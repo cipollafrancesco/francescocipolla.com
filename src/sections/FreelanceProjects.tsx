@@ -30,10 +30,10 @@ const FreelanceProjects: React.FC<IFreelanceProjectsProps> = ({ref}) => {
                 className="w-full relative z-10"
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
-                viewport={{ once: true, margin: "-20%" }}
+                viewport={{ once: false, margin: "-20%" }}
                 transition={{ 
                     duration: 0.8,
-                    delay: 0.5 // Delay the slider animation
+                    delay: 0.8 // Delay the slider animation
                 }}
             >
                 <StackedProjects projects={projects}/>
@@ -44,7 +44,7 @@ const FreelanceProjects: React.FC<IFreelanceProjectsProps> = ({ref}) => {
                 id="projects-title"
                 className="absolute text-[2.5rem] md:text-[150px] lg:text-[200px] xl:text-[300px] leading-[0.9] tracking-tighter font-black 
                     left-0 z-0 whitespace-nowrap md:whitespace-normal
-                    top-[80%] md:top-[40%]"
+                    top-[80%] md:top-[40%] lg:top-[20%]"
                 initial={{ opacity: 0, y: 100 }}
                 whileInView={{ 
                     opacity: 1,
