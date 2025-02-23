@@ -11,6 +11,7 @@
   "dependencies": {
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "framer-motion": "^12.4.7",
     "fs": "^0.0.1-security",
     "gray-matter": "^4.0.3",
     "gsap": "^3.12.5",
@@ -19,10 +20,12 @@
     "path": "^0.12.7",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-fast-marquee": "^1.6.5",
     "react-markdown": "^9.0.1",
     "swiper": "^11.1.15",
     "tailwind-merge": "^2.6.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "three": "^0.171.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
