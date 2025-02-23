@@ -1,7 +1,7 @@
 import './globals.css'
 import {Inter} from 'next/font/google'
-import Link from 'next/link'
-import {Github, Linkedin, Mail} from 'lucide-react'
+// import Link from 'next/link'
+// import {Github, Linkedin, Mail} from 'lucide-react'
 
 const inter = Inter({subsets: ['latin'], weight: ['400', '500', '700', '900']})
 
@@ -17,7 +17,7 @@ export default function RootLayout({
 }) {
     return (
         <html lang="en">
-        <body className={inter.className}>
+        <body className={`${inter.className}`}>
         {/*<header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-sm">
             <nav className="container mx-auto px-8 py-8">
                 <div className="flex justify-between items-center">

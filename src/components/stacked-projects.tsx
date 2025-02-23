@@ -23,13 +23,13 @@ export default function StackedProjects({projects}: StackedProjectsProps) {
     const swiperRef = useRef(null)
 
     return (
-        <div className="h-[80vh] flex items-center justify-center">
+        <div className="lg:h-[80vh] flex items-center justify-center">
             <Swiper
                 ref={swiperRef}
                 effect={'cards'}
                 grabCursor={true}
                 modules={[EffectCards]}
-                className="w-[500px] h-[400px] xl:w-[1080px] xl:h-[600px]"
+                className="w-[315px] h-auto aspect-video md:w-[500px] md:h-[400px] xl:w-[1080px] xl:h-[600px] xl:!mr-[5%]"
             >
                 {projects.map((project) => (
                     <SwiperSlide key={project.id} className="bg-white rounded-lg shadow-xl overflow-hidden">

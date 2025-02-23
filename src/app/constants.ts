@@ -1,6 +1,6 @@
 export const descriptions = [
     'senior software engineer',
-    `co-founder of <span style="color:#9075FF">ISAAC</span>`,
+    `co-founder of <span style="color:#8B5CF6">ISAAC</span>`,
     'design enthusiast',
     'nice fonts addicted',
     'basketball passionate',

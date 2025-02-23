@@ -16,15 +16,15 @@ const Contacts: React.FC<IContactsProps> = ({ref}) => {
     const y = useTransform(scrollYProgress, [0, 0.2], [100, 0])
 
     return (
-        <motion.section 
-            ref={ref} 
-            id="contacts" 
+        <motion.section
+            ref={ref}
+            id="contacts"
             className="py-20 flex flex-col items-center justify-center"
             style={{ opacity, y }}
         >
-            <motion.h2 
+            <motion.h2
                 id="contacts-title"
-                className="text-[2.5rem] md:text-6xl lg:text-7xl xl:text-[300px] leading-[0.9] tracking-tighter font-semibold my-12"
+                className="text-[80px] md:text-6xl lg:text-7xl xl:text-[300px] leading-[0.9] tracking-tighter font-extrabold mb-12"
                 initial={{ opacity: 0, scale: 0.8 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
@@ -33,8 +33,8 @@ const Contacts: React.FC<IContactsProps> = ({ref}) => {
                 contacts
             </motion.h2>
 
-            <motion.a 
-                className="text-5xl mb-16 tracking-tighter" 
+            <motion.a
+                className="text-2xl md:text-5xl mb-12 tracking-tighter"
                 href="mailto:info@francescocipolla.com"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -44,10 +44,10 @@ const Contacts: React.FC<IContactsProps> = ({ref}) => {
                 info@francescocipolla.com
             </motion.a>
 
-            <div className="flex flex-row gap-20">
-                <motion.a 
-                    className="underline text-4xl tracking-tighter"
-                    href="https://www.linkedin.com/in/francesco-cipolla-41768411b" 
+            <div className="flex flex-row gap-8">
+                <motion.a
+                    className="underline text-xl md:text-4xl tracking-tighter"
+                    href="https://www.linkedin.com/in/francesco-cipolla-41768411b"
                     target="_blank"
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -57,9 +57,9 @@ const Contacts: React.FC<IContactsProps> = ({ref}) => {
                     LinkedIn
                 </motion.a>
 
-                <motion.a 
-                    className="underline text-4xl tracking-tighter"
-                    href="https://github.com/cipollafrancesco" 
+                <motion.a
+                    className="underline text-xl md:text-4xl tracking-tighter"
+                    href="https://github.com/cipollafrancesco"
                     target="_blank"
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
