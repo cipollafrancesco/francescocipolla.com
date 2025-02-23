@@ -1,30 +1,21 @@
 'use client'
 import React, {useRef} from 'react'
 import {motion, useScroll, useSpring, useTransform} from 'framer-motion'
-import LandingHeroHandwriting from '@/components/LandingHeroHandwriting'
 import {descriptions} from '@/app/constants'
 import Contacts from '@/sections/Contacts'
 import FreelanceProjects from '@/sections/FreelanceProjects'
 import Experiences from '@/sections/Experiences'
 import Image from 'next/image'
+import Hero from '@/sections/Hero'
 
 export default function Portfolio() {
     const mainContainerRef = useRef<HTMLDivElement>(null)
-    const handwritingRef = useRef<HTMLDivElement>(null)
-    const cipoRef = useRef<HTMLHeadingElement>(null)
-    const cLetterRef = useRef<HTMLSpanElement>(null)
     const heroSectionRef = useRef<HTMLElement>(null)
     const descriptionsSectionRef = useRef<HTMLElement>(null)
     const descriptionsRef = useRef<(HTMLParagraphElement | null)[]>([])
     const experienceRef = useRef<HTMLDivElement>(null)
     const freelanceProjectsRef = useRef<HTMLDivElement>(null)
     const contactsRef = useRef<HTMLDivElement>(null)
-
-    // Main scroll progress for the entire page
-    const {scrollYProgress} = useScroll({
-        target: mainContainerRef,
-        offset: ['start start', 'end end']
-    })
 
     // Hero section specific scroll progress
     const {scrollYProgress: heroScrollProgress} = useScroll({
@@ -41,28 +32,9 @@ export default function Portfolio() {
     })
 
     // Animation sequence timing:
-    // 0-0.3: SVG path drawing
-    // 0.3-0.45: Hold completed drawing
-    // 0.45-0.6: Fade out handwriting
+    // 0-0.6: Show name and fade in/out
     // 0.6-0.8: Zoom in to "C"
     // 0.8-0.9: Fade out text
-
-    // Handwriting animation timing
-    const handwritingOpacityValue = useTransform(smoothScrollProgress,
-        [0, 0.3, 0.45, 0.6],
-        [1, 1, 1, 0]
-    )
-
-    // Spring config for individual animations
-    const springConfig = {
-        stiffness: 80,
-        damping: 25,
-        mass: 0.8,
-        restDelta: 0.001
-    }
-
-    // Apply spring animation to handwriting opacity
-    const handwritingOpacity = useSpring(handwritingOpacityValue, springConfig)
 
     // Text scale and position animation (delayed start)
     const scale = useTransform(smoothScrollProgress,
@@ -81,6 +53,13 @@ export default function Portfolio() {
         [0.6, 0.75, 0.8],
         [1, 1, 0]
     )
+
+    const springConfig = {
+        stiffness: 80,
+        damping: 25,
+        mass: 0.8,
+        restDelta: 0.001
+    }
 
     const springScale = useSpring(scale, springConfig)
     const springX = useSpring(xPosition, springConfig)
@@ -136,28 +115,13 @@ export default function Portfolio() {
                             pointerEvents: heroPointerEvents
                         }}
                     >
-                        <motion.h1
-                            ref={cipoRef}
-                            style={{
-                                scale: springScale,
-                                x: springX,
-                                y: springY,
-                                opacity: textOpacity
-                            }}
-                            className="text-6xl md:text-8xl lg:text-9xl xl:text-[16.5rem] tracking-[-0.06em] text-nowrap font-black text-center leading-none relative z-10"
-                        >
-                            I&apos;m <span className="relative">
-                                <span ref={cLetterRef}>C</span>ipo
-                            </span>
-                        </motion.h1>
-                        <motion.div
-                            ref={handwritingRef}
-                            id="handwriting-container"
-                            style={{opacity: handwritingOpacity}}
-                            className="fixed top-0 w-full h-full z-20"
-                        >
-                            <LandingHeroHandwriting scrollYProgress={smoothScrollProgress}/>
-                        </motion.div>
+                        <Hero 
+                            scale={springScale}
+                            x={springX}
+                            y={springY}
+                            opacity={textOpacity}
+                            progress={smoothScrollProgress}
+                        />
                     </motion.section>
 
                     <motion.section
