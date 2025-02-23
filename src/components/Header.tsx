@@ -2,10 +2,6 @@
 import React from 'react'
 import Link from 'next/link'
 
-
-interface IHeaderProps {
-}
-
 const menuItems = [
     {href: '/#about-me', label: 'About Me'},
     {href: '/#experiences', label: 'Experiences'},
@@ -13,7 +9,8 @@ const menuItems = [
     {href: '/#contacts', label: 'Contacts'}
 ]
 
-const Header: React.FC<IHeaderProps> = props => {
+type IHeaderProps = object
+const Header: React.FC<IHeaderProps> = () => {
     /*const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
     const toggleDrawer = () => {

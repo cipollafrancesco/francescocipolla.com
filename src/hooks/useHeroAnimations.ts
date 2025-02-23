@@ -1,5 +1,6 @@
 'use client'
 import {MotionValue, useScroll, useSpring, useTransform} from 'framer-motion'
+import {useEffect, useState} from 'react'
 
 interface HeroAnimations {
     springScale: MotionValue<number>
@@ -14,6 +15,12 @@ interface HeroAnimations {
 }
 
 export const useHeroAnimations = (heroSectionRef: React.RefObject<HTMLElement | null>): HeroAnimations => {
+    const [isClient, setIsClient] = useState(false)
+
+    useEffect(() => {
+        setIsClient(typeof window !== 'undefined')
+    }, [])
+
     // Hero section specific scroll progress
     const {scrollYProgress: heroScrollProgress} = useScroll({
         target: heroSectionRef,
@@ -37,11 +44,11 @@ export const useHeroAnimations = (heroSectionRef: React.RefObject<HTMLElement | 
     // Responsive position adjustments for centering on "C"
     const xPosition = useTransform(smoothScrollProgress,
         [0.6, 0.75],
-        [0, window?.innerWidth < 768 ? -800 : -1800]
+        [0, isClient && window.innerWidth < 768 ? -800 : -1800]
     )
     const yPosition = useTransform(smoothScrollProgress,
         [0.6, 0.75],
-        [0, window?.innerWidth < 768 ? -200 : -500]
+        [0, isClient && window.innerWidth < 768 ? -200 : -500]
     )
 
     const textOpacity = useTransform(smoothScrollProgress,

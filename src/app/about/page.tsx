@@ -132,7 +132,7 @@ export default function AboutPage() {
                   As a Senior Frontend Engineer at FIFA+, I bring years of experience in developing robust, scalable applications for the sports streaming industry. My expertise spans both frontend and backend technologies, allowing me to create comprehensive solutions that meet and exceed client expectations.
                 </p>
                 <p className="text-lg text-gray-700 mb-4">
-                  I'm passionate about clean code, performance optimization, and staying up-to-date with the latest industry trends. My goal is to deliver high-quality software that not only solves complex problems but also provides an excellent user experience. Outside of work, I'm a basketball enthusiast and a beginner kitesurfer, always seeking new challenges both in and out of the office.
+                  I&apos;m passionate about clean code, performance optimization, and staying up-to-date with the latest industry trends. My goal is to deliver high-quality software that not only solves complex problems but also provides an excellent user experience. Outside of work, I&apos;m a basketball enthusiast and a beginner kitesurfer, always seeking new challenges both in and out of the office.
                 </p>
               </div>
             </div>

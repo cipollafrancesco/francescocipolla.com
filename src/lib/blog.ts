@@ -48,6 +48,7 @@ export async function getBlogPost(slug: string): Promise<BlogPost | null> {
       content,
     }
   } catch (error) {
+    console.error('>>> getBlogPost', error)
     return null
   }
 }
