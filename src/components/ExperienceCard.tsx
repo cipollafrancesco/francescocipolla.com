@@ -35,7 +35,7 @@ const ExperienceCard: React.FC<IExperienceCardProps> = ({
                     {period}
                 </p>
 
-                <p className="text-sm hidden md:flex text-gray-500 mb-2 items-center">
+                <p className="text-sm hidden lg:flex text-gray-500 mb-2 items-center">
                     {description}
                 </p>
             </div>

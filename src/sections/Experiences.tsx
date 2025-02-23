@@ -19,6 +19,7 @@ const Experiences: React.FC<IExperiencesProps> = props => {
 
     return (
         <motion.section
+            id="experiences"
             className="py-20"
             ref={props.ref}
             style={{ opacity, y }}
@@ -55,7 +56,7 @@ const Experiences: React.FC<IExperiencesProps> = props => {
                     {/* Container for maintaining center alignment */}
                     <div className="relative flex flex-col items-center">
                         {/* Top row */}
-                        <div className="w-full flex justify-center gap-20 mb-32 xl:mb-20">
+                        <div className="w-full flex justify-center gap-20 mb-20">
                             {experiences.slice(0, 2).map((exp, index) => (
                                 <motion.div
                                     key={exp.company}
@@ -72,7 +73,7 @@ const Experiences: React.FC<IExperiencesProps> = props => {
 
                         {/* Title */}
                         <motion.h2
-                            className="text-4xl md:text-6xl lg:text-9xl xl:text-[15.5rem] leading-[1.2] tracking-tighter font-extrabold mb-32 xl:mb-20"
+                            className="text-4xl md:text-[7.65rem] lg:text-9xl xl:text-[15.5rem] leading-[1.2] tracking-tighter font-extrabold mb-20"
                             initial={{ opacity: 0, scale: 0.8 }}
                             whileInView={{ opacity: 1, scale: 1 }}
                             viewport={{ once: true }}

@@ -1,25 +1,16 @@
 'use client'
 import Image from 'next/image'
-import { useRef } from 'react'
-import { EffectCards } from 'swiper/modules'
-import { Swiper, SwiperSlide } from 'swiper/react'
+import React, {useRef} from 'react'
+import {EffectCards, Pagination} from 'swiper/modules'
+import {Swiper, SwiperSlide} from 'swiper/react'
 
 import 'swiper/css'
 import 'swiper/css/effect-cards'
+import {projects} from '@/app/constants'
+import {ArrowUpRight} from 'lucide-react'
+import Link from 'next/link'
 
-interface Project {
-    id: number
-    title: string
-    image: string
-    url: string
-    technologies: string[]
-}
-
-interface StackedProjectsProps {
-    projects: Project[]
-}
-
-export default function StackedProjects({projects}: StackedProjectsProps) {
+export default function StackedProjects() {
     const swiperRef = useRef(null)
 
     return (
@@ -28,11 +19,13 @@ export default function StackedProjects({projects}: StackedProjectsProps) {
                 ref={swiperRef}
                 effect={'cards'}
                 grabCursor={true}
-                modules={[EffectCards]}
-                className="w-[315px] h-auto aspect-video md:w-[500px] md:h-[400px] xl:w-[1080px] xl:h-[600px] xl:!mr-[5%]"
+                pagination={{clickable: true, enabled: true}}
+                modules={[EffectCards, Pagination]}
+                className="w-[315px] h-auto aspect-video md:w-[630px] xl:w-[1080px] xl:h-[600px] xl:!mr-[5%]"
             >
                 {projects.map((project) => (
-                    <SwiperSlide key={project.id} className="bg-white rounded-lg shadow-xl overflow-hidden">
+                    <SwiperSlide key={project.id}
+                                 className="bg-white rounded-lg shadow-xl overflow-hidden group">
                         <div className="relative w-full h-full">
                             <Image
                                 src={project.image}
@@ -40,18 +33,20 @@ export default function StackedProjects({projects}: StackedProjectsProps) {
                                 fill
                                 className="object-cover"
                             />
-                            {/*<div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-end p-6">
+
+                            <div
+                                className="absolute inset-0 bg-black opacity-0 group-hover:opacity-100 bg-opacity-60 flex flex-col justify-end p-6 transition-opacity duration-300">
                                 <h3 className="text-2xl font-bold text-white mb-2">{project.title}</h3>
                                 <p className="text-sm text-gray-300 mb-4">{project.technologies.join(' • ')}</p>
                                 <Link
                                     href={project.url}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="inline-flex items-center text-white text-lg font-semibold hover:underline"
+                                    className="text-white flex items-center"
                                 >
-                                    Visit Site <ArrowUpRight className="ml-2 h-5 w-5"/>
+                                    Visit this Site <ArrowUpRight className="ml-2 h-5 w-5"/>
                                 </Link>
-                            </div>*/}
+                            </div>
                         </div>
                     </SwiperSlide>
                 ))}
@@ -59,4 +54,3 @@ export default function StackedProjects({projects}: StackedProjectsProps) {
         </div>
     )
 }
-

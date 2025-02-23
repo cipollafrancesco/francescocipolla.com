@@ -1,7 +1,6 @@
 'use client'
 import React from 'react'
-import StackedProjects from '@/components/stacked-projects'
-import {projects} from '@/app/constants'
+import StackedProjects from '@/components/StackedProjects'
 import {motion, useScroll, useTransform} from 'framer-motion'
 
 interface IFreelanceProjectsProps {
@@ -10,9 +9,9 @@ interface IFreelanceProjectsProps {
 
 const FreelanceProjects: React.FC<IFreelanceProjectsProps> = ({ref}) => {
     // Main section scroll progress
-    const { scrollYProgress } = useScroll({
+    const {scrollYProgress} = useScroll({
         target: ref,
-        offset: ["start end", "end start"]
+        offset: ['start end', 'end start']
     })
 
     const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0])
@@ -23,41 +22,41 @@ const FreelanceProjects: React.FC<IFreelanceProjectsProps> = ({ref}) => {
             ref={ref}
             id="projects"
             className="min-h-screen py-20 w-full max-w-[90vw] xl:max-w-full mx-auto relative isolate overflow-x-hidden"
-            style={{ opacity, y }}
+            style={{opacity, y}}
         >
             {/* Title container */}
             <motion.h2
                 id="projects-title"
                 className="text-[70px] md:text-[150px] lg:text-[200px] xl:text-[300px] leading-[0.9] tracking-tighter font-extrabold
-                    mb-10 md:mb-0 md:absolute md:left-0 md:z-0 md:whitespace-nowrap md:top-[40%] lg:top-0"
-                initial={{ opacity: 0, y: 20 }}
+                    mb-10 md:mb-0 md:absolute md:left-0 md:z-0 md:whitespace-nowrap md:top-0"
+                initial={{opacity: 0, y: 20}}
                 whileInView={{
                     opacity: 1,
                     y: 0
                 }}
-                viewport={{ once: true, margin: "-20%" }}
+                viewport={{once: true}}
                 transition={{
                     duration: 0.5,
-                    ease: "easeOut"
+                    ease: 'easeOut'
                 }}
             >
                 freelance
-                <br />
+                <br/>
                 projects
             </motion.h2>
 
             {/* Projects container */}
             <motion.div
-                className="w-full relative md:z-10"
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true, margin: "-20%" }}
+                className="w-full relative z-10 md:mt-[9.5rem] xl:mt-14"
+                initial={{opacity: 0}}
+                whileInView={{opacity: 1}}
+                viewport={{once: true}}
                 transition={{
                     duration: 0.8,
                     delay: 0.5
                 }}
             >
-                <StackedProjects projects={projects}/>
+                <StackedProjects/>
             </motion.div>
         </motion.section>
     )

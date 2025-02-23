@@ -1,3 +1,5 @@
+import {IProject} from '@/app/types'
+
 export const descriptions = [
     'senior software engineer',
     `co-founder of <span style="color:#8B5CF6">ISAAC</span>`,
@@ -41,26 +43,26 @@ export const experiences = [
     }
 ]
 
-export const projects = [
+export const projects: IProject[] = [
     {
         id: 1,
         title: 'Che Designer Sei? - Talent Garden',
         image: '/projects/chedesignersei.png',
-        url: 'https://example-portfolio.com',
+        url: 'https://chedesignersei.talentgarden.com/',
         technologies: ['Next.js', 'Tailwind CSS', 'Vercel', 'HubSpot CMS']
     },
     {
         id: 2,
         title: 'Hub Lombardini22 - Company Website',
         image: '/projects/hublombardini22.png',
-        url: 'https://example-ecommerce.com',
-        technologies: ['Next.js', 'Tailwind CSS', 'Vercel', 'Strapi'],
+        url: 'https://hublombardini22.com/',
+        technologies: ['Next.js', 'Matter.js', 'Tailwind CSS', 'Vercel', 'Strapi'],
     },
     {
         id: 3,
         title: 'Dpulses - Company Website',
         image: '/projects/dpulses.png',
-        url: 'https://example-blog.com',
+        url: 'https://www.dpulses.com/',
         technologies: ['Next.js', 'Tailwind CSS', 'Vercel'],
     },
 ]
