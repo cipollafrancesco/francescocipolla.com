@@ -1,14 +1,14 @@
 'use client'
 import Image from 'next/image'
-import React, {useRef} from 'react'
-import {EffectCards, Pagination} from 'swiper/modules'
-import {Swiper, SwiperSlide} from 'swiper/react'
+import { useRef } from 'react'
+import { EffectCards, Pagination } from 'swiper/modules'
+import { Swiper, SwiperSlide } from 'swiper/react'
 
+import { projects } from '@/app/constants'
+import { ArrowUpRight } from 'lucide-react'
+import Link from 'next/link'
 import 'swiper/css'
 import 'swiper/css/effect-cards'
-import {projects} from '@/app/constants'
-import {ArrowUpRight} from 'lucide-react'
-import Link from 'next/link'
 
 export default function StackedProjects() {
     const swiperRef = useRef(null)
@@ -19,19 +19,25 @@ export default function StackedProjects() {
                 ref={swiperRef}
                 effect={'cards'}
                 grabCursor={true}
-                pagination={{clickable: true, enabled: true}}
+                pagination={{ clickable: true, enabled: true }}
                 modules={[EffectCards, Pagination]}
-                className="w-[315px] h-auto aspect-video md:w-[630px] xl:w-[1080px] xl:h-[600px] xl:!mr-[5%]"
+                className="w-[290px] h-auto aspect-[9/16] md:aspect-video md:w-[630px] xl:w-[1080px] xl:h-[600px] xl:!mr-[5%]"
             >
                 {projects.map((project) => (
                     <SwiperSlide key={project.id}
-                                 className="bg-white rounded-lg shadow-xl overflow-hidden group">
+                        className="bg-white rounded-lg shadow-xl overflow-hidden group">
                         <div className="relative w-full h-full">
+                            <Image
+                                src={project.mobileImage}
+                                alt={project.title}
+                                fill
+                                className="object-cover md:hidden"
+                            />
                             <Image
                                 src={project.image}
                                 alt={project.title}
                                 fill
-                                className="object-cover"
+                                className="object-cover hidden md:block"
                             />
 
                             <div
@@ -44,7 +50,7 @@ export default function StackedProjects() {
                                     rel="noopener noreferrer"
                                     className="text-white flex items-center"
                                 >
-                                    Visit this Site <ArrowUpRight className="ml-2 h-5 w-5"/>
+                                    Visit this Site <ArrowUpRight className="ml-2 h-5 w-5" />
                                 </Link>
                             </div>
                         </div>
