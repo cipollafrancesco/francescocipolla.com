@@ -8,6 +8,7 @@ import Experiences from '@/sections/Experiences'
 import Image from 'next/image'
 import Hero from '@/sections/Hero'
 import {useHeroAnimations} from '@/hooks/useHeroAnimations'
+import Header from '@/components/Header'
 
 export default function Portfolio() {
     const mainContainerRef = useRef<HTMLDivElement>(null)
@@ -32,6 +33,7 @@ export default function Portfolio() {
 
     return (
         <>
+            <Header/>
             <div ref={mainContainerRef} className="min-h-[300vh] bg-white text-black">
                 <main className="relative mb-16 lg:mb-32">
                     <motion.div

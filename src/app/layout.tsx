@@ -1,6 +1,7 @@
 import './globals.css'
 import {Inter} from 'next/font/google'
 import Header from '@/components/Header'
+import React from 'react'
 
 const inter = Inter({subsets: ['latin'], weight: ['400', '500', '700', '900']})
 
@@ -17,7 +18,6 @@ export default function RootLayout({
     return (
         <html lang="en">
         <body className={`${inter.className}`}>
-        <Header/>
         {children}
         <footer className="bg-white py-8">
             <div className="mx-auto px-4 text-center">
