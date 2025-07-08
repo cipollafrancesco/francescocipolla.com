@@ -1,4 +1,4 @@
-import {IProject} from '@/app/types'
+import { IProject } from '@/app/types'
 
 export const descriptions = [
     'senior software engineer',
@@ -47,22 +47,41 @@ export const projects: IProject[] = [
     {
         id: 1,
         title: 'Che Designer Sei? - Talent Garden',
-        image: '/projects/chedesignersei.png',
+        image: '/projects/chedesignersei.webp',
+        mobileImage: '/projects/chedesignersei_mobile.webp',
         url: 'https://chedesignersei.talentgarden.com/',
         technologies: ['Next.js', 'Tailwind CSS', 'Vercel', 'HubSpot CMS']
     },
     {
         id: 2,
         title: 'Hub Lombardini22 - Company Website',
-        image: '/projects/hublombardini22.png',
+        image: '/projects/hublombardini22.webp',
+        mobileImage: '/projects/hublombardini22_mobile.webp',
         url: 'https://hublombardini22.com/',
         technologies: ['Next.js', 'Matter.js', 'Tailwind CSS', 'Vercel', 'Strapi'],
     },
     {
         id: 3,
         title: 'Dpulses - Company Website',
-        image: '/projects/dpulses.png',
+        image: '/projects/dpulses.webp',
+        mobileImage: '/projects/dpulses_mobile.webp',
         url: 'https://www.dpulses.com/',
         technologies: ['Next.js', 'Tailwind CSS', 'Vercel'],
     },
+    {
+        id: 4,
+        title: 'DataHause - Company Website',
+        image: '/projects/datahause.webp',
+        mobileImage: '/projects/datahause_mobile.webp',
+        url: 'https://www.datahause.com/',
+        technologies: ['Next.js', 'Tailwind CSS', 'Vercel'],
+    }
+    // {
+    //     id: 5,
+    //     title: '',
+    //     image: '/projects/etc.webp',
+    //     mobileImage: '/projects/etc_mobile.webp',
+    //     url: '',
+    //     technologies: [],
+    // },
 ]
