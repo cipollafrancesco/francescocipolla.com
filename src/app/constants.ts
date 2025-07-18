@@ -38,7 +38,7 @@ export const experiences = [
         logo: '/companies/softlab.png',
         position: 'Front-end Engineer',
         period: 'Nov 2017 - Nov 2021',
-        description: `- Developed enterprise web applications for a major insurance corporation\n- Played a key role as a Frontend Vice-Team Leader`,
+        description: `Developed enterprise web applications for a major insurance corporation\nPlayed a key role as a Frontend Vice-Team Leader`,
         techs: ['React', 'TypeScript', 'Angular2+', 'Redux', 'Puppeteer'],
     }
 ]
