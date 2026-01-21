@@ -4,13 +4,15 @@ import { useRef } from 'react'
 import { EffectCards, Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
-import { projects } from '@/app/constants'
+import { projects } from '@/app/[locale]/constants'
 import { ArrowUpRight } from 'lucide-react'
 import Link from 'next/link'
+import {useTranslations} from 'next-intl'
 import 'swiper/css'
 import 'swiper/css/effect-cards'
 
 export default function StackedProjects() {
+    const t = useTranslations('about.projects')
     const swiperRef = useRef(null)
 
     return (
@@ -50,7 +52,7 @@ export default function StackedProjects() {
                                     rel="noopener noreferrer"
                                     className="text-white flex items-center"
                                 >
-                                    Visit this Site <ArrowUpRight className="ml-2 h-5 w-5" />
+                                    {t('visit')} <ArrowUpRight className="ml-2 h-5 w-5" />
                                 </Link>
                             </div>
                         </div>

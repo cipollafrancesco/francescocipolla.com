@@ -2,12 +2,14 @@
 import Cal, { getCalApi } from '@calcom/embed-react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import React, { useEffect } from 'react'
+import {useTranslations} from 'next-intl'
 
 interface IContactsProps {
     ref: React.RefObject<HTMLDivElement | null>
 }
 
 const Contacts: React.FC<IContactsProps> = ({ ref }) => {
+    const t = useTranslations('about.contacts')
     const { scrollYProgress } = useScroll({
         target: ref,
         offset: ["start end", "end start"]
@@ -41,7 +43,7 @@ const Contacts: React.FC<IContactsProps> = ({ ref }) => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.7 }}
             >
-                contacts
+                {t('title')}
             </motion.h2>
 
             <motion.a
@@ -95,7 +97,7 @@ const Contacts: React.FC<IContactsProps> = ({ ref }) => {
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: 0.6 }}
                 >
-                    Schedule a call with me
+                    {t('schedule')}
                 </motion.h3>
                 <Cal calLink="francescocipolla/free-intro-call-30-minutes" />
             </motion.div>

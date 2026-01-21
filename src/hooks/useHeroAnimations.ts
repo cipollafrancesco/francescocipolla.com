@@ -1,5 +1,5 @@
 'use client'
-import {MotionValue, useScroll, useSpring, useTransform} from 'framer-motion'
+import {MotionValue, useScroll, useSpring, useTransform, useReducedMotion} from 'framer-motion'
 import {useEffect, useState} from 'react'
 
 interface HeroAnimations {
@@ -16,6 +16,7 @@ interface HeroAnimations {
 
 export const useHeroAnimations = (heroSectionRef: React.RefObject<HTMLElement | null>): HeroAnimations => {
     const [isClient, setIsClient] = useState(false)
+    const shouldReduceMotion = useReducedMotion()
 
     useEffect(() => {
         setIsClient(typeof window !== 'undefined')
@@ -29,26 +30,26 @@ export const useHeroAnimations = (heroSectionRef: React.RefObject<HTMLElement | 
 
     // Add spring animation to the scroll progress for smooth control
     const smoothScrollProgress = useSpring(heroScrollProgress, {
-        stiffness: 30,    // Lower stiffness for smoother movement
-        damping: 15,      // Lower damping for more fluid motion
-        mass: 1.2,        // Slightly more mass for more controlled inertia
-        restDelta: 0.001  // Precision of final resting position
+        stiffness: shouldReduceMotion ? 100 : 30,    
+        damping: shouldReduceMotion ? 20 : 15,      
+        mass: shouldReduceMotion ? 0.5 : 1.2,        
+        restDelta: 0.001
     })
 
     // Text scale and position animation (delayed start)
     const scale = useTransform(smoothScrollProgress,
         [0.6, 0.75],
-        [1, 44]
+        [1, shouldReduceMotion ? 1.5 : 44] // Soften zoom if reduced motion
     )
 
     // Responsive position adjustments for centering on "C"
     const xPosition = useTransform(smoothScrollProgress,
         [0.6, 0.75],
-        [0, isClient && window.innerWidth < 768 ? -800 : -1800]
+        [0, shouldReduceMotion ? 0 : (isClient && window.innerWidth < 768 ? -800 : -1800)]
     )
     const yPosition = useTransform(smoothScrollProgress,
         [0.6, 0.75],
-        [0, isClient && window.innerWidth < 768 ? -200 : -500]
+        [0, shouldReduceMotion ? 0 : (isClient && window.innerWidth < 768 ? -200 : -500)]
     )
 
     const textOpacity = useTransform(smoothScrollProgress,
@@ -69,7 +70,7 @@ export const useHeroAnimations = (heroSectionRef: React.RefObject<HTMLElement | 
 
     // Content fade in (delayed until after zoom)
     const contentOpacity = useTransform(smoothScrollProgress,
-        [0.85, 0.95],
+        [shouldReduceMotion ? 0.2 : 0.85, 0.95],
         [0, 1]
     )
 
@@ -84,7 +85,7 @@ export const useHeroAnimations = (heroSectionRef: React.RefObject<HTMLElement | 
     const heroVisibility = useTransform(
         smoothScrollProgress,
         [0, 0.8, 0.801],
-        ['visible', 'visible', 'hidden']
+        ['visible', 'visible', shouldReduceMotion ? 'visible' : 'hidden']
     )
 
     const heroPointerEvents = useTransform(

@@ -1,0 +1,107 @@
+{
+  "common": {
+    "nav": {
+      "about": "Su di me",
+      "experiences": "Esperienze",
+      "projects": "Progetti",
+      "contacts": "Contatti"
+    },
+    "footer": {
+      "rights": "Tutti i diritti riservati."
+    }
+  },
+  "home": {
+    "hero": {
+      "h1": "Sviluppo prodotti digitali ad alte prestazioni e sistemi AI che generano valore.",
+      "sub": "Senior Full-Stack Engineer specializzato in piattaforme web e workflow AI intelligenti. Aiuto founder e agenzie a lanciare prodotti scalabili, ottimizzare la delivery e trasformare idee complesse in realtà redditizie.",
+      "audience": {
+        "founders_label": "Founder & CTO",
+        "founders": "Lancia o fai evolvere prodotti che generano ricavi con la massima affidabilità.",
+        "agencies_label": "Agenzie Digitali",
+        "agencies": "Un partner tecnico affidabile per scalare la tua capacità su Next.js/React."
+      },
+      "pillars": {
+        "platforms": "Piattaforme Web Scalabili",
+        "platforms_desc": "Soluzioni end-to-end in Next.js. Non scrivo solo codice: progetto architetture sicure e performanti, pensate per crescere insieme al tuo business.",
+        "ai": "Integrazione AI & LLM",
+        "ai_desc": "Sfrutta l'AI per automatizzare i processi e migliorare la UX. Dai custom agent alle pipeline di dati intelligenti, rendo l'AI una risorsa concreta per la tua azienda.",
+        "consulting": "Leadership Tecnica",
+        "consulting_desc": "Guida strategica per team di engineering. Audit dell'architettura e ottimizzazione dei processi per rilasciare software di alta qualità in meno tempo."
+      },
+      "cta": "Prenota una call di 30 minuti",
+      "location": "Basato a Trapani • Disponibile da remoto"
+    },
+    "proof": {
+      "title": "Ho collaborato con brand globali e realtà ad alta crescita"
+    },
+    "process": {
+      "title": "Il Mio Processo",
+      "step1_title": "Strategia e Analisi",
+      "step1_desc": "Studio approfondito dei tuoi obiettivi per garantire che la soluzione sia allineata alle necessità del mercato.",
+      "step2_title": "Sviluppo e Prototipazione",
+      "step2_desc": "Sviluppo full-stack rapido e di qualità utilizzando tecnologie moderne, con un focus costante su performance e solidità.",
+      "step3_title": "Rilascio e Qualità",
+      "step3_desc": "Testing rigoroso e deploy su infrastrutture ad alte prestazioni per assicurare un'esperienza utente senza compromessi.",
+      "step4_title": "Evoluzione e Supporto",
+      "step4_desc": "Miglioramento continuo basato su dati reali per mantenere il tuo prodotto competitivo e sempre aggiornato."
+    },
+    "models": {
+      "title": "Modelli di Collaborazione",
+      "fixed_title": "A Progetto",
+      "fixed_desc": "Ideale per MVP, siti marketing o feature specifiche con perimetro e timeline definiti.",
+      "retainer_title": "Consulenza Ricorrente",
+      "retainer_desc": "Una partnership tecnica continuativa per l'evoluzione del prodotto, manutenzione e supporto strategico.",
+      "augmentation_title": "Team Integration",
+      "augmentation_desc": "Integrazione diretta nel tuo team per accelerare lo sviluppo e risolvere sfide tecniche complesse."
+    },
+    "projects_section": {
+      "title": "Progetti Selezionati",
+      "subtitle": "Una selezione di prodotti digitali e piattaforme ad alte prestazioni realizzate per startup e grandi aziende."
+    }
+  },
+  "about": {
+    "hero": {
+      "im": "Sono",
+      "disclaimer": "E questa landing page è stata costruita in un giorno usando Next, Tailwind e Framer Motion."
+    },
+    "descriptions": {
+      "senior": "senior software engineer",
+      "isaac": "co-founder di <span style=\"color:#8B5CF6\">ISAAC</span>",
+      "design": "appassionato di design",
+      "fonts": "nice fonts addicted",
+      "basketball": "appassionato di basket",
+      "kitesurfer": "kitesurfer principiante"
+    },
+    "experiences": {
+      "title": "esperienze",
+      "fifa": {
+        "position": "Senior Front-end Engineer (Freelance)",
+        "period": "Giu 2023 - Presente",
+        "description": "Responsabile dello sviluppo e della manutenzione di una single-page application (SPA) in React e delle sue funzionalità principali come il Player."
+      },
+      "globant": {
+        "position": "Senior Web UI Developer",
+        "period": "Ago 2023 - Presente",
+        "description": "In seguito all'acquisizione della divisione business di CHILI Tech da parte di Globant, contribuisco ai progetti che gestivo in precedenza (le piattaforme streaming CHILI e FIFA+)."
+      },
+      "chili": {
+        "position": "Senior Front-end Engineer",
+        "period": "Nov 2021 - Dic 2024",
+        "description": "Sviluppo e manutenzione del sito web (desktop e mobile) e dell'app Smart TV per vari dispositivi (Samsung, LG, Sony, ecc.) dell'azienda di streaming."
+      },
+      "softlab": {
+        "position": "Front-end Engineer",
+        "period": "Nov 2017 - Nov 2021",
+        "description": "Sviluppo di applicazioni web enterprise per una major assicurativa. Ruolo chiave come Frontend Vice-Team Leader."
+      }
+    },
+    "projects": {
+      "title": "progetti freelance",
+      "visit": "Visita il sito"
+    },
+    "contacts": {
+      "title": "contatti",
+      "schedule": "Prenota una call con me"
+    }
+  }
+}

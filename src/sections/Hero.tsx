@@ -1,6 +1,7 @@
 'use client'
 import React, {useRef} from 'react'
 import {motion, MotionValue, useTransform} from 'framer-motion'
+import {useTranslations} from 'next-intl'
 
 interface IHeroProps {
     scale: MotionValue<number>
@@ -11,6 +12,7 @@ interface IHeroProps {
 }
 
 const Hero: React.FC<IHeroProps> = ({scale, x, y, opacity, progress}) => {
+    const t = useTranslations('about')
     const cipoRef = useRef(null)
     const cLetterRef = useRef(null)
 
@@ -40,7 +42,8 @@ const Hero: React.FC<IHeroProps> = ({scale, x, y, opacity, progress}) => {
                 }}
                 className="relative text-8xl sm:text-[10rem] md:text-[13rem] lg:text-[15rem] xl:text-[16.5rem] tracking-[-0.06em] text-nowrap font-black text-center leading-none z-10"
             >
-                I&apos;m <span className="relative">
+                {t('hero.im')}{' '}
+                <span className="relative">
                     <motion.span
                         style={{opacity: nameOpacity}}
                         className="absolute -top-7 left-0 font-semibold text-3xl md:text-5xl lg:text-6xl tracking-tighter"
@@ -60,7 +63,8 @@ const Hero: React.FC<IHeroProps> = ({scale, x, y, opacity, progress}) => {
                     id="hero-disclaimer"
                     style={{opacity: paragraphOpacity}}
                     className="font-normal whitespace-normal text-left text-sm tracking-tighter absolute mt-4 md:p-4 max-w-[80%]"
-                >And this landing page has been built in one day using Next, Tailwind, and Framer Motion.
+                >
+                    {t('hero.disclaimer')}
                 </motion.p>
 
             </motion.h1>

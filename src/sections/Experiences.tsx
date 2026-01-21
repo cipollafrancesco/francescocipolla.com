@@ -1,14 +1,16 @@
 'use client'
 import React from 'react'
-import { experiences } from '@/app/constants'
+import { experiences as experiencesData } from '@/app/[locale]/constants'
 import ExperienceCard from '@/components/ExperienceCard'
 import { motion, useScroll, useTransform } from 'framer-motion'
+import {useTranslations} from 'next-intl'
 
 interface IExperiencesProps {
     ref: React.RefObject<HTMLDivElement | null>
 }
 
 const Experiences: React.FC<IExperiencesProps> = props => {
+    const t = useTranslations('about.experiences')
     const { scrollYProgress } = useScroll({
         target: props.ref,
         offset: ["start end", "end start"]
@@ -16,6 +18,16 @@ const Experiences: React.FC<IExperiencesProps> = props => {
 
     const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0])
     const y = useTransform(scrollYProgress, [0, 0.2], [100, 0])
+
+    const experiences = experiencesData.map(exp => {
+        const key = exp.company.toLowerCase().split(' ')[0]
+        return {
+            ...exp,
+            position: t(`${key}.position`),
+            period: t(`${key}.period`),
+            description: t(`${key}.description`)
+        }
+    })
 
     return (
         <motion.section
@@ -33,7 +45,7 @@ const Experiences: React.FC<IExperiencesProps> = props => {
                     viewport={{ once: true }}
                     transition={{ duration: 0.7 }}
                 >
-                    experiences
+                    {t('title')}
                 </motion.h2>
 
                 {/* Mobile: Column layout for experiences */}
@@ -79,7 +91,7 @@ const Experiences: React.FC<IExperiencesProps> = props => {
                             viewport={{ once: true }}
                             transition={{ duration: 0.7 }}
                         >
-                            experiences
+                            {t('title')}
                         </motion.h2>
 
                         {/* Bottom row */}

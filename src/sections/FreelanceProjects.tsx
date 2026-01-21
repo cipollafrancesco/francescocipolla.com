@@ -2,12 +2,14 @@
 import React from 'react'
 import StackedProjects from '@/components/StackedProjects'
 import {motion, useScroll, useTransform} from 'framer-motion'
+import {useTranslations} from 'next-intl'
 
 interface IFreelanceProjectsProps {
     ref: React.RefObject<HTMLDivElement | null>
 }
 
 const FreelanceProjects: React.FC<IFreelanceProjectsProps> = ({ref}) => {
+    const t = useTranslations('about.projects')
     // Main section scroll progress
     const {scrollYProgress} = useScroll({
         target: ref,
@@ -40,9 +42,12 @@ const FreelanceProjects: React.FC<IFreelanceProjectsProps> = ({ref}) => {
                     ease: 'easeOut'
                 }}
             >
-                freelance
-                <br/>
-                projects
+                {t('title').split(' ').map((word, i) => (
+                    <React.Fragment key={i}>
+                        {word}
+                        {i === 0 && <br/>}
+                    </React.Fragment>
+                ))}
             </motion.h2>
 
             {/* Projects container */}
