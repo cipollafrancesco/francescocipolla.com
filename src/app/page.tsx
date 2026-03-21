@@ -1,6 +1,6 @@
 'use client'
 import React, {useRef} from 'react'
-import {motion} from 'framer-motion'
+import {motion, useReducedMotion} from 'framer-motion'
 import {descriptions} from '@/app/constants'
 import Contacts from '@/sections/Contacts'
 import FreelanceProjects from '@/sections/FreelanceProjects'
@@ -29,6 +29,8 @@ export default function Portfolio() {
         heroPointerEvents,
         smoothScrollProgress
     } = useHeroAnimations(heroSectionRef)
+
+    const prefersReducedMotion = useReducedMotion()
 
     return (
         <>
@@ -67,7 +69,7 @@ export default function Portfolio() {
                     >
                         <div className="max-w-[90vw] mx-auto">
                             <div className="mb-32">
-                                {descriptions.map((text, index) => (
+                                {descriptions.map((segments, index) => (
                                     <motion.p
                                         key={index}
                                         ref={el => {
@@ -75,13 +77,18 @@ export default function Portfolio() {
                                                 descriptionsRef.current[index] = el
                                             }
                                         }}
-                                        initial={{opacity: 0, y: 50}}
+                                        initial={prefersReducedMotion ? false : {opacity: 0, y: 50}}
                                         whileInView={{opacity: 1, y: 0}}
                                         viewport={{once: true, margin: '-100px'}}
-                                        transition={{duration: 0.8, delay: index * 0.2}}
+                                        transition={{duration: prefersReducedMotion ? 0 : 0.8, delay: prefersReducedMotion ? 0 : index * 0.2}}
                                         className="text-[36px] sm:text-[50px] md:text-[70px] lg:text-[100px] xl:text-[120px] leading-[1.2] tracking-tighter font-semibold"
-                                        dangerouslySetInnerHTML={{__html: text}}
-                                    />
+                                    >
+                                        {segments.map((seg, i) =>
+                                            seg.color
+                                                ? <span key={i} style={{color: seg.color}}>{seg.text}</span>
+                                                : seg.text
+                                        )}
+                                    </motion.p>
                                 ))}
                             </div>
                         </div>
@@ -90,10 +97,10 @@ export default function Portfolio() {
                         <div className="h-[20vh]"/>
 
                         <motion.div
-                            initial={{opacity: 0}}
+                            initial={prefersReducedMotion ? false : {opacity: 0}}
                             whileInView={{opacity: 1}}
                             viewport={{once: true, margin: '-20%'}}
-                            transition={{duration: 0.8}}
+                            transition={{duration: prefersReducedMotion ? 0 : 0.8}}
                         >
                             <Experiences ref={experienceRef}/>
                         </motion.div>
@@ -102,10 +109,10 @@ export default function Portfolio() {
                         <div className="h-[10vh] lg:h-[20vh]"/>
 
                         <motion.div
-                            initial={{opacity: 0}}
+                            initial={prefersReducedMotion ? false : {opacity: 0}}
                             whileInView={{opacity: 1}}
                             viewport={{once: true}}
-                            transition={{duration: 0.8}}
+                            transition={{duration: prefersReducedMotion ? 0 : 0.8}}
                         >
                             <FreelanceProjects ref={freelanceProjectsRef}/>
                         </motion.div>
@@ -114,10 +121,10 @@ export default function Portfolio() {
                         <div className="hidden md:block h-[10vh] lg:h-[40vh]"/>
 
                         <motion.div
-                            initial={{opacity: 0}}
+                            initial={prefersReducedMotion ? false : {opacity: 0}}
                             whileInView={{opacity: 1}}
                             viewport={{once: true}}
-                            transition={{duration: 0.8}}
+                            transition={{duration: prefersReducedMotion ? 0 : 0.8}}
                         >
                             <Contacts ref={contactsRef}/>
                         </motion.div>

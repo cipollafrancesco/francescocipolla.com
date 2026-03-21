@@ -1,12 +1,12 @@
-import { IProject } from '@/app/types'
+import { IProject, Description } from '@/app/types'
 
-export const descriptions = [
-    'senior software engineer',
-    `co-founder of <span style="color:#8B5CF6">ISAAC</span>`,
-    'design enthusiast',
-    'nice fonts addicted',
-    'basketball passionate',
-    'beginner kitesurfer',
+export const descriptions: Description[] = [
+    [{text: 'senior software engineer'}],
+    [{text: 'co-founder of '}, {text: 'ISAAC', color: '#8B5CF6'}],
+    [{text: 'design enthusiast'}],
+    [{text: 'nice fonts addicted'}],
+    [{text: 'basketball passionate'}],
+    [{text: 'beginner kitesurfer'}],
 ]
 
 export const experiences = [

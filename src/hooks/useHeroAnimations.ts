@@ -1,5 +1,5 @@
 'use client'
-import {MotionValue, useScroll, useSpring, useTransform} from 'framer-motion'
+import {MotionValue, useReducedMotion, useScroll, useSpring, useTransform} from 'framer-motion'
 import {useEffect, useState} from 'react'
 
 interface HeroAnimations {
@@ -16,6 +16,7 @@ interface HeroAnimations {
 
 export const useHeroAnimations = (heroSectionRef: React.RefObject<HTMLElement | null>): HeroAnimations => {
     const [isClient, setIsClient] = useState(false)
+    const prefersReducedMotion = useReducedMotion()
 
     useEffect(() => {
         setIsClient(typeof window !== 'undefined')
@@ -38,22 +39,22 @@ export const useHeroAnimations = (heroSectionRef: React.RefObject<HTMLElement | 
     // Text scale and position animation (delayed start)
     const scale = useTransform(smoothScrollProgress,
         [0.6, 0.75],
-        [1, 44]
+        prefersReducedMotion ? [1, 1] : [1, 44]
     )
 
     // Responsive position adjustments for centering on "C"
     const xPosition = useTransform(smoothScrollProgress,
         [0.6, 0.75],
-        [0, isClient && window.innerWidth < 768 ? -800 : -1800]
+        prefersReducedMotion ? [0, 0] : [0, isClient && window.innerWidth < 768 ? -800 : -1800]
     )
     const yPosition = useTransform(smoothScrollProgress,
         [0.6, 0.75],
-        [0, isClient && window.innerWidth < 768 ? -200 : -500]
+        prefersReducedMotion ? [0, 0] : [0, isClient && window.innerWidth < 768 ? -200 : -500]
     )
 
     const textOpacity = useTransform(smoothScrollProgress,
         [0.6, 0.75, 0.8],
-        [1, 1, 0]
+        prefersReducedMotion ? [1, 1, 1] : [1, 1, 0]
     )
 
     const springConfig = {
@@ -70,7 +71,7 @@ export const useHeroAnimations = (heroSectionRef: React.RefObject<HTMLElement | 
     // Content fade in (delayed until after zoom)
     const contentOpacity = useTransform(smoothScrollProgress,
         [0.85, 0.95],
-        [0, 1]
+        prefersReducedMotion ? [1, 1] : [0, 1]
     )
 
     // Scroll indicator opacity
