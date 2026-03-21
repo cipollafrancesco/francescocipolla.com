@@ -10,8 +10,9 @@ const menuItems = [
     {href: '/#contacts', label: 'Contacts'}
 ]
 
-type IHeaderProps = object
-const Header: React.FC<IHeaderProps> = () => {
+const BrandLogo = () => <span className="font-extrabold text-2xl">cipo.</span>
+
+const Header = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
     const toggleDrawer = () => {
@@ -35,8 +36,8 @@ const Header: React.FC<IHeaderProps> = () => {
             <nav
                 className="hidden lg:block max-w-screen-2xl mx-auto px-8 py-8 bg-white/80 backdrop-blur-sm lg:bg-transparent lg:backdrop-blur-none">
                 <div className="flex justify-center items-center lg:justify-end">
-                    <span className="font-extrabold text-2xl mr-auto">cipo.</span>
-                    <div className="flex space-x-4 lowercase">
+                    <BrandLogo/>
+                    <div className="flex space-x-4 lowercase ml-auto">
                         {menuItems.map(item => (
                             <Link key={item.href} href={item.href}
                                   className="lg:text-lg text-black hover:underline underline-offset-2">
@@ -49,7 +50,7 @@ const Header: React.FC<IHeaderProps> = () => {
 
             {/* Mobile hamburger button */}
             <div className="w-full px-8 py-8 flex justify-between items-center lg:hidden">
-                <span className="font-extrabold text-2xl">cipo.</span>
+                <BrandLogo/>
                 <button onClick={toggleDrawer} aria-label="Open menu">
                     <Menu width={40} height={40}/>
                 </button>
