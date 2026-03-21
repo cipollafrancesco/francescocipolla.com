@@ -31,7 +31,7 @@ const Header = () => {
     }, [isDrawerOpen])
 
     return (
-        <header className="static md:fixed top-0 left-0 right-0 z-50">
+        <header className="relative md:fixed top-0 left-0 right-0 z-50">
             {/* Desktop nav */}
             <nav
                 className="hidden lg:block max-w-screen-2xl mx-auto px-8 py-8 bg-white/80 backdrop-blur-sm lg:bg-transparent lg:backdrop-blur-none">
