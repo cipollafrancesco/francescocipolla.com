@@ -1,9 +1,32 @@
+import type { Metadata } from 'next'
 import {getBlogPost} from '@/lib/blog'
 import {notFound} from 'next/navigation'
 import Markdown from 'react-markdown'
 
 interface BlogPostPageProps {
     params: Promise<{ slug: string }>
+}
+
+export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
+    const { slug } = await params
+    const post = await getBlogPost(slug)
+
+    if (!post) return {}
+
+    return {
+        title: `${post.title} — Francesco Cipolla`,
+        description: post.excerpt,
+        openGraph: {
+            title: post.title,
+            description: post.excerpt,
+            url: `https://francescocipolla.com/blog/${slug}`,
+            type: 'article',
+            publishedTime: post.date,
+        },
+        alternates: {
+            canonical: `https://francescocipolla.com/blog/${slug}`,
+        },
+    }
 }
 
 export default async function BlogPostPage({params}: BlogPostPageProps) {

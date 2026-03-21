@@ -1,5 +1,19 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import {getBlogPosts} from '@/lib/blog'
+
+export const metadata: Metadata = {
+    title: 'Blog — Francesco Cipolla',
+    description: 'Thoughts on frontend engineering, design, product, and the tools I use day to day.',
+    openGraph: {
+        title: 'Blog — Francesco Cipolla',
+        description: 'Thoughts on frontend engineering, design, product, and the tools I use day to day.',
+        url: 'https://francescocipolla.com/blog',
+    },
+    alternates: {
+        canonical: 'https://francescocipolla.com/blog',
+    },
+}
 
 export default async function BlogPage() {
   const posts = await getBlogPosts()
