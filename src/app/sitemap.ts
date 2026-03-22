@@ -1,27 +1,23 @@
 import { MetadataRoute } from 'next'
 import { getProjectSlugs } from '@/lib/projects'
+import { routing } from '@/i18n/routing'
 
 const BASE_URL = 'https://francescocipolla.com'
 
 export default function sitemap(): MetadataRoute.Sitemap {
     const now = new Date()
-    const projectRoutes = getProjectSlugs().map((slug) => ({
-        url: `${BASE_URL}/projects/${slug}`,
-        lastModified: now,
-        changeFrequency: 'monthly' as const,
-        priority: 0.7,
-    }))
+    const locales = routing.locales
 
-    return [
-        { url: BASE_URL, lastModified: now, changeFrequency: 'monthly', priority: 1 },
-        {
-            url: `${BASE_URL}/services`,
+    const staticRoutes = ['', '/services', '/about', '/blog']
+    const projectRoutes = getProjectSlugs().map((slug) => `/projects/${slug}`)
+    const allRoutes = [...staticRoutes, ...projectRoutes]
+
+    return locales.flatMap((locale) =>
+        allRoutes.map((route) => ({
+            url: `${BASE_URL}/${locale}${route}`,
             lastModified: now,
-            changeFrequency: 'monthly',
-            priority: 0.9,
-        },
-        { url: `${BASE_URL}/about`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
-        { url: `${BASE_URL}/blog`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
-        ...projectRoutes,
-    ]
+            changeFrequency: route === '/blog' ? ('weekly' as const) : ('monthly' as const),
+            priority: route === '' ? 1 : route === '/services' ? 0.9 : 0.7,
+        }))
+    )
 }

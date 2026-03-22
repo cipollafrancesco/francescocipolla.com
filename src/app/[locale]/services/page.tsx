@@ -1,150 +1,78 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
+import { getTranslations, setRequestLocale } from 'next-intl/server'
+import { Link } from '@/i18n/navigation'
 import { ArrowRight, Check } from 'lucide-react'
 import CalEmbed from '@/components/CalEmbed'
 
-export const metadata: Metadata = {
-    title: 'Services — Francesco Cipolla',
-    description:
-        "Freelance frontend engineering services: web apps, design systems, performance optimisation, and consulting. Let's build something great.",
-    openGraph: {
-        title: 'Services — Francesco Cipolla',
-        description:
-            'Freelance frontend engineering: web apps, design systems, performance, consulting.',
-        url: 'https://francescocipolla.com/services',
-    },
-    alternates: {
-        canonical: 'https://francescocipolla.com/services',
-    },
+interface ServicesPageProps {
+    params: Promise<{ locale: string }>
 }
 
-const services = [
-    {
-        title: 'Frontend Architecture',
-        description:
-            'I design and build scalable React and Next.js applications from the ground up — component systems, state management, routing, and API integration. Clean, maintainable code that grows with your product.',
-        bullets: [
-            'React / Next.js / TypeScript',
-            'Component & design-system setup',
-            'API & CMS integration',
-            'CI/CD pipeline configuration',
-        ],
-    },
-    {
-        title: 'Performance Optimisation',
-        description:
-            'Slow sites cost conversions. I audit your Core Web Vitals, identify bottlenecks, and ship targeted fixes — image pipelines, code splitting, server-side rendering, and edge delivery.',
-        bullets: [
-            'Core Web Vitals audit & fix',
-            'Bundle analysis & code splitting',
-            'Image & font optimisation',
-            'Server-side & edge rendering',
-        ],
-    },
-    {
-        title: 'Design-to-Code',
-        description:
-            'I turn Figma (or any design file) into pixel-perfect, fully responsive interfaces — without losing the design intent. I work closely with designers and am comfortable leading the handoff process.',
-        bullets: [
-            'Figma → production-quality code',
-            'Responsive at every breakpoint',
-            'Tailwind CSS & CSS Modules',
-            'Motion & interaction design',
-        ],
-    },
-    {
-        title: 'Technical Consulting',
-        description:
-            'Need a second opinion before a big architectural decision, a codebase review, or guidance on tooling choices? I offer focused consulting sessions to help teams move faster with more confidence.',
-        bullets: [
-            'Architecture & tech-stack review',
-            'Code quality audit',
-            'Tooling & dependency strategy',
-            'Team mentorship & pairing',
-        ],
-    },
-]
+export async function generateMetadata({ params }: ServicesPageProps): Promise<Metadata> {
+    const { locale } = await params
+    const t = await getTranslations({ locale, namespace: 'services.meta' })
+    return {
+        title: t('title'),
+        description: t('description'),
+        openGraph: {
+            title: t('title'),
+            description: t('ogDescription'),
+            url: `https://francescocipolla.com/${locale}/services`,
+        },
+        alternates: {
+            canonical: `https://francescocipolla.com/${locale}/services`,
+        },
+    }
+}
 
-const process = [
-    {
-        step: '01',
-        title: 'Discovery call',
-        description:
-            'We map out your goals, constraints, and timeline in a free 30-minute intro call.',
-    },
-    {
-        step: '02',
-        title: 'Proposal',
-        description:
-            'I send a clear scope, timeline, and fixed or time-based pricing — no surprises.',
-    },
-    {
-        step: '03',
-        title: 'Build',
-        description:
-            "Regular check-ins, async updates, and a staging environment so you're never in the dark.",
-    },
-    {
-        step: '04',
-        title: 'Launch & handoff',
-        description:
-            'Clean handoff with documentation, test coverage, and optional retainer support.',
-    },
-]
+export default async function ServicesPage({ params }: ServicesPageProps) {
+    const { locale } = await params
+    setRequestLocale(locale)
 
-const clients = [
-    {
-        type: 'Startups',
-        description: 'Move fast and ship a polished product that scales when you do.',
-    },
-    {
-        type: 'Agencies',
-        description:
-            'I integrate into your team as a senior IC for overloaded sprints or specialist work.',
-    },
-    {
-        type: 'Scale-ups',
-        description: 'Refactor legacy codebases, improve DX, and unblock your engineering team.',
-    },
-    {
-        type: 'Brands',
-        description: 'Marketing sites and campaign microsites that load fast and look great.',
-    },
-]
+    const t = await getTranslations('services')
 
-export default function ServicesPage() {
+    const services = t.raw('servicesList') as Array<{
+        title: string
+        description: string
+        bullets: string[]
+    }>
+    const process = t.raw('process') as Array<{
+        step: string
+        title: string
+        description: string
+    }>
+    const clients = t.raw('clients') as Array<{ type: string; description: string }>
+
     return (
         <div className="mt-[88px] min-h-screen bg-white text-black">
             <main id="main-content">
                 {/* ── Hero ───────────────────────────────────────────────── */}
                 <section className="mx-auto max-w-5xl px-6 pb-32 pt-20">
                     <p className="mb-6 text-sm uppercase tracking-widest text-gray-400">
-                        Freelance services
+                        {t('hero.tag')}
                     </p>
                     <h1 className="mb-8 text-5xl font-extrabold leading-none tracking-tighter md:text-7xl xl:text-8xl">
-                        Let&apos;s build
-                        <br />
-                        something
+                        {t('hero.headline').split('great.')[0]}
                         <br />
                         <span className="font-semibold italic">great.</span>
                     </h1>
                     <p className="mb-10 max-w-xl text-lg leading-relaxed text-gray-600 md:text-xl">
-                        I&apos;m a Senior Frontend Engineer with 8+ years of experience shipping
-                        production-grade web applications for streaming platforms, architecture
-                        firms, and digital studios. Available for freelance projects.
+                        {t('hero.intro')}
                     </p>
                     <a
                         href="#book"
                         className="inline-flex items-center gap-2 rounded-full bg-black px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-gray-800"
                     >
-                        Book a free intro call <ArrowRight className="h-4 w-4" />
+                        {t('hero.cta')} <ArrowRight className="h-4 w-4" />
                     </a>
                 </section>
 
                 {/* ── Services grid ──────────────────────────────────────── */}
                 <section className="border-t border-gray-100 py-24">
                     <div className="mx-auto max-w-5xl px-6">
-                        <h2 className="mb-16 text-3xl font-bold tracking-tight">What I offer</h2>
+                        <h2 className="mb-16 text-3xl font-bold tracking-tight">
+                            {t('sections.whatIOffer')}
+                        </h2>
                         <div className="grid gap-12 md:grid-cols-2">
                             {services.map((svc) => (
                                 <div
@@ -175,7 +103,9 @@ export default function ServicesPage() {
                 {/* ── Who I work with ────────────────────────────────────── */}
                 <section className="border-t border-gray-100 bg-gray-50 py-24">
                     <div className="mx-auto max-w-5xl px-6">
-                        <h2 className="mb-16 text-3xl font-bold tracking-tight">Who I work with</h2>
+                        <h2 className="mb-16 text-3xl font-bold tracking-tight">
+                            {t('sections.whoIWorkWith')}
+                        </h2>
                         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
                             {clients.map((c) => (
                                 <div key={c.type}>
@@ -192,7 +122,9 @@ export default function ServicesPage() {
                 {/* ── Process ────────────────────────────────────────────── */}
                 <section className="border-t border-gray-100 py-24">
                     <div className="mx-auto max-w-5xl px-6">
-                        <h2 className="mb-16 text-3xl font-bold tracking-tight">How it works</h2>
+                        <h2 className="mb-16 text-3xl font-bold tracking-tight">
+                            {t('sections.howItWorks')}
+                        </h2>
                         <div className="grid gap-8 md:grid-cols-4">
                             {process.map((p) => (
                                 <div key={p.step}>
@@ -213,17 +145,16 @@ export default function ServicesPage() {
                 <section className="border-t border-gray-100 bg-gray-50 py-24">
                     <div className="mx-auto flex max-w-5xl flex-col justify-between gap-8 px-6 md:flex-row md:items-center">
                         <div>
-                            <h2 className="mb-4 text-3xl font-bold tracking-tight">See my work</h2>
-                            <p className="max-w-md text-gray-600">
-                                Case studies from recent freelance projects — streaming platforms,
-                                architecture firms, and digital agencies.
-                            </p>
+                            <h2 className="mb-4 text-3xl font-bold tracking-tight">
+                                {t('sections.seeMyWork')}
+                            </h2>
+                            <p className="max-w-md text-gray-600">{t('seeMyWork.description')}</p>
                         </div>
                         <Link
                             href="/#projects"
                             className="inline-flex shrink-0 items-center gap-2 rounded-full border border-black px-6 py-3 text-sm font-medium transition-colors hover:bg-black hover:text-white"
                         >
-                            View projects <ArrowRight className="h-4 w-4" />
+                            {t('seeMyWork.cta')} <ArrowRight className="h-4 w-4" />
                         </Link>
                     </div>
                 </section>
@@ -232,12 +163,9 @@ export default function ServicesPage() {
                 <section id="book" className="border-t border-gray-100 py-24">
                     <div className="mx-auto max-w-5xl px-6">
                         <h2 className="mb-4 text-3xl font-bold tracking-tight">
-                            Book a free intro call
+                            {t('sections.bookACall')}
                         </h2>
-                        <p className="mb-12 max-w-md text-gray-600">
-                            30 minutes. No commitment. We&apos;ll talk about your project and see if
-                            we&apos;re a good fit.
-                        </p>
+                        <p className="mb-12 max-w-md text-gray-600">{t('booking.description')}</p>
                         <CalEmbed calLink="francescocipolla/free-intro-call-30-minutes" />
                     </div>
                 </section>

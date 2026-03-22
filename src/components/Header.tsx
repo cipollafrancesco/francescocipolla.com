@@ -1,7 +1,8 @@
 'use client'
 import React, { useState, useEffect } from 'react'
-import Link from 'next/link'
 import { Menu, X } from 'lucide-react'
+import { Link } from '@/i18n/navigation'
+import LanguageSwitcher from './LanguageSwitcher'
 
 const menuItems = [
     { href: '/#about-me', label: 'About Me' },
@@ -55,6 +56,7 @@ const Header = () => {
                         >
                             résumé
                         </a>
+                        <LanguageSwitcher />
                     </div>
                 </div>
             </nav>
@@ -62,9 +64,12 @@ const Header = () => {
             {/* Mobile hamburger button */}
             <div className="flex w-full items-center justify-between px-8 py-8 lg:hidden">
                 <BrandLogo />
-                <button onClick={toggleDrawer} aria-label="Open menu">
-                    <Menu width={40} height={40} />
-                </button>
+                <div className="flex items-center gap-4">
+                    <LanguageSwitcher />
+                    <button onClick={toggleDrawer} aria-label="Open menu">
+                        <Menu width={40} height={40} />
+                    </button>
+                </div>
             </div>
 
             {/* Mobile drawer overlay */}

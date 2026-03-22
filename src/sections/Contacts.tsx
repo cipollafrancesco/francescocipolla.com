@@ -1,6 +1,7 @@
 'use client'
 import CalEmbed from '@/components/CalEmbed'
 import { motion, useScroll, useTransform } from 'framer-motion'
+import { useTranslations } from 'next-intl'
 import React from 'react'
 
 interface IContactsProps {
@@ -8,6 +9,8 @@ interface IContactsProps {
 }
 
 const Contacts: React.FC<IContactsProps> = ({ ref }) => {
+    const t = useTranslations('contacts')
+
     const { scrollYProgress } = useScroll({
         target: ref,
         offset: ['start end', 'end start'],
@@ -85,7 +88,7 @@ const Contacts: React.FC<IContactsProps> = ({ ref }) => {
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: 0.6 }}
                 >
-                    Schedule a call with me
+                    {t('scheduleCall')}
                 </motion.h3>
                 <CalEmbed calLink="francescocipolla/free-intro-call-30-minutes" />
             </motion.div>

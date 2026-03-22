@@ -1,0 +1,248 @@
+{
+    "common": {
+        "skipToContent": "Vai al contenuto",
+        "footer": {
+            "tagline": "Senior Frontend Engineer & Freelancer",
+            "copyright": "© {year} Francesco Cipolla. Tutti i diritti riservati."
+        }
+    },
+    "contacts": {
+        "scheduleCall": "Prenota una chiamata con me"
+    },
+    "projects": {
+        "caseStudy": "Case study",
+        "visitSite": "Visita il sito",
+        "detail": {
+            "back": "Torna ai progetti",
+            "overview": "Panoramica",
+            "highlights": "Punti salienti",
+            "visitLive": "Visita il sito live",
+            "onMobile": "su mobile"
+        },
+        "content": {
+            "che-designer-sei": {
+                "description": "Un'esperienza web interattiva realizzata per Talent Garden — la più grande rete tech-education d'Europa — per promuovere i loro corsi di design. Gli utenti rispondono a una serie di domande sulla personalità e ricevono un profilo designer personalizzato con una raccomandazione di corso.",
+                "highlights": [
+                    "Progettato e sviluppato l'intero flusso del quiz con transizioni animate tra le domande",
+                    "Integrazione con HubSpot CMS per la raccolta di lead nelle pagine dei risultati",
+                    "Raggiunto un caricamento della pagina sotto il secondo sulla rete edge di Vercel",
+                    "Consegnato end-to-end in meno di 3 settimane, dal brief alla produzione"
+                ]
+            },
+            "hub-lombardini22": {
+                "description": "Un sito vetrina per Hub Lombardini22, l'hub di innovazione e conoscenza di uno dei principali studi di architettura e ingegneria italiani. Il sito presenta animazioni interattive basate sulla fisica con Matter.js, contenuti gestiti tramite un CMS Strapi headless e un design editoriale pulito che riflette la filosofia dello studio.",
+                "highlights": [
+                    "Realizzata un'animazione di particelle basata sulla fisica nell'hero con Matter.js",
+                    "Integrato un CMS headless Strapi per consentire al team editoriale di pubblicare contenuti in autonomia",
+                    "Implementate transizioni di sezione fluide guidate dallo scroll per un'esperienza di lettura immersiva",
+                    "Consegnato un layout completamente responsive ottimizzato sia per desktop che per mobile"
+                ]
+            },
+            "dpulses": {
+                "description": "Il sito aziendale per Dpulses, un brand studio digital-first. Il brief richiedeva un'identità visiva audace e ad alto contrasto tradotta in una presenza web veloce e responsiva. Il risultato è un sito minimale ma d'impatto che comunica il posizionamento creativo dello studio e genera richieste in entrata.",
+                "highlights": [
+                    "Tradotto un concept di brand Figma in un'implementazione Next.js pixel-perfect",
+                    "Ottimizzati i Core Web Vitals al verde in tutte le categorie di Lighthouse",
+                    "Realizzato con un approccio mobile-first, garantendo un'esperienza coerente a ogni breakpoint",
+                    "Distribuito su Vercel con deploy di anteprima automatici per il ciclo di revisione del cliente"
+                ]
+            },
+            "datahause": {
+                "description": "Il sito marketing per DataHause, una società di consulenza in data analytics e business intelligence. Il sito doveva trasmettere credibilità tecnica restando accessibile a un pubblico non tecnico. Tipografia pulita, sezioni di case study strutturate e call-to-action chiare guidano i visitatori dalla consapevolezza al contatto.",
+                "highlights": [
+                    "Progettato un sistema di layout component-driven per un assemblaggio rapido delle pagine",
+                    "Implementati dati strutturati (JSON-LD) per migliorare la visibilità nei motori di ricerca",
+                    "Realizzata una sezione statistiche animata per evidenziare le metriche chiave del business",
+                    "Garantita la conformità WCAG AA in tutti gli elementi interattivi"
+                ]
+            }
+        }
+    },
+    "services": {
+        "meta": {
+            "title": "Servizi — Francesco Cipolla",
+            "description": "Servizi di frontend engineering freelance: web app, design system, ottimizzazione delle performance e consulenza. Costruiamo qualcosa di grande insieme.",
+            "ogDescription": "Frontend engineering freelance: web app, design system, performance, consulenza."
+        },
+        "hero": {
+            "tag": "Servizi freelance",
+            "headline": "Costruiamo qualcosa di grande.",
+            "intro": "Sono un Senior Frontend Engineer con oltre 8 anni di esperienza nella realizzazione di applicazioni web in produzione per piattaforme streaming, studi di architettura e agenzie digitali. Disponibile per progetti freelance.",
+            "cta": "Prenota una chiamata introduttiva gratuita"
+        },
+        "sections": {
+            "whatIOffer": "Cosa offro",
+            "whoIWorkWith": "Con chi lavoro",
+            "howItWorks": "Come funziona",
+            "seeMyWork": "Guarda i miei lavori",
+            "bookACall": "Prenota una chiamata introduttiva gratuita"
+        },
+        "seeMyWork": {
+            "description": "Case study di recenti progetti freelance — piattaforme streaming, studi di architettura e agenzie digitali.",
+            "cta": "Visualizza i progetti"
+        },
+        "booking": {
+            "description": "30 minuti. Nessun impegno. Parleremo del tuo progetto e vedremo se siamo una buona coppia."
+        },
+        "servicesList": [
+            {
+                "title": "Architettura Frontend",
+                "description": "Progetto e sviluppo applicazioni React e Next.js scalabili da zero — sistemi di componenti, state management, routing e integrazione API. Codice pulito e manutenibile che cresce con il tuo prodotto.",
+                "bullets": [
+                    "React / Next.js / TypeScript",
+                    "Setup di componenti e design system",
+                    "Integrazione API & CMS",
+                    "Configurazione pipeline CI/CD"
+                ]
+            },
+            {
+                "title": "Ottimizzazione delle Performance",
+                "description": "I siti lenti costano conversioni. Verifico i tuoi Core Web Vitals, identifico i colli di bottiglia e rilascio correzioni mirate — pipeline immagini, code splitting, server-side rendering e edge delivery.",
+                "bullets": [
+                    "Audit e correzione dei Core Web Vitals",
+                    "Analisi del bundle e code splitting",
+                    "Ottimizzazione di immagini e font",
+                    "Rendering server-side ed edge"
+                ]
+            },
+            {
+                "title": "Da Design a Codice",
+                "description": "Trasformo file Figma (o qualsiasi file di design) in interfacce pixel-perfect e completamente responsive — senza perdere l'intento del design. Collaboro strettamente con i designer e sono a mio agio nel guidare il processo di handoff.",
+                "bullets": [
+                    "Figma → codice di qualità produzione",
+                    "Responsive a ogni breakpoint",
+                    "Tailwind CSS & CSS Modules",
+                    "Motion & interaction design"
+                ]
+            },
+            {
+                "title": "Consulenza Tecnica",
+                "description": "Hai bisogno di un secondo parere prima di una grande decisione architetturale, una revisione del codice o una guida nella scelta degli strumenti? Offro sessioni di consulenza mirate per aiutare i team a muoversi più velocemente con maggiore sicurezza.",
+                "bullets": [
+                    "Revisione di architettura e tech-stack",
+                    "Audit della qualità del codice",
+                    "Strategia di tooling e dipendenze",
+                    "Mentorship e pairing del team"
+                ]
+            }
+        ],
+        "process": [
+            {
+                "step": "01",
+                "title": "Chiamata esplorativa",
+                "description": "Definiamo insieme obiettivi, vincoli e tempi in una chiamata introduttiva gratuita di 30 minuti."
+            },
+            {
+                "step": "02",
+                "title": "Proposta",
+                "description": "Invio uno scope chiaro, una timeline e un prezzo fisso o a ore — senza sorprese."
+            },
+            {
+                "step": "03",
+                "title": "Sviluppo",
+                "description": "Check-in regolari, aggiornamenti asincroni e un ambiente di staging così non sei mai all'oscuro."
+            },
+            {
+                "step": "04",
+                "title": "Lancio e consegna",
+                "description": "Consegna pulita con documentazione, copertura dei test e supporto opzionale a retainer."
+            }
+        ],
+        "clients": [
+            {
+                "type": "Startup",
+                "description": "Muoviti velocemente e lancia un prodotto rifinito che scala con te."
+            },
+            {
+                "type": "Agenzie",
+                "description": "Mi integro nel tuo team come senior IC per sprint sovraccarichi o lavori specializzati."
+            },
+            {
+                "type": "Scale-up",
+                "description": "Refactoring di codebase legacy, miglioramento della DX e sblocco del tuo team di sviluppo."
+            },
+            {
+                "type": "Brand",
+                "description": "Siti marketing e micrositi per campagne che caricano velocemente e hanno un ottimo aspetto."
+            }
+        ]
+    },
+    "about": {
+        "meta": {
+            "title": "Chi sono — Francesco Cipolla",
+            "description": "Senior Frontend Engineer, co-fondatore di ISAAC, appassionato di design e basket."
+        },
+        "heading": "Chi sono",
+        "intro1": "Come Senior Frontend Engineer presso FIFA+, porto anni di esperienza nello sviluppo di applicazioni robuste e scalabili per il settore dello streaming sportivo. La mia competenza abbraccia sia le tecnologie frontend che quelle backend, permettendomi di creare soluzioni complete che soddisfano e superano le aspettative dei clienti.",
+        "intro2": "Sono appassionato di codice pulito, ottimizzazione delle performance e dell'aggiornamento costante sulle ultime tendenze del settore. Il mio obiettivo è sviluppare software di alta qualità che non solo risolva problemi complessi, ma offra anche un'eccellente esperienza utente. Fuori dal lavoro, sono un appassionato di basket e un principiante del kitesurf, sempre alla ricerca di nuove sfide dentro e fuori dall'ufficio.",
+        "sections": {
+            "education": "Formazione",
+            "passions": "Passioni e Obiettivi",
+            "travels": "Viaggi",
+            "books": "Libri preferiti",
+            "channels": "Canali YouTube preferiti"
+        },
+        "education": [
+            {
+                "degree": "Laurea Magistrale in Informatica",
+                "institution": "Università della Tecnologia",
+                "year": "2015",
+                "description": "Specializzazione in Ingegneria del Software e Machine Learning"
+            },
+            {
+                "degree": "Laurea Triennale in Ingegneria Informatica",
+                "institution": "Università Statale",
+                "year": "2013",
+                "description": "Focus su Tecnologie Web e Gestione dei Database"
+            }
+        ],
+        "passions": [
+            { "id": 1, "text": "Imparare il kitesurf", "completed": false },
+            { "id": 2, "text": "Padroneggiare React 18", "completed": true },
+            { "id": 3, "text": "Costruire un prodotto SaaS di successo", "completed": false },
+            { "id": 4, "text": "Correre una maratona", "completed": false },
+            { "id": 5, "text": "Contribuire a progetti open source", "completed": true }
+        ],
+        "travels": [
+            { "id": 1, "place": "Bali, Indonesia" },
+            { "id": 2, "place": "Santorini, Grecia" },
+            { "id": 3, "place": "Tokyo, Giappone" },
+            { "id": 4, "place": "New York City, USA" },
+            { "id": 5, "place": "Città del Capo, Sudafrica" }
+        ],
+        "books": [
+            { "title": "Clean Code", "author": "Robert C. Martin" },
+            { "title": "Design Patterns", "author": "Erich Gamma et al." },
+            { "title": "The Pragmatic Programmer", "author": "Andrew Hunt, David Thomas" }
+        ],
+        "channels": [
+            { "name": "Fireship", "url": "https://www.youtube.com/c/Fireship" },
+            { "name": "Traversy Media", "url": "https://www.youtube.com/user/TechGuyWeb" },
+            {
+                "name": "The Net Ninja",
+                "url": "https://www.youtube.com/channel/UCW5YeuERMmlnqo4oq8vwUpg"
+            }
+        ]
+    },
+    "experiences": {
+        "descriptions": {
+            "fifa": "Responsabile dello sviluppo e della manutenzione di una single-page application (SPA) costruita con React e delle sue funzionalità principali come il Player.",
+            "globant": "In seguito all'acquisizione della divisione business di CHILI Tech da parte di Globant, continuo a contribuire agli stessi progetti che gestivo in precedenza (le piattaforme streaming CHILI e FIFA+).",
+            "chili": "Ho sviluppato e mantenuto il sito web (desktop e mobile) e la Smart TV App dell'azienda streaming su diversi dispositivi (Samsung, LG, Sony, ecc.).",
+            "softlab": "Ho sviluppato applicazioni web enterprise per una grande compagnia assicurativa. Ho svolto un ruolo chiave come Frontend Vice-Team Leader."
+        }
+    },
+    "blog": {
+        "meta": {
+            "title": "Blog — Francesco Cipolla",
+            "description": "Riflessioni su frontend engineering, design, prodotto e gli strumenti che uso ogni giorno."
+        }
+    },
+    "error": {
+        "message": "Qualcosa è andato storto da parte nostra. Non sei tu — siamo noi.",
+        "retry": "Riprova"
+    },
+    "notFound": {
+        "back": "torna alla home"
+    }
+}
