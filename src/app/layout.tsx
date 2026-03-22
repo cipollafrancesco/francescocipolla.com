@@ -11,6 +11,30 @@ export const metadata: Metadata = {
     description: 'Currently working in the Sport Streaming Industry | ISAAC Co-Founder | Passionate Product Contributor | Design Enthusiast',
 }
 
+const personJsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': [
+        {
+            '@type': 'Person',
+            '@id': 'https://francescocipolla.com/#person',
+            name: 'Francesco Cipolla',
+            url: 'https://francescocipolla.com',
+            jobTitle: 'Senior Frontend Engineer',
+            sameAs: [
+                'https://www.linkedin.com/in/francesco-cipolla-41768411b',
+                'https://github.com/cipollafrancesco',
+            ],
+        },
+        {
+            '@type': 'WebSite',
+            '@id': 'https://francescocipolla.com/#website',
+            url: 'https://francescocipolla.com',
+            name: 'Francesco Cipolla',
+            author: { '@id': 'https://francescocipolla.com/#person' },
+        },
+    ],
+}
+
 export default function RootLayout({
                                        children,
                                    }: {
@@ -19,6 +43,18 @@ export default function RootLayout({
     return (
         <html lang="en">
         <body className={`${inter.className}`}>
+        {/* JSON-LD structured data */}
+        <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+        />
+        {/* Skip to content — A2 */}
+        <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:bg-black focus:text-white focus:px-4 focus:py-2 focus:rounded focus:text-sm focus:font-medium"
+        >
+            Skip to content
+        </a>
         <Header/>
         {children}
         <footer className="bg-white border-t border-gray-100 py-12">
@@ -72,4 +108,3 @@ export default function RootLayout({
         </html>
     )
 }
-

@@ -44,14 +44,22 @@ export default function StackedProjects() {
                                 className="absolute inset-0 bg-black opacity-0 group-hover:opacity-100 bg-opacity-60 flex flex-col justify-end p-6 transition-opacity duration-300">
                                 <h3 className="text-2xl font-bold text-white mb-2">{project.title}</h3>
                                 <p className="text-sm text-gray-300 mb-4">{project.technologies.join(' • ')}</p>
-                                <Link
-                                    href={project.url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-white flex items-center"
-                                >
-                                    Visit this Site <ArrowUpRight className="ml-2 h-5 w-5" />
-                                </Link>
+                                <div className="flex items-center gap-4">
+                                    <Link
+                                        href={`/projects/${project.slug}`}
+                                        className="text-white text-sm underline underline-offset-2"
+                                    >
+                                        Case study
+                                    </Link>
+                                    <Link
+                                        href={project.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-white flex items-center"
+                                    >
+                                        Visit site <ArrowUpRight className="ml-1 h-5 w-5" />
+                                    </Link>
+                                </div>
                             </div>
                         </div>
                     </SwiperSlide>

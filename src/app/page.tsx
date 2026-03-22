@@ -37,7 +37,7 @@ export default function Portfolio() {
     })
 
     return (
-        <div className="min-h-[300vh] bg-white text-black">
+        <div id="main-content" className="min-h-[300vh] bg-white text-black">
             <main className="relative mb-16 lg:mb-32">
                 <motion.div
                     style={{opacity: scrollIndicatorOpacity}}

@@ -1,0 +1,19 @@
+{
+  "id": 2,
+  "slug": "hub-lombardini22",
+  "title": "Hub Lombardini22",
+  "client": "Lombardini22",
+  "image": "/projects/hublombardini22.webp",
+  "mobileImage": "/projects/hublombardini22_mobile.webp",
+  "url": "https://hublombardini22.com/",
+  "role": "Freelance Frontend Engineer",
+  "year": "2023",
+  "technologies": ["Next.js", "Matter.js", "Tailwind CSS", "Vercel", "Strapi"],
+  "description": "A showcase website for Hub Lombardini22, the innovation and knowledge hub of one of Italy's leading architecture and engineering firms. The site features physics-based interactive animations powered by Matter.js, content managed via a headless Strapi CMS, and a clean editorial design that reflects the firm's design philosophy.",
+  "highlights": [
+    "Built a physics-based particle animation on the hero using Matter.js",
+    "Integrated a Strapi headless CMS so the editorial team can publish content independently",
+    "Implemented smooth scroll-driven section transitions for an immersive reading experience",
+    "Delivered a fully responsive layout optimised for both desktop deep-dives and mobile browsing"
+  ]
+}
