@@ -24,79 +24,74 @@ export const useHeroAnimations = (
         setIsClient(typeof window !== 'undefined')
     }, [])
 
-    // Hero section specific scroll progress
+    // Raw scroll progress — no spring wrapper so reverse scrolling is always accurate
     const { scrollYProgress: heroScrollProgress } = useScroll({
         target: heroSectionRef,
         offset: ['start start', 'end start'],
     })
 
-    // Add spring animation to the scroll progress for smooth control
-    const smoothScrollProgress = useSpring(heroScrollProgress, {
-        stiffness: 60,
-        damping: 25,
-        mass: 0.8,
-        restDelta: 0.001,
-    })
+    const springConfig = {
+        stiffness: 120,
+        damping: 30,
+        mass: 0.6,
+        restDelta: 0.0001,
+    }
 
-    // Text scale and position animation (delayed start)
+    // Derive transforms directly from raw scroll, then spring each one.
+    // A single spring per value avoids the "spring of a spring" lag that
+    // prevented full return to the initial position when scrolling back up.
     const scale = useTransform(
-        smoothScrollProgress,
+        heroScrollProgress,
         [0.6, 0.75],
         prefersReducedMotion ? [1, 1] : [1, 44]
     )
 
-    // Responsive position adjustments for centering on "C"
     const xPosition = useTransform(
-        smoothScrollProgress,
+        heroScrollProgress,
         [0.6, 0.75],
         prefersReducedMotion ? [0, 0] : [0, isClient && window.innerWidth < 768 ? -800 : -1800]
     )
+
     const yPosition = useTransform(
-        smoothScrollProgress,
+        heroScrollProgress,
         [0.6, 0.75],
         prefersReducedMotion ? [0, 0] : [0, isClient && window.innerWidth < 768 ? -200 : -500]
     )
-
-    const textOpacity = useTransform(
-        smoothScrollProgress,
-        [0.6, 0.75, 0.8],
-        prefersReducedMotion ? [1, 1, 1] : [1, 1, 0]
-    )
-
-    const springConfig = {
-        stiffness: 80,
-        damping: 25,
-        mass: 0.8,
-        restDelta: 0.001,
-    }
 
     const springScale = useSpring(scale, springConfig)
     const springX = useSpring(xPosition, springConfig)
     const springY = useSpring(yPosition, springConfig)
 
-    // Content fade in (delayed until after zoom)
+    // All opacity / visibility values use the raw scroll value so they respond
+    // immediately when the user scrolls back up — no spring lag.
+    const textOpacity = useTransform(
+        heroScrollProgress,
+        [0.6, 0.75, 0.8],
+        prefersReducedMotion ? [1, 1, 1] : [1, 1, 0]
+    )
+
     const contentOpacity = useTransform(
-        smoothScrollProgress,
+        heroScrollProgress,
         [0.85, 0.95],
         prefersReducedMotion ? [1, 1] : [0, 1]
     )
 
-    // Scroll indicator opacity
     const scrollIndicatorOpacity = useTransform(
-        smoothScrollProgress,
-        [0, 0.1, 0.95, 1],
+        heroScrollProgress,
+        [0, 0.05, 0.7, 0.8],
         [1, 1, 1, 0]
     )
 
-    // Hero section visibility
+    // Use raw scroll for visibility so the hero re-appears the moment the user
+    // scrolls back past the threshold — spring lag was causing it to stay hidden.
     const heroVisibility = useTransform(
-        smoothScrollProgress,
+        heroScrollProgress,
         [0, 0.8, 0.801],
         ['visible', 'visible', 'hidden']
     )
 
     const heroPointerEvents = useTransform(
-        smoothScrollProgress,
+        heroScrollProgress,
         [0, 0.8, 0.801],
         ['auto', 'auto', 'none']
     )
@@ -110,6 +105,7 @@ export const useHeroAnimations = (
         scrollIndicatorOpacity,
         heroVisibility,
         heroPointerEvents,
-        smoothScrollProgress,
+        // Expose raw progress for Hero sub-components (nameOpacity, paragraph)
+        smoothScrollProgress: heroScrollProgress,
     }
 }
