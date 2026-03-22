@@ -1,7 +1,7 @@
 'use client'
-import Cal, { getCalApi } from '@calcom/embed-react'
+import CalEmbed from '@/components/CalEmbed'
 import { motion, useScroll, useTransform } from 'framer-motion'
-import React, { useEffect } from 'react'
+import React from 'react'
 
 interface IContactsProps {
     ref: React.RefObject<HTMLDivElement | null>
@@ -10,32 +10,22 @@ interface IContactsProps {
 const Contacts: React.FC<IContactsProps> = ({ ref }) => {
     const { scrollYProgress } = useScroll({
         target: ref,
-        offset: ["start end", "end start"]
+        offset: ['start end', 'end start'],
     })
 
     const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0])
     const y = useTransform(scrollYProgress, [0, 0.2], [100, 0])
 
-    useEffect(() => {
-        (async function () {
-            const Cal = await getCalApi();
-            Cal("ui", {
-                theme: "light",
-                hideEventTypeDetails: true
-            });
-        })();
-    }, []);
-
     return (
         <motion.section
             ref={ref}
             id="contacts"
-            className="py-20 flex flex-col items-center justify-center"
+            className="flex flex-col items-center justify-center py-20"
             style={{ opacity, y }}
         >
             <motion.h2
                 id="contacts-title"
-                className="text-[80px] md:text-9xl lg:text-[9rem] xl:text-[16rem] leading-[0.9] tracking-tighter font-extrabold mb-12"
+                className="mb-12 text-[80px] font-extrabold leading-[0.9] tracking-tighter md:text-9xl lg:text-[9rem] xl:text-[16rem]"
                 initial={{ opacity: 0, scale: 0.8 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
@@ -45,7 +35,7 @@ const Contacts: React.FC<IContactsProps> = ({ ref }) => {
             </motion.h2>
 
             <motion.a
-                className="text-2xl md:text-4xl lg:text-5xl mb-12 tracking-tighter"
+                className="mb-12 text-2xl tracking-tighter md:text-4xl lg:text-5xl"
                 href="mailto:info@francescocipolla.com"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -57,7 +47,7 @@ const Contacts: React.FC<IContactsProps> = ({ ref }) => {
 
             <div className="flex flex-row gap-8">
                 <motion.a
-                    className="underline text-xl md:text-3xl lg:text-4xl tracking-tighter"
+                    className="text-xl tracking-tighter underline md:text-3xl lg:text-4xl"
                     href="https://www.linkedin.com/in/francesco-cipolla-41768411b"
                     target="_blank"
                     initial={{ opacity: 0, y: 20 }}
@@ -69,7 +59,7 @@ const Contacts: React.FC<IContactsProps> = ({ ref }) => {
                 </motion.a>
 
                 <motion.a
-                    className="underline text-xl md:text-3xl lg:text-4xl tracking-tighter"
+                    className="text-xl tracking-tighter underline md:text-3xl lg:text-4xl"
                     href="https://github.com/cipollafrancesco"
                     target="_blank"
                     initial={{ opacity: 0, y: 20 }}
@@ -89,7 +79,7 @@ const Contacts: React.FC<IContactsProps> = ({ ref }) => {
                 transition={{ duration: 0.5, delay: 0.6 }}
             >
                 <motion.h3
-                    className="text-2xl md:text-3xl lg:text-4xl mb-8 text-center tracking-tighter"
+                    className="mb-8 text-center text-2xl tracking-tighter md:text-3xl lg:text-4xl"
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
@@ -97,7 +87,7 @@ const Contacts: React.FC<IContactsProps> = ({ ref }) => {
                 >
                     Schedule a call with me
                 </motion.h3>
-                <Cal calLink="francescocipolla/free-intro-call-30-minutes" />
+                <CalEmbed calLink="francescocipolla/free-intro-call-30-minutes" />
             </motion.div>
         </motion.section>
     )
