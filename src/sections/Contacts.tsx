@@ -5,9 +5,11 @@ import React from 'react'
 
 interface IContactsProps {
     ref: React.RefObject<HTMLDivElement | null>
+    title: string
+    scheduleTitle: string
 }
 
-const Contacts: React.FC<IContactsProps> = ({ ref }) => {
+const Contacts: React.FC<IContactsProps> = ({ ref, title, scheduleTitle }) => {
     const { scrollYProgress } = useScroll({
         target: ref,
         offset: ['start end', 'end start'],
@@ -31,7 +33,7 @@ const Contacts: React.FC<IContactsProps> = ({ ref }) => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.7 }}
             >
-                contacts
+                {title}
             </motion.h2>
 
             <motion.a
@@ -85,7 +87,7 @@ const Contacts: React.FC<IContactsProps> = ({ ref }) => {
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: 0.6 }}
                 >
-                    Schedule a call with me
+                    {scheduleTitle}
                 </motion.h3>
                 <CalEmbed calLink="francescocipolla/free-intro-call-30-minutes" />
             </motion.div>

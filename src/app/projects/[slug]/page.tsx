@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowLeft, ArrowUpRight } from 'lucide-react'
 import { getProject, getProjectSlugs } from '@/lib/projects'
+import { getProjectGalleryImages } from '@/lib/project-gallery'
 
 interface ProjectPageProps {
     params: Promise<{ slug: string }>
@@ -40,13 +41,15 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
     if (!project) notFound()
 
+    const galleryImages = getProjectGalleryImages(project.slug)
+
     return (
-        <div className="min-h-screen bg-white text-black mt-[88px]">
-            <main id="main-content" className="max-w-5xl mx-auto px-6 py-16">
+        <div className="mt-[88px] min-h-screen bg-white text-black">
+            <main id="main-content" className="mx-auto max-w-5xl px-6 py-16">
                 {/* Back */}
                 <Link
                     href="/#projects"
-                    className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-black transition-colors mb-12"
+                    className="mb-12 inline-flex items-center gap-2 text-sm text-gray-500 transition-colors hover:text-black"
                 >
                     <ArrowLeft className="h-4 w-4" />
                     Back to projects
@@ -54,21 +57,21 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
                 {/* Header */}
                 <div className="mb-12">
-                    <div className="flex flex-wrap items-center gap-3 text-sm text-gray-400 mb-4">
+                    <div className="mb-4 flex flex-wrap items-center gap-3 text-sm text-gray-400">
                         <span>{project.client}</span>
                         <span>·</span>
                         <span>{project.year}</span>
                         <span>·</span>
                         <span>{project.role}</span>
                     </div>
-                    <h1 className="text-5xl md:text-7xl font-extrabold tracking-tighter leading-none mb-8">
+                    <h1 className="mb-8 text-5xl font-extrabold leading-none tracking-tighter md:text-7xl">
                         {project.title}
                     </h1>
-                    <div className="flex flex-wrap gap-2 mb-8">
+                    <div className="mb-8 flex flex-wrap gap-2">
                         {project.technologies.map((tech) => (
                             <span
                                 key={tech}
-                                className="text-xs border border-gray-200 px-3 py-1 rounded-full"
+                                className="rounded-full border border-gray-200 px-3 py-1 text-xs"
                             >
                                 {tech}
                             </span>
@@ -78,14 +81,14 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                         href={project.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 text-sm font-medium underline underline-offset-4 hover:text-gray-600 transition-colors"
+                        className="inline-flex items-center gap-2 text-sm font-medium underline underline-offset-4 transition-colors hover:text-gray-600"
                     >
                         Visit live site <ArrowUpRight className="h-4 w-4" />
                     </a>
                 </div>
 
                 {/* Hero image */}
-                <div className="relative w-full aspect-video rounded-xl overflow-hidden mb-16 bg-gray-50">
+                <div className="relative mb-16 aspect-video w-full overflow-hidden rounded-xl bg-gray-50">
                     <Image
                         src={project.image}
                         alt={project.title}
@@ -96,17 +99,22 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 </div>
 
                 {/* Body */}
-                <div className="grid md:grid-cols-[1fr_320px] gap-16">
+                <div className="grid gap-16 md:grid-cols-[1fr_320px]">
                     <div>
-                        <h2 className="text-2xl font-bold mb-4">Overview</h2>
-                        <p className="text-gray-700 leading-relaxed text-lg">{project.description}</p>
+                        <h2 className="mb-4 text-2xl font-bold">Overview</h2>
+                        <p className="text-lg leading-relaxed text-gray-700">
+                            {project.description}
+                        </p>
                     </div>
                     <aside>
-                        <h2 className="text-2xl font-bold mb-4">Highlights</h2>
+                        <h2 className="mb-4 text-2xl font-bold">Highlights</h2>
                         <ul className="space-y-3">
                             {project.highlights.map((item, i) => (
-                                <li key={i} className="flex gap-3 text-gray-700 text-sm leading-relaxed">
-                                    <span className="mt-0.5 text-gray-300 select-none">—</span>
+                                <li
+                                    key={i}
+                                    className="flex gap-3 text-sm leading-relaxed text-gray-700"
+                                >
+                                    <span className="mt-0.5 select-none text-gray-300">—</span>
                                     {item}
                                 </li>
                             ))}
@@ -116,7 +124,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
                 {/* Mobile image */}
                 <div className="mt-16 flex justify-center">
-                    <div className="relative w-[220px] aspect-[9/16] rounded-2xl overflow-hidden shadow-2xl">
+                    <div className="relative aspect-[9/16] w-[220px] overflow-hidden rounded-2xl shadow-2xl">
                         <Image
                             src={project.mobileImage}
                             alt={`${project.title} on mobile`}
@@ -125,6 +133,40 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                         />
                     </div>
                 </div>
+
+                {galleryImages.length > 0 && (
+                    <section className="mt-20 border-t border-black pt-12">
+                        <div className="mb-8 flex items-end justify-between gap-6">
+                            <div>
+                                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-gray-500">
+                                    {project.client}
+                                </p>
+                                <h2 className="mt-3 text-3xl font-black tracking-tight md:text-5xl">
+                                    More images
+                                </h2>
+                            </div>
+                            <p className="text-sm font-semibold text-gray-500">
+                                {galleryImages.length.toString().padStart(2, '0')}
+                            </p>
+                        </div>
+                        <div className="grid gap-5">
+                            {galleryImages.map((image, index) => (
+                                <div
+                                    key={image}
+                                    className="relative aspect-video overflow-hidden rounded-lg border border-gray-200 bg-gray-50"
+                                >
+                                    <Image
+                                        src={image}
+                                        alt={`${project.title} gallery ${index + 1}`}
+                                        fill
+                                        className="object-contain"
+                                        sizes="(min-width: 1024px) 1024px, 100vw"
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                )}
             </main>
         </div>
     )

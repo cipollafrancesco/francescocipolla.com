@@ -8,25 +8,16 @@ interface IHeroProps {
     y: MotionValue<number>
     opacity: MotionValue<number>
     progress: MotionValue<number>
+    disclaimer: string
 }
 
-const Hero: React.FC<IHeroProps> = ({ scale, x, y, opacity, progress }) => {
+const Hero: React.FC<IHeroProps> = ({ scale, x, y, opacity, progress, disclaimer }) => {
     const cipoRef = useRef(null)
     const cLetterRef = useRef(null)
 
-    // Animate "Francesco" and "lla" opacity based on scroll
-    const nameOpacity = useTransform(
-        progress,
-        [0, 0.2, 0.6], // Show during initial scroll, hide before zoom
-        [0, 1, 1]
-    )
+    const nameOpacity = useTransform(progress, [0, 0.2, 0.6], [0, 1, 1])
 
-    // Animate the paragraph opacity based on scroll
-    const paragraphOpacity = useTransform(
-        progress,
-        [0.3, 0.6, 0.75], // Appear after "Francesco" and "lla", disappear before zoom
-        [0, 1, 1]
-    )
+    const paragraphOpacity = useTransform(progress, [0.3, 0.6, 0.75], [0, 1, 1])
 
     return (
         <div className="sentence-container relative">
@@ -37,7 +28,6 @@ const Hero: React.FC<IHeroProps> = ({ scale, x, y, opacity, progress }) => {
                     x,
                     y,
                     opacity,
-                    willChange: 'transform',
                 }}
                 className="relative z-10 text-nowrap text-center text-8xl font-black leading-none tracking-[-0.06em] sm:text-[10rem] md:text-[13rem] lg:text-[15rem] xl:text-[16.5rem]"
             >
@@ -68,8 +58,7 @@ const Hero: React.FC<IHeroProps> = ({ scale, x, y, opacity, progress }) => {
                     style={{ opacity: paragraphOpacity }}
                     className="absolute mt-4 max-w-[80%] whitespace-normal text-left text-sm font-normal tracking-tighter md:p-4"
                 >
-                    And this landing page has been built in one day using Next, Tailwind, and Framer
-                    Motion.
+                    {disclaimer}
                 </motion.p>
             </motion.h1>
         </div>

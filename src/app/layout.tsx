@@ -1,15 +1,14 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import Link from 'next/link'
-import Header from '@/components/Header'
 
 const inter = Inter({ subsets: ['latin'], weight: ['400', '500', '700', '900'] })
 
 export const metadata: Metadata = {
-    title: 'Francesco Cipolla - Senior Frontend Engineer',
+    title: 'Francesco Cipolla - Digital Product Partner',
     description:
-        'Currently working in the Sport Streaming Industry | ISAAC Co-Founder | Passionate Product Contributor | Design Enthusiast',
+        'Siti web, applicazioni e digitalizzazione per aziende. Digital product partner per trasformare idee, processi e presenza online in strumenti concreti.',
+    metadataBase: new URL('https://francescocipolla.com'),
 }
 
 const personJsonLd = {
@@ -38,7 +37,7 @@ const personJsonLd = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
-        <html lang="en">
+        <html lang="it">
             <body className={`${inter.className}`}>
                 {/* JSON-LD structured data */}
                 <script
@@ -54,80 +53,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 >
                     Skip to content
                 </a>
-                <Header />
                 {children}
-                <footer className="border-t border-gray-100 bg-white py-12">
-                    <div className="mx-auto max-w-screen-2xl px-8">
-                        <div className="flex flex-col items-start justify-between gap-8 md:flex-row md:items-center">
-                            <div>
-                                <span className="text-2xl font-extrabold">cipo.</span>
-                                <p className="mt-1 text-sm text-gray-500">
-                                    Senior Frontend Engineer &amp; Freelancer
-                                </p>
-                            </div>
-                            <nav className="flex flex-wrap gap-x-8 gap-y-2 text-sm lowercase">
-                                <Link
-                                    href="/#about-me"
-                                    className="underline-offset-2 hover:underline"
-                                >
-                                    About
-                                </Link>
-                                <Link
-                                    href="/#experiences"
-                                    className="underline-offset-2 hover:underline"
-                                >
-                                    Experiences
-                                </Link>
-                                <Link
-                                    href="/#projects"
-                                    className="underline-offset-2 hover:underline"
-                                >
-                                    Projects
-                                </Link>
-                                <Link href="/blog" className="underline-offset-2 hover:underline">
-                                    Blog
-                                </Link>
-                                <Link
-                                    href="/#contacts"
-                                    className="underline-offset-2 hover:underline"
-                                >
-                                    Contacts
-                                </Link>
-                            </nav>
-                            <div className="flex gap-6 text-sm">
-                                <a
-                                    href="https://www.linkedin.com/in/francesco-cipolla-41768411b"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="underline-offset-2 hover:underline"
-                                    aria-label="LinkedIn"
-                                >
-                                    LinkedIn
-                                </a>
-                                <a
-                                    href="https://github.com/cipollafrancesco"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="underline-offset-2 hover:underline"
-                                    aria-label="GitHub"
-                                >
-                                    GitHub
-                                </a>
-                                <a
-                                    href="mailto:info@francescocipolla.com"
-                                    className="underline-offset-2 hover:underline"
-                                    aria-label="Email"
-                                >
-                                    Email
-                                </a>
-                            </div>
-                        </div>
-                        <p className="mt-10 text-xs text-gray-400">
-                            &copy; {new Date().getFullYear()} Francesco Cipolla. All rights
-                            reserved.
-                        </p>
-                    </div>
-                </footer>
             </body>
         </html>
     )
