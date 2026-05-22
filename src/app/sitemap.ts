@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next'
 import { absoluteLocalizedUrl, getProjectSlugs } from '@/content/site'
 import { locales } from '@/i18n/config'
 
-const staticRoutes = ['', '/services', '/about', '/blog']
+const staticRoutes = ['', '/services', '/about', '/projects', '/contacts', '/blog']
 
 export default function sitemap(): MetadataRoute.Sitemap {
     const now = new Date()

@@ -19,9 +19,9 @@ const Header = ({ lang, copy }: HeaderProps) => {
     const menuItems = [
         { href: `/${lang}/#about-me`, label: copy.nav.about },
         { href: `/${lang}/#experiences`, label: copy.nav.experiences },
-        { href: `/${lang}/#projects`, label: copy.nav.projects },
+        { href: `/${lang}/projects`, label: copy.nav.projects },
         { href: `/${lang}/services`, label: copy.nav.services },
-        { href: `/${lang}/#contacts`, label: copy.nav.contacts },
+        { href: `/${lang}/contacts`, label: copy.nav.contacts },
     ]
 
     const toggleDrawer = () => {

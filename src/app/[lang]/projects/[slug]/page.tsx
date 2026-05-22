@@ -1,14 +1,15 @@
+import { Badge } from '@/components/ui/Badge'
+import { ProjectGalleryCarousel } from '@/components/ProjectGalleryCarousel'
+import { getLocalizedProject, getProjectSlugs } from '@/content/site'
+import { isLocale, locales } from '@/i18n/config'
+import { getI18nContent } from '@/i18n/server'
+import { withLocaleMetadata } from '@/lib/metadata'
+import { getProjectGalleryMedia } from '@/lib/project-gallery'
+import { ArrowLeft, ArrowUpRight } from 'lucide-react'
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { ArrowLeft, ArrowUpRight } from 'lucide-react'
-import { Badge } from '@/components/ui/Badge'
-import { getI18nContent } from '@/i18n/server'
-import { isLocale, locales } from '@/i18n/config'
-import { getLocalizedProject, getProjectSlugs } from '@/content/site'
-import { getProjectGalleryImages } from '@/lib/project-gallery'
-import { withLocaleMetadata } from '@/lib/metadata'
 
 interface ProjectPageProps {
     params: Promise<{ lang: string; slug: string }>
@@ -55,13 +56,24 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         notFound()
     }
 
-    const galleryImages = getProjectGalleryImages(project.slug)
+    const galleryMedia = getProjectGalleryMedia(project.slug)
+    const hasMobileGalleryMedia = galleryMedia.some((media) => media.viewport === 'mobile')
+    const visibleGalleryMedia = hasMobileGalleryMedia
+        ? galleryMedia
+        : [
+              {
+                  src: project.mobileImage,
+                  type: 'image' as const,
+                  viewport: 'mobile' as const,
+              },
+              ...galleryMedia,
+          ]
 
     return (
-        <div className="mt-[88px] min-h-screen bg-white text-black">
-            <main id="main-content" className="mx-auto max-w-5xl px-6 py-16">
+        <div className="min-h-screen bg-white text-black md:mt-[88px]">
+            <main id="main-content" className="mx-auto max-w-5xl px-6 pb-16 pt-8 md:py-16">
                 <Link
-                    href={`/${lang}/#projects`}
+                    href={`/${lang}/projects`}
                     className="mb-12 inline-flex items-center gap-2 text-sm text-gray-500 transition-colors hover:text-black"
                 >
                     <ArrowLeft className="h-4 w-4" />
@@ -69,12 +81,8 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 </Link>
 
                 <div className="mb-12">
-                    <div className="mb-4 flex flex-wrap items-center gap-3 text-sm text-gray-400">
+                    <div className="mb-4 text-sm text-gray-400">
                         <span>{project.client}</span>
-                        <span aria-hidden="true">/</span>
-                        <span>{project.year}</span>
-                        <span aria-hidden="true">/</span>
-                        <span>{project.role}</span>
                     </div>
                     <h1 className="mb-8 text-5xl font-extrabold leading-none tracking-tighter md:text-7xl">
                         {project.title}
@@ -144,50 +152,29 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                     </aside>
                 </div>
 
-                <div className="mt-16 flex justify-center">
-                    <div className="relative aspect-[9/16] w-[220px] overflow-hidden rounded-2xl shadow-2xl">
-                        <Image
-                            src={project.mobileImage}
-                            alt={`${project.title} mobile`}
-                            fill
-                            className="object-cover"
-                        />
-                    </div>
-                </div>
-
-                {galleryImages.length > 0 && (
-                    <section className="mt-20 border-t border-black pt-12">
-                        <div className="mb-8 flex items-end justify-between gap-6">
-                            <div>
-                                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-gray-500">
-                                    {project.client}
-                                </p>
-                                <h2 className="mt-3 text-3xl font-black tracking-tight md:text-5xl">
-                                    {content.projectPage.gallery}
-                                </h2>
-                            </div>
-                            <p className="text-sm font-semibold text-gray-500">
-                                {galleryImages.length.toString().padStart(2, '0')}
+                <section className="mt-20 border-t border-black pt-12">
+                    <div className="mb-8">
+                        <div>
+                            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-gray-500">
+                                {project.client}
                             </p>
+                            <h2 className="mt-3 text-3xl font-black tracking-tight md:text-5xl">
+                                {content.projectPage.gallery}
+                            </h2>
                         </div>
-                        <div className="grid gap-5">
-                            {galleryImages.map((image, index) => (
-                                <div
-                                    key={image}
-                                    className="relative aspect-video overflow-hidden rounded-lg border border-gray-200 bg-gray-50"
-                                >
-                                    <Image
-                                        src={image}
-                                        alt={`${project.title} gallery ${index + 1}`}
-                                        fill
-                                        className="object-contain"
-                                        sizes="(min-width: 1024px) 1024px, 100vw"
-                                    />
-                                </div>
-                            ))}
-                        </div>
-                    </section>
-                )}
+                    </div>
+                    <ProjectGalleryCarousel
+                        media={visibleGalleryMedia}
+                        projectTitle={project.title}
+                        labels={{
+                            view: content.projectPage.galleryView,
+                            desktop: content.projectPage.galleryDesktop,
+                            mobile: content.projectPage.galleryMobile,
+                            previous: content.projectPage.galleryPrevious,
+                            next: content.projectPage.galleryNext,
+                        }}
+                    />
+                </section>
             </main>
         </div>
     )

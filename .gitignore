@@ -20,9 +20,25 @@
 # production
 /build
 
+# local media sources and optimized upload artifacts
+/.media-source/
+/.media-output/
+/public/projects/*/gallery/**/*.avif
+/public/projects/*/gallery/**/*.gif
+/public/projects/*/gallery/**/*.jpg
+/public/projects/*/gallery/**/*.jpeg
+/public/projects/*/gallery/**/*.png
+/public/projects/*/gallery/**/*.webp
+/public/projects/*/gallery/**/*.mp4
+/public/projects/*/gallery/**/*.mov
+/public/projects/*/gallery/**/*.webm
+
 # misc
 .DS_Store
 *.pem
+.claude/
+.playwright-mcp/
+hero-*.png
 
 # debug
 npm-debug.log*

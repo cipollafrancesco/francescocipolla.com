@@ -1,0 +1,210 @@
+{
+    "che-designer-sei": [
+        {
+            "src": "https://lnmqecoudsl0zm1o.public.blob.vercel-storage.com/portfolio/projects/che-designer-sei/gallery/desktop/homepage.b8405cd50890.mp4",
+            "pathname": "portfolio/projects/che-designer-sei/gallery/desktop/homepage.b8405cd50890.mp4",
+            "type": "video",
+            "viewport": "desktop",
+            "width": 1280,
+            "height": 700,
+            "bytes": 360979,
+            "duration": 20.166667
+        },
+        {
+            "src": "https://lnmqecoudsl0zm1o.public.blob.vercel-storage.com/portfolio/projects/che-designer-sei/gallery/desktop/quiz-flow.e51319067aba.mp4",
+            "pathname": "portfolio/projects/che-designer-sei/gallery/desktop/quiz-flow.e51319067aba.mp4",
+            "type": "video",
+            "viewport": "desktop",
+            "width": 1280,
+            "height": 700,
+            "bytes": 508317,
+            "duration": 19.25
+        },
+        {
+            "src": "https://lnmqecoudsl0zm1o.public.blob.vercel-storage.com/portfolio/projects/che-designer-sei/gallery/desktop/result-page.16a579fda104.mp4",
+            "pathname": "portfolio/projects/che-designer-sei/gallery/desktop/result-page.16a579fda104.mp4",
+            "type": "video",
+            "viewport": "desktop",
+            "width": 1280,
+            "height": 700,
+            "bytes": 1941117,
+            "duration": 50.583333
+        },
+        {
+            "src": "https://lnmqecoudsl0zm1o.public.blob.vercel-storage.com/portfolio/projects/che-designer-sei/gallery/mobile/homepage.e713eb394a86.mp4",
+            "pathname": "portfolio/projects/che-designer-sei/gallery/mobile/homepage.e713eb394a86.mp4",
+            "type": "video",
+            "viewport": "mobile",
+            "width": 746,
+            "height": 1330,
+            "bytes": 94136,
+            "duration": 2.7
+        },
+        {
+            "src": "https://lnmqecoudsl0zm1o.public.blob.vercel-storage.com/portfolio/projects/che-designer-sei/gallery/mobile/quiz-flow.d5a6b4c94334.mp4",
+            "pathname": "portfolio/projects/che-designer-sei/gallery/mobile/quiz-flow.d5a6b4c94334.mp4",
+            "type": "video",
+            "viewport": "mobile",
+            "width": 746,
+            "height": 1330,
+            "bytes": 871721,
+            "duration": 21.008333
+        },
+        {
+            "src": "https://lnmqecoudsl0zm1o.public.blob.vercel-storage.com/portfolio/projects/che-designer-sei/gallery/mobile/result.5f8deb23f97f.mp4",
+            "pathname": "portfolio/projects/che-designer-sei/gallery/mobile/result.5f8deb23f97f.mp4",
+            "type": "video",
+            "viewport": "mobile",
+            "width": 746,
+            "height": 1330,
+            "bytes": 2839826,
+            "duration": 67.283333
+        }
+    ],
+    "dpulses": [
+        {
+            "src": "https://lnmqecoudsl0zm1o.public.blob.vercel-storage.com/portfolio/projects/dpulses/gallery/desktop/homepage.118899213ed0.mp4",
+            "pathname": "portfolio/projects/dpulses/gallery/desktop/homepage.118899213ed0.mp4",
+            "type": "video",
+            "viewport": "desktop",
+            "width": 1918,
+            "height": 1048,
+            "bytes": 8287718,
+            "duration": 33.633333
+        },
+        {
+            "src": "https://lnmqecoudsl0zm1o.public.blob.vercel-storage.com/portfolio/projects/dpulses/gallery/mobile/homepage.dc75d7c71a02.mp4",
+            "pathname": "portfolio/projects/dpulses/gallery/mobile/homepage.dc75d7c71a02.mp4",
+            "type": "video",
+            "viewport": "mobile",
+            "width": 746,
+            "height": 1330,
+            "bytes": 5367263,
+            "duration": 55.983333
+        }
+    ],
+    "hub-lombardini22": [
+        {
+            "src": "https://lnmqecoudsl0zm1o.public.blob.vercel-storage.com/portfolio/projects/hub-lombardini22/gallery/desktop/homepage.c1ea1f456594.mp4",
+            "pathname": "portfolio/projects/hub-lombardini22/gallery/desktop/homepage.c1ea1f456594.mp4",
+            "type": "video",
+            "viewport": "desktop",
+            "width": 1918,
+            "height": 1048,
+            "bytes": 4750442,
+            "duration": 12.833333
+        },
+        {
+            "src": "https://lnmqecoudsl0zm1o.public.blob.vercel-storage.com/portfolio/projects/hub-lombardini22/gallery/desktop/manifesto.bd8443fd3610.mp4",
+            "pathname": "portfolio/projects/hub-lombardini22/gallery/desktop/manifesto.bd8443fd3610.mp4",
+            "type": "video",
+            "viewport": "desktop",
+            "width": 1920,
+            "height": 1050,
+            "bytes": 1028311,
+            "duration": 17.7
+        },
+        {
+            "src": "https://lnmqecoudsl0zm1o.public.blob.vercel-storage.com/portfolio/projects/hub-lombardini22/gallery/desktop/venue.d7afa2ce8281.mp4",
+            "pathname": "portfolio/projects/hub-lombardini22/gallery/desktop/venue.d7afa2ce8281.mp4",
+            "type": "video",
+            "viewport": "desktop",
+            "width": 1920,
+            "height": 1050,
+            "bytes": 4835792,
+            "duration": 57.066667
+        },
+        {
+            "src": "https://lnmqecoudsl0zm1o.public.blob.vercel-storage.com/portfolio/projects/hub-lombardini22/gallery/mobile/home-animation.cc0b7f0b86bd.mp4",
+            "pathname": "portfolio/projects/hub-lombardini22/gallery/mobile/home-animation.cc0b7f0b86bd.mp4",
+            "type": "video",
+            "viewport": "mobile",
+            "width": 748,
+            "height": 1330,
+            "bytes": 130710,
+            "duration": 2.191667
+        },
+        {
+            "src": "https://lnmqecoudsl0zm1o.public.blob.vercel-storage.com/portfolio/projects/hub-lombardini22/gallery/mobile/homepage.048a5a583b1e.mp4",
+            "pathname": "portfolio/projects/hub-lombardini22/gallery/mobile/homepage.048a5a583b1e.mp4",
+            "type": "video",
+            "viewport": "mobile",
+            "width": 748,
+            "height": 1330,
+            "bytes": 342571,
+            "duration": 8.416667
+        },
+        {
+            "src": "https://lnmqecoudsl0zm1o.public.blob.vercel-storage.com/portfolio/projects/hub-lombardini22/gallery/mobile/loader.eacea7a39528.mp4",
+            "pathname": "portfolio/projects/hub-lombardini22/gallery/mobile/loader.eacea7a39528.mp4",
+            "type": "video",
+            "viewport": "mobile",
+            "width": 748,
+            "height": 1330,
+            "bytes": 159228,
+            "duration": 12.783333
+        },
+        {
+            "src": "https://lnmqecoudsl0zm1o.public.blob.vercel-storage.com/portfolio/projects/hub-lombardini22/gallery/mobile/manifesto.6c6f67dcacd9.mp4",
+            "pathname": "portfolio/projects/hub-lombardini22/gallery/mobile/manifesto.6c6f67dcacd9.mp4",
+            "type": "video",
+            "viewport": "mobile",
+            "width": 748,
+            "height": 1330,
+            "bytes": 200610,
+            "duration": 10.292078
+        },
+        {
+            "src": "https://lnmqecoudsl0zm1o.public.blob.vercel-storage.com/portfolio/projects/hub-lombardini22/gallery/mobile/venue.864dddf83035.mp4",
+            "pathname": "portfolio/projects/hub-lombardini22/gallery/mobile/venue.864dddf83035.mp4",
+            "type": "video",
+            "viewport": "mobile",
+            "width": 748,
+            "height": 1330,
+            "bytes": 2118700,
+            "duration": 83.158333
+        }
+    ],
+    "reclamigaseluce": [
+        {
+            "src": "https://lnmqecoudsl0zm1o.public.blob.vercel-storage.com/portfolio/projects/reclamigaseluce/gallery/desktop/blog.a158a9013402.mp4",
+            "pathname": "portfolio/projects/reclamigaseluce/gallery/desktop/blog.a158a9013402.mp4",
+            "type": "video",
+            "viewport": "desktop",
+            "width": 1918,
+            "height": 1048,
+            "bytes": 6229118,
+            "duration": 29.466667
+        },
+        {
+            "src": "https://lnmqecoudsl0zm1o.public.blob.vercel-storage.com/portfolio/projects/reclamigaseluce/gallery/desktop/homepage.95adffeca03e.mp4",
+            "pathname": "portfolio/projects/reclamigaseluce/gallery/desktop/homepage.95adffeca03e.mp4",
+            "type": "video",
+            "viewport": "desktop",
+            "width": 1918,
+            "height": 1048,
+            "bytes": 4448715,
+            "duration": 29.733333
+        },
+        {
+            "src": "https://lnmqecoudsl0zm1o.public.blob.vercel-storage.com/portfolio/projects/reclamigaseluce/gallery/mobile/blog.d47dbad897eb.mp4",
+            "pathname": "portfolio/projects/reclamigaseluce/gallery/mobile/blog.d47dbad897eb.mp4",
+            "type": "video",
+            "viewport": "mobile",
+            "width": 748,
+            "height": 1330,
+            "bytes": 2239223,
+            "duration": 18.15
+        },
+        {
+            "src": "https://lnmqecoudsl0zm1o.public.blob.vercel-storage.com/portfolio/projects/reclamigaseluce/gallery/mobile/homepage.931b2d636c23.mp4",
+            "pathname": "portfolio/projects/reclamigaseluce/gallery/mobile/homepage.931b2d636c23.mp4",
+            "type": "video",
+            "viewport": "mobile",
+            "width": 748,
+            "height": 1330,
+            "bytes": 2966997,
+            "duration": 59.825
+        }
+    ]
+}

@@ -5,12 +5,15 @@
     "scripts": {
         "dev": "next dev",
         "build": "next build",
+        "gallery:sync": "node scripts/sync-project-gallery.mjs",
         "start": "next start",
         "lint": "next lint",
         "prepare": "husky"
     },
     "dependencies": {
         "@calcom/embed-react": "^1.5.3",
+        "@vercel/analytics": "^2.0.1",
+        "@vercel/blob": "^2.4.0",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "framer-motion": "^12.4.7",

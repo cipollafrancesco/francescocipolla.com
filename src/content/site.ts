@@ -67,6 +67,8 @@ export type SiteContent = {
         home: Metadata
         services: Metadata
         about: Metadata
+        projects: Metadata
+        contacts: Metadata
         blog: Metadata
     }
     home: {
@@ -150,6 +152,11 @@ export type SiteContent = {
         solution: string
         outcome: string
         gallery: string
+        galleryView: string
+        galleryDesktop: string
+        galleryMobile: string
+        galleryPrevious: string
+        galleryNext: string
     }
     blog: {
         title: string
@@ -501,6 +508,16 @@ export const siteContent: Record<Locale, SiteContent> = {
                 description:
                     'Digital product partner e ingegnere informatico: esperienza in prodotti web, streaming, design e sistemi digitali.',
             },
+            projects: {
+                title: 'Progetti - Francesco Cipolla',
+                description:
+                    'Una selezione di progetti web, applicazioni e piattaforme digitali realizzate per aziende, studi e prodotti in produzione.',
+            },
+            contacts: {
+                title: 'Contatti - Francesco Cipolla',
+                description:
+                    'Contatta Francesco Cipolla o prenota una consulenza per parlare di siti, applicazioni, automazioni e progetti digitali.',
+            },
             blog: {
                 title: 'Blog - Francesco Cipolla',
                 description: 'Appunti su prodotto digitale, sviluppo web, design e tecnologia.',
@@ -743,6 +760,11 @@ export const siteContent: Record<Locale, SiteContent> = {
             solution: 'Soluzione',
             outcome: 'Risultato',
             gallery: 'Altre immagini',
+            galleryView: 'Formato',
+            galleryDesktop: 'Desktop',
+            galleryMobile: 'Mobile',
+            galleryPrevious: 'Media precedente',
+            galleryNext: 'Media successivo',
         },
         blog: {
             title: 'Blog',
@@ -817,6 +839,16 @@ export const siteContent: Record<Locale, SiteContent> = {
                 title: 'About - Francesco Cipolla',
                 description:
                     'Digital product partner and senior engineer with experience across web products, streaming platforms, design, and business systems.',
+            },
+            projects: {
+                title: 'Projects - Francesco Cipolla',
+                description:
+                    'A selection of websites, applications, and digital platforms built for companies, studios, and production products.',
+            },
+            contacts: {
+                title: 'Contacts - Francesco Cipolla',
+                description:
+                    'Contact Francesco Cipolla or book a project discovery call for websites, applications, automation, and digital product work.',
             },
             blog: {
                 title: 'Blog - Francesco Cipolla',
@@ -1061,6 +1093,11 @@ export const siteContent: Record<Locale, SiteContent> = {
             solution: 'Solution',
             outcome: 'Outcome',
             gallery: 'More images',
+            galleryView: 'Format',
+            galleryDesktop: 'Desktop',
+            galleryMobile: 'Mobile',
+            galleryPrevious: 'Previous media',
+            galleryNext: 'Next media',
         },
         blog: {
             title: 'Blog',

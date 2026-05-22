@@ -1,4 +1,20 @@
 import type { NextConfig } from 'next'
+import { existsSync, readFileSync } from 'fs'
+
+const blobHostsPath = new URL('./src/content/blob-hosts.generated.json', import.meta.url)
+
+function getBlobImageRemotePatterns() {
+    if (!existsSync(blobHostsPath)) {
+        return []
+    }
+
+    const hosts = JSON.parse(readFileSync(blobHostsPath, 'utf8')) as string[]
+
+    return hosts.map((hostname) => ({
+        protocol: 'https' as const,
+        hostname,
+    }))
+}
 
 const securityHeaders = [
     { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
@@ -11,6 +27,7 @@ const nextConfig: NextConfig = {
     poweredByHeader: false,
     images: {
         formats: ['image/avif', 'image/webp'],
+        remotePatterns: getBlobImageRemotePatterns(),
     },
     async headers() {
         return [

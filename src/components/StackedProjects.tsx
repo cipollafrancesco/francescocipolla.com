@@ -1,10 +1,11 @@
 'use client'
 import Image from 'next/image'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { EffectCards, Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
+import type { Swiper as SwiperInstance } from 'swiper'
 
-import { ArrowUpRight } from 'lucide-react'
+import { ArrowLeft, ArrowRight, ArrowUpRight } from 'lucide-react'
 import Link from 'next/link'
 import 'swiper/css'
 import 'swiper/css/effect-cards'
@@ -23,12 +24,29 @@ export default function StackedProjects({
         liveSite: string
     }
 }) {
-    const swiperRef = useRef(null)
+    const swiperRef = useRef<SwiperInstance | null>(null)
+    const [activeIndex, setActiveIndex] = useState(0)
+    const totalProjects = projects.length
+    const previousLabel = lang === 'it' ? 'Progetto precedente' : 'Previous project'
+    const nextLabel = lang === 'it' ? 'Progetto successivo' : 'Next project'
+
+    const goPrevious = () => {
+        swiperRef.current?.slidePrev()
+    }
+
+    const goNext = () => {
+        swiperRef.current?.slideNext()
+    }
 
     return (
-        <div className="flex items-center justify-center lg:h-[80vh]">
+        <div className="flex flex-col items-center justify-center gap-5 lg:h-[80vh]">
             <Swiper
-                ref={swiperRef}
+                onSwiper={(swiper) => {
+                    swiperRef.current = swiper
+                }}
+                onSlideChange={(swiper) => {
+                    setActiveIndex(swiper.realIndex)
+                }}
                 effect={'cards'}
                 grabCursor={true}
                 pagination={{ clickable: true, enabled: true }}
@@ -41,47 +59,60 @@ export default function StackedProjects({
                         className="group overflow-hidden rounded-lg bg-white shadow-xl"
                     >
                         <div className="relative h-full w-full">
-                            <Image
-                                src={project.mobileImage}
-                                alt={project.title}
-                                fill
-                                className="object-cover md:hidden"
-                            />
-                            <Image
-                                src={project.image}
-                                alt={project.title}
-                                fill
-                                className="hidden object-cover md:block"
-                            />
+                            <Link
+                                href={`/${lang}/projects/${project.slug}`}
+                                className="absolute inset-0 z-0"
+                                aria-label={`${labels.caseStudy}: ${project.title}`}
+                            >
+                                <Image
+                                    src={project.mobileImage}
+                                    alt={project.title}
+                                    fill
+                                    className="object-cover md:hidden"
+                                />
+                                <Image
+                                    src={project.image}
+                                    alt={project.title}
+                                    fill
+                                    className="hidden object-cover md:block"
+                                />
+                            </Link>
 
-                            <div className="absolute inset-0 flex flex-col justify-end bg-black bg-opacity-60 p-6 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                                <h3 className="mb-2 text-2xl font-bold text-white">
-                                    {project.title}
-                                </h3>
-                                <p className="mb-4 text-sm text-gray-300">
-                                    {project.technologies.join(' • ')}
-                                </p>
-                                <div className="flex items-center gap-4">
-                                    <Link
-                                        href={`/${lang}/projects/${project.slug}`}
-                                        className="text-sm text-white underline underline-offset-2"
-                                    >
-                                        {labels.caseStudy}
-                                    </Link>
-                                    <Link
-                                        href={project.url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="flex items-center text-white"
-                                    >
-                                        {labels.liveSite} <ArrowUpRight className="ml-1 h-5 w-5" />
-                                    </Link>
-                                </div>
+                            <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-black/60 p-6 opacity-100 transition-opacity duration-300 md:opacity-0 md:group-hover:opacity-100">
+                                <Link
+                                    href={`/${lang}/projects/${project.slug}`}
+                                    className="pointer-events-auto inline-flex items-center gap-2 rounded-full border border-white/70 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-white hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+                                >
+                                    {labels.caseStudy}
+                                    <ArrowUpRight className="h-4 w-4" />
+                                </Link>
                             </div>
                         </div>
                     </SwiperSlide>
                 ))}
             </Swiper>
+            <div className="flex items-center gap-4">
+                <button
+                    type="button"
+                    onClick={goPrevious}
+                    className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-black bg-white text-black transition-colors hover:bg-black hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+                    aria-label={previousLabel}
+                >
+                    <ArrowLeft className="h-4 w-4" />
+                </button>
+                <p className="min-w-16 text-center text-xs font-semibold uppercase tracking-[0.22em] text-gray-500">
+                    {String(activeIndex + 1).padStart(2, '0')} /{' '}
+                    {String(totalProjects).padStart(2, '0')}
+                </p>
+                <button
+                    type="button"
+                    onClick={goNext}
+                    className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-black bg-white text-black transition-colors hover:bg-black hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+                    aria-label={nextLabel}
+                >
+                    <ArrowRight className="h-4 w-4" />
+                </button>
+            </div>
         </div>
     )
 }

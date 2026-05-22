@@ -69,7 +69,7 @@ function Footer({
                             {copy.footer.links.experiences}
                         </Link>
                         <Link
-                            href={`/${lang}/#projects`}
+                            href={`/${lang}/projects`}
                             className="underline-offset-2 hover:underline"
                         >
                             {copy.footer.links.projects}
@@ -84,7 +84,7 @@ function Footer({
                             {copy.footer.links.blog}
                         </Link>
                         <Link
-                            href={`/${lang}/#contacts`}
+                            href={`/${lang}/contacts`}
                             className="underline-offset-2 hover:underline"
                         >
                             {copy.footer.links.contacts}
