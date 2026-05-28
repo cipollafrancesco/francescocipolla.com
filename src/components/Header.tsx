@@ -17,10 +17,9 @@ const Header = ({ lang, copy }: HeaderProps) => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
     const menuItems = [
-        { href: `/${lang}/#about-me`, label: copy.nav.about },
-        { href: `/${lang}/#experiences`, label: copy.nav.experiences },
+        { href: `/${lang}/about`, label: copy.nav.about },
         { href: `/${lang}/projects`, label: copy.nav.projects },
-        { href: `/${lang}/services`, label: copy.nav.services },
+        { href: `/${lang}/blog`, label: 'blog' },
         { href: `/${lang}/contacts`, label: copy.nav.contacts },
     ]
 
@@ -66,7 +65,7 @@ const Header = ({ lang, copy }: HeaderProps) => {
                             {copy.nav.resume}
                         </a>
                         <Link
-                            href={`/${lang}/services#booking`}
+                            href={`/${lang}/#booking`}
                             className="rounded bg-black px-4 py-2 text-white transition-colors duration-200 hover:bg-gray-800 lg:text-base"
                         >
                             {copy.nav.bookCall}
@@ -111,7 +110,7 @@ const Header = ({ lang, copy }: HeaderProps) => {
                         </Link>
                     ))}
                     <Link
-                        href={`/${lang}/services#booking`}
+                        href={`/${lang}/#booking`}
                         className="mt-2 rounded bg-black px-5 py-3 text-base font-semibold text-white"
                         onClick={toggleDrawer}
                     >

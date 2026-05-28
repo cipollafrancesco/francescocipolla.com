@@ -528,7 +528,6 @@ export const siteContent: Record<Locale, SiteContent> = {
                 'Costruisco prodotti digitali, siti e sistemi web con Next.js, React e attenzione al risultato di business.',
             descriptions: [
                 [{ text: 'digital product partner' }],
-                [{ text: 'co-founder di ' }, { text: 'ISAAC', color: '#8B5CF6' }],
                 [{ text: 'Ingegnere Informatico' }],
                 [{ text: 'appassionato di design' }],
                 [{ text: 'basketball passionate' }],
@@ -861,7 +860,6 @@ export const siteContent: Record<Locale, SiteContent> = {
                 'I build digital products, websites, and business systems with Next.js, React, and a practical focus on outcomes.',
             descriptions: [
                 [{ text: 'digital product partner' }],
-                [{ text: 'co-founder of ' }, { text: 'ISAAC', color: '#8B5CF6' }],
                 [{ text: 'senior software engineer' }],
                 [{ text: 'design enthusiast' }],
                 [{ text: 'basketball passionate' }],

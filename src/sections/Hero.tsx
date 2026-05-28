@@ -53,13 +53,15 @@ const Hero: React.FC<IHeroProps> = ({ scale, x, y, opacity, progress, disclaimer
                 >
                     lla
                 </motion.span>
-                <motion.p
-                    id="hero-disclaimer"
-                    style={{ opacity: paragraphOpacity }}
-                    className="absolute mt-4 max-w-[80%] whitespace-normal text-left text-sm font-normal tracking-tighter md:p-4"
-                >
-                    {disclaimer}
-                </motion.p>
+                {disclaimer && (
+                    <motion.p
+                        id="hero-disclaimer"
+                        style={{ opacity: paragraphOpacity }}
+                        className="absolute mt-4 max-w-[80%] whitespace-normal text-left text-sm font-normal tracking-tighter md:p-4"
+                    >
+                        {disclaimer}
+                    </motion.p>
+                )}
             </motion.h1>
         </div>
     )
