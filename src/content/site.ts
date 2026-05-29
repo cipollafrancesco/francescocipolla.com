@@ -1,5 +1,5 @@
-import type { Metadata } from 'next'
 import type { Locale } from '@/i18n/config'
+import type { Metadata } from 'next'
 
 const baseUrl = 'https://francescocipolla.com'
 
@@ -105,7 +105,6 @@ export type SiteContent = {
             imageAlt: string
             imageCaption: string
         }
-        pains: { title: string; description: string }[]
         serviceIntro: {
             eyebrow: string
             title: string
@@ -119,6 +118,7 @@ export type SiteContent = {
             title: string
             label: string
             plainLabel: string
+            capability: string
             situation: string
             description: string
             bullets: string[]
@@ -269,7 +269,7 @@ const itProjects: LocalizedProject[] = [
         solution:
             'Ho sviluppato un sito Next.js con CMS headless, animazioni interattive e componenti editoriali riutilizzabili.',
         outcome:
-            'Il team puo pubblicare contenuti in autonomia mantenendo una presenza digitale distintiva e performante.',
+            'Il team può pubblicare contenuti in autonomia mantenendo una presenza digitale distintiva e performante.',
         showcaseOutcome:
             'Contenuti gestibili in autonomia dentro una presenza digitale distintiva e performante.',
     },
@@ -297,7 +297,7 @@ const itProjects: LocalizedProject[] = [
         ...sharedProjects.datahause,
         role: 'Digital product partner',
         description:
-            'Il sito marketing di DataHause, societa di data analytics e business intelligence, progettato per comunicare credibilita tecnica in modo accessibile.',
+            'Il sito marketing di DataHause, società di data analytics e business intelligence, progettato per comunicare credibilità tecnica in modo accessibile.',
         highlights: [
             'Sistema component-driven per assemblare rapidamente le pagine',
             'Structured data JSON-LD per migliorare la visibilita search',
@@ -487,7 +487,7 @@ export const siteContent: Record<Locale, SiteContent> = {
                 book: 'Prenota una consulenza',
                 project: 'Guarda il progetto',
                 liveSite: 'Visita il sito',
-                caseStudy: 'Caso studio',
+                caseStudy: 'Scopri di più',
                 backHome: 'Torna alla home',
                 backProjects: 'Torna ai progetti',
             },
@@ -544,7 +544,7 @@ export const siteContent: Record<Locale, SiteContent> = {
                 position: 'Senior Front-end Engineer (Contractor)',
                 period: 'Giu 2023 - Presente',
                 description:
-                    'Sviluppo e manutenzione di una SPA React per lo streaming sportivo, incluse funzionalita core come il player.',
+                    'Sviluppo e manutenzione di una SPA React per lo streaming sportivo, incluse funzionalità core come il player.',
                 techs: ['React', 'TypeScript', 'Storybook', 'Jest', 'Playwright'],
             },
             {
@@ -577,10 +577,10 @@ export const siteContent: Record<Locale, SiteContent> = {
         services: {
             hero: {
                 eyebrow: 'Siti web che portano clienti',
-                title: 'Non ti serve un sito piu bello. Ti serve un sito che porti clienti.',
-                lead: 'Se le persone ti trovano online ma non capiscono subito perche sceglierti, ogni visita diventa un’occasione persa. Progetto e sviluppo siti, applicazioni e automazioni che trasformano attenzione in contatti e lavoro.',
+                title: 'Non ti serve un sito più bello. Ti serve un sito che porti clienti.',
+                lead: 'Se le persone ti trovano online ma non capiscono subito perché sceglierti, ogni visita diventa un’occasione persa.',
                 secondary:
-                    'Partiamo da cio che blocca la crescita: messaggio, percorso, dati, processi. Poi costruiamo il sistema digitale piu semplice che puo generare valore.',
+                    'Progetto e sviluppo Siti Web, App e automazioni AI per aiutare le aziende a farsi scegliere, lavorare meglio e crescere.',
             },
             proof: {
                 eyebrow: 'Esperienza su prodotti e progetti reali',
@@ -596,10 +596,7 @@ export const siteContent: Record<Locale, SiteContent> = {
                 ],
                 stats: [
                     { value: '8+', label: 'anni su prodotti web in produzione' },
-                    {
-                        value: 'TV/Web',
-                        label: 'esperienza su piattaforme streaming e siti aziendali',
-                    },
+                    { value: '20+', label: 'progetti web consegnati' },
                     { value: 'IT/EN', label: 'lavoro con clienti italiani e internazionali' },
                 ],
             },
@@ -607,82 +604,84 @@ export const siteContent: Record<Locale, SiteContent> = {
                 eyebrow: 'Chi sono',
                 title: 'Ingegnere Informatico e partner digitale per progetti web orientati al business.',
                 description:
-                    'Lavoro da oltre 8 anni su prodotti web in produzione, piattaforme streaming, siti aziendali e applicazioni digitali. Porto insieme visione di prodotto, cura dell’interfaccia e solidita tecnica per aiutare le aziende a trasformare idee, processi e presenza online in sistemi utili.',
+                    'Lavoro da oltre 8 anni su prodotti web in produzione, piattaforme streaming, siti aziendali e applicazioni digitali. Porto insieme visione di prodotto, cura dell’interfaccia e solidità tecnica per aiutare le aziende a trasformare idee, processi e presenza online in sistemi utili.',
                 imageAlt: 'Francesco Cipolla, ingegnere informatico e digital product partner',
                 imageCaption: 'Francesco Cipolla / prodotto, design, sviluppo',
             },
-            pains: [
-                {
-                    title: 'Il sito non genera richieste',
-                    description:
-                        'La tua presenza online esiste, ma non spiega abbastanza bene cosa fai, per chi lo fai e perche contattarti.',
-                },
-                {
-                    title: 'Il lavoro e troppo manuale',
-                    description:
-                        'Preventivi, richieste, dati e aggiornamenti passano da email, fogli e messaggi invece che da un sistema unico.',
-                },
-                {
-                    title: 'Le idee restano ferme',
-                    description:
-                        'Sai che un portale, una dashboard o una nuova esperienza digitale aiuterebbe il business, ma manca chi la trasformi in prodotto.',
-                },
-            ],
             serviceIntro: {
-                eyebrow: 'Tre modi per lavorare insieme',
-                title: 'Scegli da dove partire: contatti, tempo o una nuova idea.',
+                eyebrow: 'Quattro modi per lavorare insieme',
+                title: 'Scegli da dove partire: contatti, tempo, una nuova idea o un sistema da migliorare.',
                 description:
-                    'Partiamo dal problema che riconosci subito nel tuo business. Poi scegliamo il pezzo digitale piu semplice da costruire per generare valore.',
+                    'Parto dal problema che riconosci subito nel tuo business. Poi scegliamo insieme il pezzo digitale più semplice da costruire per generare valore.',
                 situationLabel: 'Quando serve',
-                buildLabel: 'Cosa possiamo costruire',
+                buildLabel: 'Cosa posso costruire',
                 ctaLabel: 'Parliamo del tuo caso',
                 ctaHelper:
-                    'Non devi scegliere la soluzione tecnica: basta partire dal problema piu urgente.',
+                    'Non devi scegliere la soluzione tecnica: basta partire dal problema più urgente.',
             },
             buckets: [
                 {
                     title: 'Growth',
                     label: 'Convertire meglio online',
                     plainLabel: 'Farti contattare meglio',
+                    capability: 'Web',
                     situation:
-                        'Le persone arrivano sul sito, ma non capiscono subito perche scegliere te o come fare il passo successivo.',
+                        "La tua presenza online esiste, ma non spiega abbastanza bene cosa fai, per chi lo fai e perché contattarti — ogni visita diventa un'occasione persa.",
                     description:
-                        'Siti web, landing page e percorsi digitali che spiegano il valore, aumentano la fiducia e rendono piu facile contattarti.',
+                        'Siti web, landing page e percorsi digitali che spiegano il valore, aumentano la fiducia e rendono più facile contattarti.',
                     bullets: [
                         'Siti aziendali e landing page',
                         'Messaggi chiari e pulsanti di contatto',
-                        'Form collegati agli strumenti che gia usi',
-                        'SEO tecnico, velocita e accessibilita',
+                        'Form collegati agli strumenti che già usi',
+                        'SEO tecnico, velocità e accessibilità',
                     ],
                 },
                 {
                     title: 'Operations',
                     label: 'Ridurre lavoro manuale',
                     plainLabel: 'Risparmiare tempo operativo',
+                    capability: 'App · AI',
                     situation:
-                        'Il team perde ore tra fogli, email, copia-incolla e strumenti che non parlano tra loro.',
+                        'Preventivi, richieste, dati e aggiornamenti passano da email, fogli e messaggi invece che da un sistema unico — il team perde ore in attività che si potrebbero automatizzare.',
                     description:
-                        'Applicazioni interne, dashboard, integrazioni e automazioni per collegare strumenti e rendere i processi piu fluidi.',
+                        'Applicazioni interne, dashboard, integrazioni e automazioni per collegare strumenti e rendere i processi più fluidi.',
                     bullets: [
                         'Dashboard e portali per il team',
                         'Database e pannelli di gestione',
                         'Automazioni tra strumenti esistenti',
-                        'Flussi AI pratici dove fanno risparmiare tempo',
+                        'Automazioni con AI dove fanno davvero risparmiare tempo',
                     ],
                 },
                 {
                     title: 'Product',
                     label: 'Lanciare idee digitali',
                     plainLabel: "Lanciare un'idea digitale",
+                    capability: 'Web App',
                     situation:
-                        "Hai un'idea per un portale, una web app o un servizio digitale, ma serve trasformarla in qualcosa che le persone possano usare.",
+                        'Sai che un portale, una dashboard o una nuova esperienza digitale aiuterebbe il business, ma manca chi la trasformi in un prodotto che le persone possano usare.',
                     description:
-                        'MVP, portali clienti e web app costruiti con attenzione a UX, solidita tecnica e possibilita di evolvere nel tempo.',
+                        'MVP, portali clienti e web app costruiti con attenzione a UX, solidità tecnica e possibilità di evolvere nel tempo.',
                     bullets: [
-                        'MVP e applicazioni web',
+                        'Prima versione funzionante (MVP) e web app',
                         'Portali clienti o aree riservate',
                         'Prototipi e flussi facili da usare',
-                        'Frontend, backend e messa online',
+                        'Sviluppo completo e pubblicazione online',
+                    ],
+                },
+                {
+                    title: 'Support',
+                    label: 'Migliorare quello che hai',
+                    plainLabel: 'Migliorare quello che hai già',
+                    capability: 'Supporto',
+                    situation:
+                        "Hai già un sito, un'app o un flusso di lavoro, ma è lento, fragile o non fa più quello che ti serve.",
+                    description:
+                        'Interventi su prodotti esistenti: correzioni, miglioramenti e nuove funzionalità senza ripartire da zero.',
+                    bullets: [
+                        'Bug fix e correzioni urgenti',
+                        'Miglioramenti di performance, SEO e accessibilità',
+                        'Nuove funzionalità su siti e app esistenti',
+                        'Manutenzione e supporto continuativo',
                     ],
                 },
             ],
@@ -704,7 +703,7 @@ export const siteContent: Record<Locale, SiteContent> = {
                     {
                         title: 'Mappa della soluzione',
                         description:
-                            'Definiamo priorita, contenuti, funzionalita e primo rilascio utile.',
+                            'Definiamo priorità, contenuti, funzionalità e primo rilascio utile.',
                     },
                     {
                         title: 'Build iterativa',
@@ -724,29 +723,29 @@ export const siteContent: Record<Locale, SiteContent> = {
                 items: [
                     {
                         question: 'Lavori solo su siti web?',
-                        answer: 'No. Il sito e spesso il punto di partenza, ma posso lavorare anche su applicazioni web, dashboard, aree riservate, integrazioni e automazioni.',
+                        answer: 'No. Il sito è spesso il punto di partenza, ma posso lavorare anche su applicazioni web, dashboard, aree riservate, integrazioni e automazioni.',
                     },
                     {
                         question: 'Puoi seguire anche UX e struttura dei contenuti?',
-                        answer: 'Si. Posso aiutarti a chiarire flussi, gerarchia dei contenuti e interfacce. Se serve una direzione visual specialistica, la definiamo nel progetto.',
+                        answer: 'Sì. Posso aiutarti a chiarire flussi, gerarchia dei contenuti e interfacce. Se serve una direzione visual specialistica, la definiamo nel progetto.',
                     },
                     {
                         question: 'Come funziona la consulenza iniziale?',
-                        answer: 'Parliamo del problema, dello stato attuale, degli obiettivi e del primo risultato utile. Da li preparo una proposta coerente con scope e priorita.',
+                        answer: 'Parliamo del problema, dello stato attuale, degli obiettivi e del primo risultato utile. Da lì preparo una proposta coerente con scope e priorità.',
                     },
                     {
                         question: 'Parliamo di budget nella call?',
-                        answer: 'Si, ma senza forzare soluzioni preconfezionate. L’obiettivo e capire il perimetro e proporre il percorso piu snello per arrivare a valore.',
+                        answer: 'Sì, ma senza forzare soluzioni preconfezionate. L’obiettivo è capire il perimetro e proporre il percorso più snello per arrivare a valore.',
                     },
                     {
-                        question: 'Puoi lavorare con team o agenzie gia esistenti?',
-                        answer: 'Si. Posso integrarmi in processi esistenti oppure gestire direttamente le parti digitali concordate.',
+                        question: 'Puoi lavorare con team o agenzie già esistenti?',
+                        answer: 'Sì. Posso integrarmi in processi esistenti oppure gestire direttamente le parti digitali concordate.',
                     },
                 ],
             },
             booking: {
                 eyebrow: 'Prossimo passo',
-                title: 'Prenota una consulenza e capiamo cosa puo sbloccare il digitale per la tua azienda.',
+                title: 'Prenota una consulenza e capiamo cosa può sbloccare il digitale per la tua azienda.',
                 description:
                     '30 minuti, senza impegno. Portami il problema: sito, processo, idea o progetto in corso.',
             },
@@ -758,7 +757,7 @@ export const siteContent: Record<Locale, SiteContent> = {
             problem: 'Problema',
             solution: 'Soluzione',
             outcome: 'Risultato',
-            gallery: 'Altre immagini',
+            gallery: 'Galleria',
             galleryView: 'Formato',
             galleryDesktop: 'Desktop',
             galleryMobile: 'Mobile',
@@ -818,7 +817,7 @@ export const siteContent: Record<Locale, SiteContent> = {
                 book: 'Book a project discovery call',
                 project: 'View project',
                 liveSite: 'Visit live site',
-                caseStudy: 'Case study',
+                caseStudy: 'Learn more',
                 backHome: 'Back to home',
                 backProjects: 'Back to projects',
             },
@@ -910,9 +909,9 @@ export const siteContent: Record<Locale, SiteContent> = {
             hero: {
                 eyebrow: 'Websites that bring clients',
                 title: 'You do not need a prettier website. You need one that brings clients.',
-                lead: 'If people find you online but do not quickly understand why they should choose you, every visit is a missed opportunity. I design and build websites, apps, and automation that turn attention into contacts and work.',
+                lead: 'If people find you online but do not quickly understand why they should choose you, every visit is a missed opportunity.',
                 secondary:
-                    'We start from what blocks growth: message, journey, data, workflows. Then we build the simplest digital system that can create value.',
+                    'I design and build Websites, Apps, and AI Automations to help businesses get chosen, work better, and grow.',
             },
             proof: {
                 eyebrow: 'Experience across real products and projects',
@@ -928,10 +927,7 @@ export const siteContent: Record<Locale, SiteContent> = {
                 ],
                 stats: [
                     { value: '8+', label: 'years on production web products' },
-                    {
-                        value: 'TV/Web',
-                        label: 'experience across streaming platforms and business websites',
-                    },
+                    { value: '20+', label: 'web projects delivered' },
                     { value: 'IT/EN', label: 'work with Italian and international clients' },
                 ],
             },
@@ -943,30 +939,13 @@ export const siteContent: Record<Locale, SiteContent> = {
                 imageAlt: 'Francesco Cipolla, senior engineer and digital product partner',
                 imageCaption: 'Francesco Cipolla / product, design, engineering',
             },
-            pains: [
-                {
-                    title: 'The website does not generate enquiries',
-                    description:
-                        'Your online presence exists, but it does not clearly explain what you do, who it is for, and why people should contact you.',
-                },
-                {
-                    title: 'Too much work is manual',
-                    description:
-                        'Quotes, requests, data, and updates move through emails, spreadsheets, and messages instead of one reliable system.',
-                },
-                {
-                    title: 'Digital ideas stay stuck',
-                    description:
-                        'You know a portal, dashboard, or digital experience would help the business, but you need someone to turn it into a real product.',
-                },
-            ],
             serviceIntro: {
-                eyebrow: 'Three ways to work together',
-                title: 'Choose where to start: contacts, time, or a new idea.',
+                eyebrow: 'Four ways to work together',
+                title: 'Choose where to start: contacts, time, a new idea, or a system to improve.',
                 description:
-                    'We start from the business problem you can recognize immediately. Then we choose the simplest digital piece to build value.',
+                    'I start from the business problem you can recognize immediately. Then we choose together the simplest digital piece to build value.',
                 situationLabel: 'When it helps',
-                buildLabel: 'What we can build',
+                buildLabel: 'What I can build',
                 ctaLabel: 'Talk through your case',
                 ctaHelper:
                     'You do not need to choose the technical solution: start from the most urgent problem.',
@@ -976,8 +955,9 @@ export const siteContent: Record<Locale, SiteContent> = {
                     title: 'Growth',
                     label: 'Convert better online',
                     plainLabel: 'Get contacted more easily',
+                    capability: 'Web',
                     situation:
-                        'People reach your site, but they do not quickly understand why to choose you or how to take the next step.',
+                        'Your online presence exists, but it does not clearly explain what you do, who it is for, and why people should contact you — every visit becomes a missed opportunity.',
                     description:
                         'Websites, landing pages, and digital journeys that explain the value, build trust, and make it easier to contact you.',
                     bullets: [
@@ -991,30 +971,48 @@ export const siteContent: Record<Locale, SiteContent> = {
                     title: 'Operations',
                     label: 'Reduce manual work',
                     plainLabel: 'Save operational time',
+                    capability: 'Apps · AI',
                     situation:
-                        'Your team loses hours across spreadsheets, email, copy-paste work, and tools that do not talk to each other.',
+                        'Quotes, requests, data, and updates move through emails, spreadsheets, and messages instead of one reliable system — your team loses hours on work that could be automated.',
                     description:
                         'Internal apps, dashboards, integrations, and automation that connect tools and make processes easier to manage.',
                     bullets: [
                         'Dashboards and team portals',
                         'Databases and admin panels',
                         'Automation across existing tools',
-                        'Practical AI flows where they save time',
+                        'AI automation where it genuinely saves time',
                     ],
                 },
                 {
                     title: 'Product',
                     label: 'Launch digital ideas',
                     plainLabel: 'Launch a digital idea',
+                    capability: 'Web Apps',
                     situation:
-                        'You have an idea for a portal, web app, or digital service, but it needs to become something people can actually use.',
+                        'You know a portal, dashboard, or digital experience would help the business, but you need someone to turn it into a real product people can actually use.',
                     description:
                         'MVPs, customer portals, and web apps built with clear UX, solid engineering, and room to evolve.',
                     bullets: [
-                        'MVPs and web applications',
+                        'First working version (MVP) and web apps',
                         'Customer portals and private areas',
                         'Prototypes and easy-to-use flows',
-                        'Frontend, backend, and launch',
+                        'Full-stack development and deployment',
+                    ],
+                },
+                {
+                    title: 'Support',
+                    label: 'Improve what you already have',
+                    plainLabel: 'Improve what you already have',
+                    capability: 'Support',
+                    situation:
+                        'You already have a site, an app, or a workflow, but it is slow, fragile, or no longer does what you need.',
+                    description:
+                        'Work on existing products: fixes, improvements, and new features without starting from scratch.',
+                    bullets: [
+                        'Bug fixes and urgent corrections',
+                        'Performance, SEO, and accessibility improvements',
+                        'New features on existing sites and apps',
+                        'Ongoing maintenance and support',
                     ],
                 },
             ],
@@ -1090,7 +1088,7 @@ export const siteContent: Record<Locale, SiteContent> = {
             problem: 'Problem',
             solution: 'Solution',
             outcome: 'Outcome',
-            gallery: 'More images',
+            gallery: 'Gallery',
             galleryView: 'Format',
             galleryDesktop: 'Desktop',
             galleryMobile: 'Mobile',

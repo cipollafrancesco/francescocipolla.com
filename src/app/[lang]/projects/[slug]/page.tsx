@@ -7,7 +7,6 @@ import { withLocaleMetadata } from '@/lib/metadata'
 import { getProjectGalleryMedia } from '@/lib/project-gallery'
 import { ArrowLeft, ArrowUpRight } from 'lucide-react'
 import type { Metadata } from 'next'
-import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
@@ -74,41 +73,37 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             <main id="main-content" className="mx-auto max-w-5xl px-6 pb-16 pt-8 md:py-16">
                 <Link
                     href={`/${lang}/projects`}
-                    className="mb-12 inline-flex items-center gap-2 text-sm text-gray-500 transition-colors hover:text-black"
+                    className="mb-12 inline-flex items-center gap-2 rounded-full border border-black px-4 py-2 text-sm font-semibold text-black transition-colors hover:bg-black hover:text-white"
                 >
                     <ArrowLeft className="h-4 w-4" />
                     {content.common.cta.backProjects}
                 </Link>
 
                 <div className="mb-12">
-                    <div className="mb-4 text-sm text-gray-400">
+                    <div className="mb-4 text-xs font-semibold uppercase tracking-[0.22em] text-gray-500">
                         <span>{project.client}</span>
                     </div>
                     <h1 className="mb-8 text-5xl font-extrabold leading-none tracking-tighter md:text-7xl">
                         {project.title}
                     </h1>
-                    <div className="mb-8 flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-2">
                         {project.technologies.map((tech) => (
                             <Badge key={tech}>{tech}</Badge>
                         ))}
                     </div>
-                    <a
-                        href={project.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 text-sm font-medium underline underline-offset-4 transition-colors hover:text-gray-600"
-                    >
-                        {content.common.cta.liveSite} <ArrowUpRight className="h-4 w-4" />
-                    </a>
                 </div>
 
-                <div className="relative mb-16 aspect-video w-full overflow-hidden rounded-lg bg-gray-50">
-                    <Image
-                        src={project.image}
-                        alt={project.title}
-                        fill
-                        className="object-cover"
-                        priority
+                <div className="mb-16">
+                    <ProjectGalleryCarousel
+                        media={visibleGalleryMedia}
+                        projectTitle={project.title}
+                        labels={{
+                            view: content.projectPage.galleryView,
+                            desktop: content.projectPage.galleryDesktop,
+                            mobile: content.projectPage.galleryMobile,
+                            previous: content.projectPage.galleryPrevious,
+                            next: content.projectPage.galleryNext,
+                        }}
                     />
                 </div>
 
@@ -149,32 +144,16 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                                 </li>
                             ))}
                         </ul>
+                        <a
+                            href={project.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="mt-8 inline-flex items-center gap-2 rounded-md border border-black px-4 py-2 text-sm font-semibold text-black transition-colors hover:bg-black hover:text-white"
+                        >
+                            {content.common.cta.liveSite} <ArrowUpRight className="h-4 w-4" />
+                        </a>
                     </aside>
                 </div>
-
-                <section className="mt-20 border-t border-black pt-12">
-                    <div className="mb-8">
-                        <div>
-                            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-gray-500">
-                                {project.client}
-                            </p>
-                            <h2 className="mt-3 text-3xl font-black tracking-tight md:text-5xl">
-                                {content.projectPage.gallery}
-                            </h2>
-                        </div>
-                    </div>
-                    <ProjectGalleryCarousel
-                        media={visibleGalleryMedia}
-                        projectTitle={project.title}
-                        labels={{
-                            view: content.projectPage.galleryView,
-                            desktop: content.projectPage.galleryDesktop,
-                            mobile: content.projectPage.galleryMobile,
-                            previous: content.projectPage.galleryPrevious,
-                            next: content.projectPage.galleryNext,
-                        }}
-                    />
-                </section>
             </main>
         </div>
     )

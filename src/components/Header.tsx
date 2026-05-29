@@ -17,9 +17,9 @@ const Header = ({ lang, copy }: HeaderProps) => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
     const menuItems = [
+        { href: `/${lang}/#services`, label: copy.nav.services },
         { href: `/${lang}/about`, label: copy.nav.about },
         { href: `/${lang}/projects`, label: copy.nav.projects },
-        { href: `/${lang}/blog`, label: 'blog' },
         { href: `/${lang}/contacts`, label: copy.nav.contacts },
     ]
 
@@ -56,14 +56,6 @@ const Header = ({ lang, copy }: HeaderProps) => {
                                 {item.label}
                             </Link>
                         ))}
-                        <a
-                            href="/resume.pdf"
-                            download
-                            className="rounded border border-black px-3 py-1 text-black transition-colors duration-200 hover:bg-black hover:text-white lg:text-lg"
-                            aria-label={copy.nav.resume}
-                        >
-                            {copy.nav.resume}
-                        </a>
                         <Link
                             href={`/${lang}/#booking`}
                             className="rounded bg-black px-4 py-2 text-white transition-colors duration-200 hover:bg-gray-800 lg:text-base"

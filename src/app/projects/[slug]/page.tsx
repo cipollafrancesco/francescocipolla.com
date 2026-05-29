@@ -137,14 +137,9 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 {galleryImages.length > 0 && (
                     <section className="mt-20 border-t border-black pt-12">
                         <div className="mb-8 flex items-end justify-between gap-6">
-                            <div>
-                                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-gray-500">
-                                    {project.client}
-                                </p>
-                                <h2 className="mt-3 text-3xl font-black tracking-tight md:text-5xl">
-                                    More images
-                                </h2>
-                            </div>
+                            <h2 className="text-3xl font-black tracking-tight md:text-5xl">
+                                Gallery
+                            </h2>
                             <p className="text-sm font-semibold text-gray-500">
                                 {galleryImages.length.toString().padStart(2, '0')}
                             </p>

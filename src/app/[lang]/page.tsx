@@ -45,17 +45,8 @@ export default async function HomePage({ params }: HomePageProps) {
     const services = content.services
     const bookingHref = `/${lang}/#booking`
     const casesHref = `/${lang}/#case-studies`
-    const caseStudiesLabel = lang === 'it' ? 'Vedi casi studio' : 'View case studies'
-    const diagnosticLabel = lang === 'it' ? 'Diagnosi' : 'Diagnostic'
-    const diagnosticTitle =
-        lang === 'it'
-            ? 'Prima di rifare il sito, capiamo dove perde valore.'
-            : 'Before rebuilding the site, find where it loses value.'
+    const caseStudiesLabel = lang === 'it' ? 'Guarda i miei progetti' : 'See past work'
     const hasProfileImage = existsSync(profileImageFile)
-    const heroLead =
-        lang === 'it'
-            ? 'Se le persone ti trovano online ma non capiscono subito perche sceglierti, ogni visita diventa un’occasione persa.'
-            : 'If people find you online but do not quickly understand why they should choose you, every visit is a missed opportunity.'
 
     return (
         <div className="min-h-screen bg-white text-black md:mt-[88px]">
@@ -63,113 +54,62 @@ export default async function HomePage({ params }: HomePageProps) {
             <main id="main-content">
                 <section className="relative overflow-hidden border-b border-black">
                     <HeroContourField className="pointer-events-none absolute inset-0 z-0 h-full w-full opacity-70 md:opacity-100" />
-                    <div className="relative z-10 mx-auto grid min-h-[calc(100svh-88px)] min-w-0 max-w-6xl content-start gap-8 px-5 pb-7 pt-8 md:content-between md:px-8 md:pb-9 md:pt-14 lg:grid-cols-[minmax(0,1fr)_330px]">
-                        <Reveal className="min-w-0 self-center">
-                            <div className="mb-6 flex items-center gap-4">
-                                <span className="h-px w-12 bg-black" aria-hidden="true" />
-                                <p className="max-w-[16rem] text-xs font-semibold uppercase leading-5 tracking-[0.22em] text-gray-500 md:max-w-none md:tracking-[0.3em]">
-                                    {services.hero.eyebrow}
+                    <div className="relative z-10 mx-auto flex min-h-[calc(100svh-88px)] max-w-6xl flex-col px-5 py-8 md:px-8 md:py-14">
+                        {/* Main content — vertically centered */}
+                        <div className="flex flex-1 items-center">
+                            <Reveal className="w-full max-w-5xl">
+                                <h1 className="max-w-5xl text-[clamp(2.6rem,10vw,4.5rem)] font-black leading-[0.95] tracking-tight md:text-[clamp(3rem,5.8vw,5.5rem)]">
+                                    {services.hero.title}
+                                </h1>
+                                <p className="mt-6 max-w-2xl text-lg leading-8 text-gray-700 md:text-xl">
+                                    {services.hero.lead}
                                 </p>
-                            </div>
-                            <h1 className="max-w-full text-[clamp(2.65rem,12.2vw,6.5rem)] font-black leading-[0.92] tracking-tight md:max-w-5xl md:text-[clamp(3.1rem,5.7vw,6.5rem)] md:leading-[0.9]">
-                                {services.hero.title}
-                            </h1>
-                        </Reveal>
-
-                        <Reveal
-                            delay={0.08}
-                            className="min-w-0 self-center lg:border-l lg:border-black lg:pl-8"
-                        >
-                            <p className="max-w-full text-lg leading-8 text-black md:text-xl md:leading-8">
-                                {heroLead}
-                            </p>
-                            <div className="mt-6 flex flex-col gap-3">
-                                <TrackedLink
-                                    href={bookingHref}
-                                    event="booking_cta_click"
-                                    eventParams={{ locale: lang, location: 'hero' }}
-                                    className="inline-flex min-h-11 w-full max-w-full items-center justify-center gap-2 rounded-md border border-black bg-black px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white hover:text-black sm:w-fit"
-                                >
-                                    {content.common.cta.book}
-                                    <ArrowRight className="h-4 w-4" />
-                                </TrackedLink>
-                                <Link
-                                    href={casesHref}
-                                    className="inline-flex items-center justify-center gap-2 px-1 py-2 text-sm font-semibold text-black underline underline-offset-4 transition-opacity hover:opacity-60"
-                                >
-                                    {caseStudiesLabel} <ArrowUpRight className="h-4 w-4" />
-                                </Link>
-                            </div>
-                        </Reveal>
-
-                        <Reveal
-                            delay={0.14}
-                            className="min-w-0 border-t border-black pt-5 lg:col-span-2"
-                        >
-                            <div>
-                                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gray-500">
-                                    {services.proof.eyebrow}
+                                <p className="mt-3 max-w-2xl text-lg leading-8 text-gray-700 md:text-xl">
+                                    {services.hero.secondary}
                                 </p>
-                                <CompanyLogoMarquee names={services.proof.names} />
-                            </div>
-                        </Reveal>
-                    </div>
-                </section>
-
-                <section className="border-b border-black py-16 md:py-24">
-                    <div className="mx-auto max-w-6xl px-5 md:px-8">
-                        <Reveal className="mb-10 grid gap-5 md:grid-cols-[0.75fr_1.25fr] md:items-end">
-                            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-gray-500">
-                                {diagnosticLabel}
-                            </p>
-                            <h2 className="text-3xl font-black tracking-tight md:text-5xl">
-                                {diagnosticTitle}
-                            </h2>
-                        </Reveal>
-                        {services.pains.map((pain, index) => (
-                            <Reveal key={pain.title} delay={index * 0.06}>
-                                <article
-                                    tabIndex={0}
-                                    className="group relative grid gap-5 overflow-hidden border-t border-black py-8 outline-none transition-colors duration-300 last:border-b hover:bg-gray-50 focus-visible:bg-gray-50 md:grid-cols-[120px_0.8fr_1.2fr] md:items-start"
-                                >
-                                    <span
-                                        className="absolute left-0 top-0 h-full w-1 origin-top scale-y-0 bg-black transition-transform duration-300 group-hover:scale-y-100 group-focus-visible:scale-y-100"
-                                        aria-hidden="true"
-                                    />
-                                    <span
-                                        className="absolute left-0 top-0 h-px w-full -translate-x-full bg-black/30 transition-transform duration-500 group-hover:translate-x-0 group-focus-visible:translate-x-0"
-                                        aria-hidden="true"
-                                    />
-                                    <span className="text-5xl font-black leading-none text-gray-200 transition-colors duration-300 group-hover:text-black group-focus-visible:text-black md:text-6xl">
-                                        0{index + 1}
-                                    </span>
-                                    <h3 className="text-2xl font-black tracking-tight transition-transform duration-300 group-hover:translate-x-2 group-focus-visible:translate-x-2 motion-reduce:transition-none md:text-3xl">
-                                        {pain.title}
-                                    </h3>
-                                    <p className="max-w-2xl text-base leading-7 text-gray-600 transition-colors duration-300 group-hover:text-gray-800 group-focus-visible:text-gray-800">
-                                        {pain.description}
-                                    </p>
-                                </article>
+                                <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-5">
+                                    <TrackedLink
+                                        href={bookingHref}
+                                        event="booking_cta_click"
+                                        eventParams={{ locale: lang, location: 'hero' }}
+                                        className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-black bg-black px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white hover:text-black sm:w-fit"
+                                    >
+                                        {content.common.cta.book}
+                                        <ArrowRight className="h-4 w-4" />
+                                    </TrackedLink>
+                                    <Link
+                                        href={casesHref}
+                                        className="inline-flex items-center gap-2 px-1 py-2 text-sm font-semibold text-black underline underline-offset-4 transition-opacity hover:opacity-60"
+                                    >
+                                        {caseStudiesLabel} <ArrowUpRight className="h-4 w-4" />
+                                    </Link>
+                                </div>
                             </Reveal>
-                        ))}
+                        </div>
+
+                        {/* Logo strip — anchored to the bottom */}
+                        <Reveal delay={0.14} className="mt-10 border-t border-black pt-5">
+                            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gray-500">
+                                {services.proof.eyebrow}
+                            </p>
+                            <CompanyLogoMarquee names={services.proof.names} />
+                        </Reveal>
                     </div>
                 </section>
 
                 <Section
+                    id="services"
                     eyebrow={services.serviceIntro.eyebrow}
                     title={services.serviceIntro.title}
                     description={services.serviceIntro.description}
                     className="border-b border-black py-16 md:py-28"
                 >
-                    <div className="grid border border-black md:grid-cols-3">
+                    <div className="grid border-l border-t border-black md:grid-cols-2">
                         {services.buckets.map((bucket, index) => (
                             <Reveal key={bucket.title} delay={index * 0.06} className="h-full">
-                                <article className="group flex h-full flex-col border-b border-black bg-white transition-colors duration-300 last:border-b-0 hover:bg-gray-50 md:min-h-[520px] md:border-b-0 md:border-r md:last:border-r-0">
+                                <article className="group flex h-full flex-col border-b border-r border-black bg-white transition-colors duration-300 hover:bg-gray-50 md:min-h-[480px]">
                                     <div className="border-b border-black p-4 md:p-6">
-                                        <div className="flex items-start justify-between gap-4">
-                                            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gray-500">
-                                                {bucket.title}
-                                            </p>
+                                        <div className="flex items-start justify-end">
                                             <span className="text-4xl font-black leading-none text-gray-200 transition-colors duration-300 group-hover:text-black md:text-5xl">
                                                 0{index + 1}
                                             </span>
@@ -228,7 +168,7 @@ export default async function HomePage({ params }: HomePageProps) {
 
                 <section
                     id="case-studies"
-                    className="overflow-hidden border-b border-black bg-black py-16 text-white md:py-24"
+                    className="border-b border-black bg-black py-16 text-white [overflow-y:clip] md:py-24"
                 >
                     <div className="mx-auto max-w-6xl px-5 md:px-8">
                         <Reveal className="grid gap-5 md:grid-cols-[0.75fr_1.25fr] md:items-end">
@@ -245,7 +185,7 @@ export default async function HomePage({ params }: HomePageProps) {
                             </p>
                         </Reveal>
                     </div>
-                    <div className="mt-12 flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth px-[max(1.25rem,calc((100vw-72rem)/2+2rem))] pb-8 md:gap-8">
+                    <div className="mt-12 flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth px-[max(1.25rem,calc((100vw-72rem)/2+2rem))] pb-8 pt-2 md:gap-8">
                         {content.projects.map((project, index) => (
                             <Reveal
                                 key={project.slug}
@@ -269,8 +209,8 @@ export default async function HomePage({ params }: HomePageProps) {
                                             sizes="(min-width: 1024px) 840px, 88vw"
                                         />
                                     </div>
-                                    <div className="grid min-h-[172px] gap-4 border-t border-black/10 p-5 md:grid-cols-[1fr_auto] md:items-center md:p-6">
-                                        <div className="grid min-h-[100px] content-start">
+                                    <div className="flex flex-col gap-3 border-t border-black/10 p-5 md:p-6">
+                                        <div className="grid content-start">
                                             <div className="flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-gray-500">
                                                 <span>0{index + 1}</span>
                                                 <span aria-hidden="true">/</span>

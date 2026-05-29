@@ -78,7 +78,7 @@ export default function StackedProjects({
                                 />
                             </Link>
 
-                            <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-black/60 p-6 opacity-100 transition-opacity duration-300 md:opacity-0 md:group-hover:opacity-100">
+                            <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-black/60 p-6 opacity-0 transition-opacity duration-300 group-focus-within:opacity-100 md:group-hover:opacity-100">
                                 <Link
                                     href={`/${lang}/projects/${project.slug}`}
                                     className="pointer-events-auto inline-flex items-center gap-2 rounded-full border border-white/70 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-white hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
