@@ -56,6 +56,8 @@ export type SiteContent = {
         }
         cta: {
             book: string
+            bookMicrocopy: string
+            tellProject: string
             project: string
             liveSite: string
             caseStudy: string
@@ -109,20 +111,23 @@ export type SiteContent = {
             eyebrow: string
             title: string
             description: string
-            situationLabel: string
-            buildLabel: string
             ctaLabel: string
+            ctaHelperTitle: string
             ctaHelper: string
         }
         buckets: {
             title: string
             label: string
             plainLabel: string
-            capability: string
             situation: string
             description: string
-            bullets: string[]
         }[]
+        capabilities: {
+            eyebrow: string
+            title: string
+            description: string
+            items: { key: string; name: string; description: string }[]
+        }
         cases: {
             eyebrow: string
             title: string
@@ -171,6 +176,42 @@ export type SiteContent = {
         description: string
         accept: string
         reject: string
+    }
+    contact: {
+        form: {
+            eyebrow: string
+            title: string
+            intro: string
+            fields: {
+                name: string
+                namePlaceholder: string
+                email: string
+                emailPlaceholder: string
+                company: string
+                companyPlaceholder: string
+                topic: string
+                message: string
+                messagePlaceholder: string
+                submit: string
+                submitting: string
+            }
+            topics: {
+                growth: string
+                operations: string
+                product: string
+                support: string
+            }
+            success: {
+                title: string
+                body: string
+            }
+            errors: {
+                required: string
+                emailInvalid: string
+                messageTooShort: string
+                generic: string
+            }
+        }
     }
 }
 
@@ -458,7 +499,7 @@ export const siteContent: Record<Locale, SiteContent> = {
                 projects: 'Progetti',
                 services: 'Servizi',
                 contacts: 'Contatti',
-                bookCall: 'Prenota una consulenza',
+                bookCall: 'Consulenza gratuita',
                 resume: 'CV',
                 openMenu: 'Apri menu',
                 closeMenu: 'Chiudi menu',
@@ -484,10 +525,12 @@ export const siteContent: Record<Locale, SiteContent> = {
                 rights: 'Realizzato in Italia, per aziende che vogliono crescere online.',
             },
             cta: {
-                book: 'Prenota una consulenza',
-                project: 'Guarda il progetto',
+                book: 'Prenota una consulenza gratuita',
+                bookMicrocopy: '30 minuti · senza impegno · nessun preventivo a sorpresa',
+                tellProject: 'Raccontami il tuo progetto',
+                project: 'Vedi il progetto',
                 liveSite: 'Visita il sito',
-                caseStudy: 'Scopri di più',
+                caseStudy: 'Vedi il progetto',
                 backHome: 'Torna alla home',
                 backProjects: 'Torna ai progetti',
             },
@@ -576,14 +619,14 @@ export const siteContent: Record<Locale, SiteContent> = {
         ],
         services: {
             hero: {
-                eyebrow: 'Siti web che portano clienti',
+                eyebrow: 'Siti, web app e automazioni AI',
                 title: 'Non ti serve un sito più bello. Ti serve un sito che porti clienti.',
-                lead: 'Se le persone ti trovano online ma non capiscono subito perché sceglierti, ogni visita diventa un’occasione persa.',
+                lead: 'Se ti trovano online ma non capiscono subito perché scegliere te, ogni visita è un’occasione persa.',
                 secondary:
-                    'Progetto e sviluppo Siti Web, App e automazioni AI per aiutare le aziende a farsi scegliere, lavorare meglio e crescere.',
+                    'Aiuto aziende e professionisti a trasformare le visite in contatti, i processi manuali in ore risparmiate e le idee in prodotti.',
             },
             proof: {
-                eyebrow: 'Esperienza su prodotti e progetti reali',
+                eyebrow: 'Esperienza su prodotti e aziende reali',
                 names: [
                     'FIFA+',
                     'CHILI',
@@ -602,92 +645,94 @@ export const siteContent: Record<Locale, SiteContent> = {
             },
             profile: {
                 eyebrow: 'Chi sono',
-                title: 'Ingegnere Informatico e partner digitale per progetti web orientati al business.',
+                title: 'Lavori con una persona sola, dall’idea alla messa online.',
                 description:
-                    'Lavoro da oltre 8 anni su prodotti web in produzione, piattaforme streaming, siti aziendali e applicazioni digitali. Porto insieme visione di prodotto, cura dell’interfaccia e solidità tecnica per aiutare le aziende a trasformare idee, processi e presenza online in sistemi utili.',
+                    'Da oltre 8 anni costruisco prodotti web che vanno in produzione: piattaforme di streaming, siti aziendali e applicazioni su misura. Unisco visione di prodotto, cura dell’interfaccia e basi tecniche solide, così non devi coordinare più figure diverse.',
                 imageAlt: 'Francesco Cipolla, ingegnere informatico e digital product partner',
                 imageCaption: 'Francesco Cipolla / prodotto, design, sviluppo',
             },
             serviceIntro: {
-                eyebrow: 'Quattro modi per lavorare insieme',
-                title: 'Scegli da dove partire: contatti, tempo, una nuova idea o un sistema da migliorare.',
+                eyebrow: 'Soluzioni',
+                title: 'Parto dal problema che riconosci, non dalla soluzione tecnica.',
                 description:
-                    'Parto dal problema che riconosci subito nel tuo business. Poi scegliamo insieme il pezzo digitale più semplice da costruire per generare valore.',
-                situationLabel: 'Quando serve',
-                buildLabel: 'Cosa posso costruire',
+                    'Scegliamo insieme il pezzo digitale più piccolo e concreto che porta un risultato, senza costruire più del necessario.',
                 ctaLabel: 'Parliamo del tuo caso',
-                ctaHelper:
-                    'Non devi scegliere la soluzione tecnica: basta partire dal problema più urgente.',
+                ctaHelperTitle: 'Non devi scegliere nulla.',
+                ctaHelper: 'In call capiamo insieme da dove partire.',
             },
             buckets: [
                 {
                     title: 'Growth',
                     label: 'Convertire meglio online',
                     plainLabel: 'Farti contattare meglio',
-                    capability: 'Web',
                     situation:
-                        "La tua presenza online esiste, ma non spiega abbastanza bene cosa fai, per chi lo fai e perché contattarti — ogni visita diventa un'occasione persa.",
+                        "La tua presenza online c'è, ma non dice abbastanza in fretta cosa fai e perché scegliere te. Chi arriva, se ne va.",
                     description:
                         'Siti web, landing page e percorsi digitali che spiegano il valore, aumentano la fiducia e rendono più facile contattarti.',
-                    bullets: [
-                        'Siti aziendali e landing page',
-                        'Messaggi chiari e pulsanti di contatto',
-                        'Form collegati agli strumenti che già usi',
-                        'SEO tecnico, velocità e accessibilità',
-                    ],
                 },
                 {
                     title: 'Operations',
                     label: 'Ridurre lavoro manuale',
                     plainLabel: 'Risparmiare tempo operativo',
-                    capability: 'App · AI',
                     situation:
-                        'Preventivi, richieste, dati e aggiornamenti passano da email, fogli e messaggi invece che da un sistema unico — il team perde ore in attività che si potrebbero automatizzare.',
+                        'Preventivi, richieste e dati rimbalzano tra email, fogli e chat invece di stare in un unico posto. Il team perde ore in copia-incolla.',
                     description:
                         'Applicazioni interne, dashboard, integrazioni e automazioni per collegare strumenti e rendere i processi più fluidi.',
-                    bullets: [
-                        'Dashboard e portali per il team',
-                        'Database e pannelli di gestione',
-                        'Automazioni tra strumenti esistenti',
-                        'Automazioni con AI dove fanno davvero risparmiare tempo',
-                    ],
                 },
                 {
                     title: 'Product',
                     label: 'Lanciare idee digitali',
                     plainLabel: "Lanciare un'idea digitale",
-                    capability: 'Web App',
                     situation:
-                        'Sai che un portale, una dashboard o una nuova esperienza digitale aiuterebbe il business, ma manca chi la trasformi in un prodotto che le persone possano usare.',
+                        'Hai in testa un portale, una dashboard o un nuovo strumento digitale, ma manca chi lo trasformi da idea a prodotto che la gente usa davvero.',
                     description:
                         'MVP, portali clienti e web app costruiti con attenzione a UX, solidità tecnica e possibilità di evolvere nel tempo.',
-                    bullets: [
-                        'Prima versione funzionante (MVP) e web app',
-                        'Portali clienti o aree riservate',
-                        'Prototipi e flussi facili da usare',
-                        'Sviluppo completo e pubblicazione online',
-                    ],
                 },
                 {
                     title: 'Support',
                     label: 'Migliorare quello che hai',
                     plainLabel: 'Migliorare quello che hai già',
-                    capability: 'Supporto',
                     situation:
                         "Hai già un sito, un'app o un flusso di lavoro, ma è lento, fragile o non fa più quello che ti serve.",
                     description:
                         'Interventi su prodotti esistenti: correzioni, miglioramenti e nuove funzionalità senza ripartire da zero.',
-                    bullets: [
-                        'Bug fix e correzioni urgenti',
-                        'Miglioramenti di performance, SEO e accessibilità',
-                        'Nuove funzionalità su siti e app esistenti',
-                        'Manutenzione e supporto continuativo',
-                    ],
                 },
             ],
+            capabilities: {
+                eyebrow: 'Cosa costruisco',
+                title: "Dalla prima landing page all'app che usano i tuoi clienti.",
+                description:
+                    'La soluzione tecnica la scegliamo sul tuo problema — questi sono i mattoni con cui la costruisco.',
+                items: [
+                    {
+                        key: 'websites',
+                        name: 'Siti web & Landing page',
+                        description:
+                            'Pagine veloci e chiare, pensate per trasformare i visitatori in contatti.',
+                    },
+                    {
+                        key: 'webApps',
+                        name: 'Web app & Portali',
+                        description:
+                            'MVP, portali clienti e aree riservate su misura, pronti a crescere.',
+                    },
+                    {
+                        key: 'mobile',
+                        name: 'App mobile cross-platform',
+                        description:
+                            "Un'unica app per iOS e Android: un solo sviluppo, meno costi.",
+                    },
+                    {
+                        key: 'ai',
+                        name: 'Automazioni AI',
+                        description:
+                            "Attività ripetitive automatizzate dove l'AI fa davvero risparmiare tempo.",
+                    },
+                ],
+            },
             cases: {
                 eyebrow: 'Casi selezionati',
-                title: 'Progetti pubblici che mostrano il metodo.',
+                title: 'Progetti reali che puoi visitare online.',
                 description:
                     'Ogni progetto parte da un bisogno diverso: acquisire contatti, raccontare un brand, pubblicare contenuti o rendere chiara una proposta tecnica.',
             },
@@ -698,7 +743,7 @@ export const siteContent: Record<Locale, SiteContent> = {
                     {
                         title: 'Consulenza iniziale',
                         description:
-                            'Capisco obiettivi, vincoli, pubblico e problema reale prima di parlare di soluzione.',
+                            'Capisco obiettivi, vincoli, pubblico e qual è il problema vero da risolvere.',
                     },
                     {
                         title: 'Mappa della soluzione',
@@ -706,7 +751,7 @@ export const siteContent: Record<Locale, SiteContent> = {
                             'Definiamo priorità, contenuti, funzionalità e primo rilascio utile.',
                     },
                     {
-                        title: 'Build iterativa',
+                        title: 'Sviluppo iterativo',
                         description:
                             'Progetto e sviluppo con review frequenti, preview online e scelte tecniche spiegate in modo chiaro.',
                     },
@@ -735,7 +780,7 @@ export const siteContent: Record<Locale, SiteContent> = {
                     },
                     {
                         question: 'Parliamo di budget nella call?',
-                        answer: 'Sì, ma senza forzare soluzioni preconfezionate. L’obiettivo è capire il perimetro e proporre il percorso più snello per arrivare a valore.',
+                        answer: 'Sì, ma senza pacchetti preconfezionati. Prima capiamo il perimetro, poi ti propongo la strada più breve per ottenere un risultato.',
                     },
                     {
                         question: 'Puoi lavorare con team o agenzie già esistenti?',
@@ -745,9 +790,9 @@ export const siteContent: Record<Locale, SiteContent> = {
             },
             booking: {
                 eyebrow: 'Prossimo passo',
-                title: 'Prenota una consulenza e capiamo cosa può sbloccare il digitale per la tua azienda.',
+                title: 'Parliamone: porta il tuo problema, esci con una direzione.',
                 description:
-                    '30 minuti, senza impegno. Portami il problema: sito, processo, idea o progetto in corso.',
+                    "Senza impegno e senza preventivi a sorpresa. Sito, processo o idea: dimmi dov'è il blocco.",
             },
         },
         projects: itProjects,
@@ -779,6 +824,43 @@ export const siteContent: Record<Locale, SiteContent> = {
             accept: 'Accetta analytics',
             reject: 'Rifiuta',
         },
+        contact: {
+            form: {
+                eyebrow: 'Scrivi',
+                title: 'Dimmi come posso aiutarti.',
+                intro: 'Compila il form e ti rispondo entro 24 ore. Se preferisci parlare subito, usa il calendario qui sotto.',
+                fields: {
+                    name: 'Nome',
+                    namePlaceholder: 'Mario Rossi',
+                    email: 'Email',
+                    emailPlaceholder: 'mario@azienda.it',
+                    company: 'Azienda (opzionale)',
+                    companyPlaceholder: 'Nome azienda',
+                    topic: 'Di cosa hai bisogno?',
+                    message: 'Messaggio',
+                    messagePlaceholder: 'Descrivi brevemente il tuo progetto o problema...',
+                    submit: 'Invia il messaggio',
+                    submitting: 'Invio in corso...',
+                },
+                topics: {
+                    growth: 'Farmi trovare e contattare meglio online',
+                    operations: 'Ridurre il lavoro manuale nei processi',
+                    product: 'Costruire un prodotto o app web',
+                    support: 'Supporto tecnico su un progetto esistente',
+                },
+                success: {
+                    title: 'Messaggio ricevuto.',
+                    body: 'Ti rispondo entro 24 ore. Se il progetto è urgente, usa il calendario qui sotto per fissare subito una call.',
+                },
+                errors: {
+                    required: 'Campo obbligatorio',
+                    emailInvalid: 'Inserisci un indirizzo email valido',
+                    messageTooShort: 'Il messaggio è troppo corto (minimo 10 caratteri)',
+                    generic:
+                        'Si è verificato un errore. Riprova o scrivimi direttamente a info@francescocipolla.com.',
+                },
+            },
+        },
     },
     en: {
         common: {
@@ -788,7 +870,7 @@ export const siteContent: Record<Locale, SiteContent> = {
                 projects: 'Projects',
                 services: 'Services',
                 contacts: 'Contacts',
-                bookCall: 'Book a call',
+                bookCall: 'Free call',
                 resume: 'Resume',
                 openMenu: 'Open menu',
                 closeMenu: 'Close menu',
@@ -814,10 +896,12 @@ export const siteContent: Record<Locale, SiteContent> = {
                 rights: 'Built in Italy for businesses that want to grow online.',
             },
             cta: {
-                book: 'Book a project discovery call',
+                book: 'Book a free call',
+                bookMicrocopy: '30 minutes · no commitment · no surprise quotes',
+                tellProject: 'Tell me about your project',
                 project: 'View project',
                 liveSite: 'Visit live site',
-                caseStudy: 'Learn more',
+                caseStudy: 'See the project',
                 backHome: 'Back to home',
                 backProjects: 'Back to projects',
             },
@@ -914,7 +998,7 @@ export const siteContent: Record<Locale, SiteContent> = {
                     'I design and build Websites, Apps, and AI Automations to help businesses get chosen, work better, and grow.',
             },
             proof: {
-                eyebrow: 'Experience across real products and projects',
+                eyebrow: 'On real products and clients',
                 names: [
                     'FIFA+',
                     'CHILI',
@@ -933,89 +1017,88 @@ export const siteContent: Record<Locale, SiteContent> = {
             },
             profile: {
                 eyebrow: 'About me',
-                title: 'Senior engineer and digital partner for business-oriented web projects.',
+                title: 'Digital partner for businesses that want to grow online.',
                 description:
                     'I have spent 8+ years working on production web products, streaming platforms, business websites, and digital applications. I combine product thinking, interface care, and solid engineering to help companies turn ideas, workflows, and online presence into useful systems.',
                 imageAlt: 'Francesco Cipolla, senior engineer and digital product partner',
                 imageCaption: 'Francesco Cipolla / product, design, engineering',
             },
             serviceIntro: {
-                eyebrow: 'Four ways to work together',
-                title: 'Choose where to start: contacts, time, a new idea, or a system to improve.',
+                eyebrow: 'Solutions',
+                title: 'I start from the problem you recognise, not the technical solution.',
                 description:
                     'I start from the business problem you can recognize immediately. Then we choose together the simplest digital piece to build value.',
-                situationLabel: 'When it helps',
-                buildLabel: 'What I can build',
                 ctaLabel: 'Talk through your case',
-                ctaHelper:
-                    'You do not need to choose the technical solution: start from the most urgent problem.',
+                ctaHelperTitle: 'You don’t need to figure it out first.',
+                ctaHelper: 'We’ll work out where to start together on a call.',
             },
             buckets: [
                 {
                     title: 'Growth',
                     label: 'Convert better online',
                     plainLabel: 'Get contacted more easily',
-                    capability: 'Web',
                     situation:
                         'Your online presence exists, but it does not clearly explain what you do, who it is for, and why people should contact you — every visit becomes a missed opportunity.',
                     description:
                         'Websites, landing pages, and digital journeys that explain the value, build trust, and make it easier to contact you.',
-                    bullets: [
-                        'Business websites and landing pages',
-                        'Clear messaging and contact buttons',
-                        'Forms connected to tools you already use',
-                        'Technical SEO, speed, and accessibility',
-                    ],
                 },
                 {
                     title: 'Operations',
                     label: 'Reduce manual work',
                     plainLabel: 'Save operational time',
-                    capability: 'Apps · AI',
                     situation:
                         'Quotes, requests, data, and updates move through emails, spreadsheets, and messages instead of one reliable system — your team loses hours on work that could be automated.',
                     description:
                         'Internal apps, dashboards, integrations, and automation that connect tools and make processes easier to manage.',
-                    bullets: [
-                        'Dashboards and team portals',
-                        'Databases and admin panels',
-                        'Automation across existing tools',
-                        'AI automation where it genuinely saves time',
-                    ],
                 },
                 {
                     title: 'Product',
                     label: 'Launch digital ideas',
                     plainLabel: 'Launch a digital idea',
-                    capability: 'Web Apps',
                     situation:
                         'You know a portal, dashboard, or digital experience would help the business, but you need someone to turn it into a real product people can actually use.',
                     description:
                         'MVPs, customer portals, and web apps built with clear UX, solid engineering, and room to evolve.',
-                    bullets: [
-                        'First working version (MVP) and web apps',
-                        'Customer portals and private areas',
-                        'Prototypes and easy-to-use flows',
-                        'Full-stack development and deployment',
-                    ],
                 },
                 {
                     title: 'Support',
                     label: 'Improve what you already have',
                     plainLabel: 'Improve what you already have',
-                    capability: 'Support',
                     situation:
                         'You already have a site, an app, or a workflow, but it is slow, fragile, or no longer does what you need.',
                     description:
                         'Work on existing products: fixes, improvements, and new features without starting from scratch.',
-                    bullets: [
-                        'Bug fixes and urgent corrections',
-                        'Performance, SEO, and accessibility improvements',
-                        'New features on existing sites and apps',
-                        'Ongoing maintenance and support',
-                    ],
                 },
             ],
+            capabilities: {
+                eyebrow: 'What I build',
+                title: 'From your first landing page to the app your customers use.',
+                description:
+                    'We pick the technical solution around your problem — these are the building blocks I work with.',
+                items: [
+                    {
+                        key: 'websites',
+                        name: 'Websites & Landing pages',
+                        description: 'Fast, clear pages designed to turn visitors into contacts.',
+                    },
+                    {
+                        key: 'webApps',
+                        name: 'Web apps & Portals',
+                        description:
+                            'MVPs, customer portals, and private areas built to grow with you.',
+                    },
+                    {
+                        key: 'mobile',
+                        name: 'Cross-platform mobile apps',
+                        description: 'One app for iOS and Android: one codebase, lower cost.',
+                    },
+                    {
+                        key: 'ai',
+                        name: 'AI automations',
+                        description: 'Repetitive tasks automated where AI genuinely saves time.',
+                    },
+                ],
+            },
             cases: {
                 eyebrow: 'Selected cases',
                 title: 'Public projects that show the method.',
@@ -1109,6 +1192,43 @@ export const siteContent: Record<Locale, SiteContent> = {
                 'I use Google Analytics only if you accept it, to understand which pages and actions are actually useful to visitors. You can reject it and use the site normally.',
             accept: 'Accept analytics',
             reject: 'Reject',
+        },
+        contact: {
+            form: {
+                eyebrow: 'Write',
+                title: 'Tell me how I can help.',
+                intro: "Fill in the form and I'll get back to you within 24 hours. If you'd rather talk straight away, use the calendar below.",
+                fields: {
+                    name: 'Name',
+                    namePlaceholder: 'John Smith',
+                    email: 'Email',
+                    emailPlaceholder: 'john@company.com',
+                    company: 'Company (optional)',
+                    companyPlaceholder: 'Company name',
+                    topic: 'What do you need?',
+                    message: 'Message',
+                    messagePlaceholder: 'Briefly describe your project or challenge...',
+                    submit: 'Send message',
+                    submitting: 'Sending...',
+                },
+                topics: {
+                    growth: 'Get found and contacted more online',
+                    operations: 'Reduce manual work in processes',
+                    product: 'Build a product or web app',
+                    support: 'Technical support on an existing project',
+                },
+                success: {
+                    title: 'Message received.',
+                    body: "I'll get back to you within 24 hours. If it's urgent, use the calendar below to book a call straight away.",
+                },
+                errors: {
+                    required: 'This field is required',
+                    emailInvalid: 'Please enter a valid email address',
+                    messageTooShort: 'Message is too short (minimum 10 characters)',
+                    generic:
+                        'Something went wrong. Please try again or email me directly at info@francescocipolla.com.',
+                },
+            },
         },
     },
 }

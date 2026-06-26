@@ -149,7 +149,7 @@ export default function ServicesPage() {
                             {services.map((svc) => (
                                 <div
                                     key={svc.title}
-                                    className="rounded-2xl border border-gray-100 p-8 transition-all duration-300 hover:border-gray-300 hover:shadow-sm"
+                                    className="rounded-2xl border border-gray-100 p-8 transition-[border-color,box-shadow] duration-300 hover:border-gray-300 hover:shadow-sm"
                                 >
                                     <h3 className="mb-3 text-xl font-bold">{svc.title}</h3>
                                     <p className="mb-6 text-sm leading-relaxed text-gray-600">

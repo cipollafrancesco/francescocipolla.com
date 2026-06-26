@@ -12,14 +12,14 @@ export function AccordionItem({ question, children }: AccordionItemProps) {
                 <span>{question}</span>
                 <span
                     aria-hidden="true"
-                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-gray-200 text-xl leading-none transition-all duration-300 group-open:rotate-45 group-open:border-black group-open:bg-black group-open:text-white"
+                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-gray-200 text-xl leading-none transition-[transform,background-color,border-color,color] duration-300 group-open:rotate-45 group-open:border-black group-open:bg-black group-open:text-white"
                 >
                     +
                 </span>
             </summary>
             <div className="grid grid-rows-[1fr] transition-[grid-template-rows] duration-300">
                 <div className="overflow-hidden">
-                    <div className="mt-4 max-w-3xl translate-y-0 text-base leading-7 text-gray-600 opacity-100 transition-all duration-300 motion-reduce:transition-none">
+                    <div className="mt-4 max-w-3xl text-base leading-7 text-gray-600">
                         {children}
                     </div>
                 </div>

@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { existsSync } from 'fs'
 import Link from 'next/link'
 import { join } from 'path'
-import { ArrowRight, ArrowUpRight, Check } from 'lucide-react'
+import { AppWindow, ArrowRight, ArrowUpRight, Globe, Smartphone, Sparkles } from 'lucide-react'
 import { BookingEmphasisCard } from '@/components/BookingEmphasisCard'
 import CalEmbed from '@/components/CalEmbed'
 import { CompanyLogoMarquee } from '@/components/CompanyLogoMarquee'
@@ -14,6 +14,8 @@ import { Reveal } from '@/components/Reveal'
 import { TrackedLink } from '@/components/TrackedLink'
 import { TrackOnView } from '@/components/TrackOnView'
 import { AccordionItem } from '@/components/ui/Accordion'
+import { ButtonLink } from '@/components/ui/Button'
+import { Eyebrow } from '@/components/ui/Eyebrow'
 import { Section } from '@/components/ui/Section'
 import { getI18nContent } from '@/i18n/server'
 import { isLocale } from '@/i18n/config'
@@ -22,6 +24,13 @@ import { notFound } from 'next/navigation'
 
 interface HomePageProps {
     params: Promise<{ lang: string }>
+}
+
+const capabilityIcons: Record<string, typeof Globe> = {
+    websites: Globe,
+    webApps: AppWindow,
+    mobile: Smartphone,
+    ai: Sparkles,
 }
 
 const profileImageSrc = '/profile/me.webp'
@@ -45,7 +54,7 @@ export default async function HomePage({ params }: HomePageProps) {
     const services = content.services
     const bookingHref = `/${lang}/#booking`
     const casesHref = `/${lang}/#case-studies`
-    const caseStudiesLabel = lang === 'it' ? 'Guarda i miei progetti' : 'See past work'
+    const caseStudiesLabel = lang === 'it' ? 'Guarda i lavori realizzati' : 'See past work'
     const hasProfileImage = existsSync(profileImageFile)
 
     return (
@@ -54,17 +63,22 @@ export default async function HomePage({ params }: HomePageProps) {
             <main id="main-content">
                 <section className="relative overflow-hidden border-b border-black">
                     <HeroContourField className="pointer-events-none absolute inset-0 z-0 h-full w-full opacity-70 md:opacity-100" />
+                    <div
+                        aria-hidden="true"
+                        className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-r from-white from-5% via-white/80 via-55% to-transparent"
+                    />
                     <div className="relative z-10 mx-auto flex min-h-[calc(100svh-88px)] max-w-6xl flex-col px-5 py-8 md:px-8 md:py-14">
                         {/* Main content — vertically centered */}
                         <div className="flex flex-1 items-center">
                             <Reveal className="w-full max-w-5xl">
+                                <Eyebrow className="mb-4">{services.hero.eyebrow}</Eyebrow>
                                 <h1 className="max-w-5xl text-[clamp(2.6rem,10vw,4.5rem)] font-black leading-[0.95] tracking-tight md:text-[clamp(3rem,5.8vw,5.5rem)]">
                                     {services.hero.title}
                                 </h1>
                                 <p className="mt-6 max-w-2xl text-lg leading-8 text-gray-700 md:text-xl">
                                     {services.hero.lead}
                                 </p>
-                                <p className="mt-3 max-w-2xl text-lg leading-8 text-gray-700 md:text-xl">
+                                <p className="mt-3 max-w-2xl text-base leading-7 text-gray-600">
                                     {services.hero.secondary}
                                 </p>
                                 <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-5">
@@ -72,26 +86,28 @@ export default async function HomePage({ params }: HomePageProps) {
                                         href={bookingHref}
                                         event="booking_cta_click"
                                         eventParams={{ locale: lang, location: 'hero' }}
-                                        className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-black bg-black px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white hover:text-black sm:w-fit"
+                                        className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-black bg-black px-5 py-2.5 text-sm font-semibold text-white transition-[color,background-color,border-color,transform] duration-200 hover:bg-white hover:text-black active:scale-[0.96] sm:w-fit"
                                     >
                                         {content.common.cta.book}
                                         <ArrowRight className="h-4 w-4" />
                                     </TrackedLink>
-                                    <Link
+                                    <ButtonLink
                                         href={casesHref}
-                                        className="inline-flex items-center gap-2 px-1 py-2 text-sm font-semibold text-black underline underline-offset-4 transition-opacity hover:opacity-60"
+                                        variant="secondary"
+                                        className="sm:w-fit"
                                     >
                                         {caseStudiesLabel} <ArrowUpRight className="h-4 w-4" />
-                                    </Link>
+                                    </ButtonLink>
                                 </div>
+                                <p className="mt-3 text-sm text-gray-500">
+                                    {content.common.cta.bookMicrocopy}
+                                </p>
                             </Reveal>
                         </div>
 
                         {/* Logo strip — anchored to the bottom */}
                         <Reveal delay={0.14} className="mt-10 border-t border-black pt-5">
-                            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gray-500">
-                                {services.proof.eyebrow}
-                            </p>
+                            <Eyebrow>{services.proof.eyebrow}</Eyebrow>
                             <CompanyLogoMarquee names={services.proof.names} />
                         </Reveal>
                     </div>
@@ -107,63 +123,64 @@ export default async function HomePage({ params }: HomePageProps) {
                     <div className="grid border-l border-t border-black md:grid-cols-2">
                         {services.buckets.map((bucket, index) => (
                             <Reveal key={bucket.title} delay={index * 0.06} className="h-full">
-                                <article className="group flex h-full flex-col border-b border-r border-black bg-white transition-colors duration-300 hover:bg-gray-50 md:min-h-[480px]">
-                                    <div className="border-b border-black p-4 md:p-6">
-                                        <div className="flex items-start justify-end">
-                                            <span className="text-4xl font-black leading-none text-gray-200 transition-colors duration-300 group-hover:text-black md:text-5xl">
-                                                0{index + 1}
-                                            </span>
-                                        </div>
-                                        <h3 className="mt-6 max-w-[12ch] text-2xl font-black leading-none tracking-tight md:mt-8 md:text-4xl">
-                                            {bucket.plainLabel}
-                                        </h3>
-                                    </div>
-                                    <div className="grid flex-1 grid-rows-[auto_1fr]">
-                                        <div className="border-b border-gray-200 p-4 md:p-6">
-                                            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gray-500">
-                                                {services.serviceIntro.situationLabel}
-                                            </p>
-                                            <p className="mt-3 text-base leading-7 text-gray-700">
-                                                {bucket.situation}
-                                            </p>
-                                        </div>
-                                        <div className="p-5 md:p-6">
-                                            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gray-500">
-                                                {services.serviceIntro.buildLabel}
-                                            </p>
-                                            <ul className="mt-4 grid gap-2">
-                                                {bucket.bullets.map((bullet) => (
-                                                    <li
-                                                        key={bullet}
-                                                        className="flex min-h-10 items-center gap-3 border border-gray-200 bg-white px-3 py-2 text-sm leading-5 text-gray-700 transition-colors duration-300 group-hover:border-gray-300 group-hover:text-black"
-                                                    >
-                                                        <Check className="h-4 w-4 shrink-0 text-black" />
-                                                        <span>{bullet}</span>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    </div>
+                                <article className="group flex h-full flex-col border-b border-r border-black bg-white p-6 transition-colors duration-300 hover:bg-gray-50 md:p-8">
+                                    <h3 className="text-xl font-black leading-tight tracking-tight md:text-2xl">
+                                        {bucket.plainLabel}
+                                    </h3>
+                                    <p className="mt-3 text-base leading-7 text-gray-600">
+                                        {bucket.situation}
+                                    </p>
                                 </article>
                             </Reveal>
                         ))}
                     </div>
                     <Reveal delay={0.2}>
-                        <div className="mt-8 flex flex-col items-start justify-between gap-4 border-y border-black py-5 md:flex-row md:items-center">
-                            <p className="max-w-2xl text-sm leading-6 text-gray-600">
-                                {services.serviceIntro.ctaHelper}
-                            </p>
+                        <div className="mt-8 flex flex-col items-start justify-between gap-5 md:mt-10 md:flex-row md:items-center md:gap-8">
+                            <div className="max-w-2xl">
+                                <p className="text-lg font-black tracking-tight md:text-xl">
+                                    {services.serviceIntro.ctaHelperTitle}
+                                </p>
+                                <p className="mt-1.5 text-sm leading-6 text-gray-600 md:text-base">
+                                    {services.serviceIntro.ctaHelper}
+                                </p>
+                            </div>
                             <TrackedLink
                                 href={bookingHref}
                                 event="booking_cta_click"
                                 eventParams={{ locale: lang, location: 'service_options' }}
-                                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-black bg-black px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white hover:text-black"
+                                className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-md border border-black bg-black px-5 py-2.5 text-sm font-semibold text-white transition-[color,background-color,border-color,transform] duration-200 hover:bg-white hover:text-black active:scale-[0.96]"
                             >
                                 {services.serviceIntro.ctaLabel}
                                 <ArrowRight className="h-4 w-4" />
                             </TrackedLink>
                         </div>
                     </Reveal>
+                </Section>
+
+                <Section
+                    eyebrow={services.capabilities.eyebrow}
+                    title={services.capabilities.title}
+                    description={services.capabilities.description}
+                    className="border-b border-black py-16 md:py-28"
+                >
+                    <div className="grid border-l border-t border-black sm:grid-cols-2">
+                        {services.capabilities.items.map((item, index) => {
+                            const Icon = capabilityIcons[item.key]
+                            return (
+                                <Reveal key={item.key} delay={index * 0.06} className="h-full">
+                                    <div className="group flex h-full flex-col border-b border-r border-black p-6 transition-colors duration-300 hover:bg-gray-50 md:p-8">
+                                        {Icon && <Icon className="h-6 w-6 text-black" />}
+                                        <h3 className="mt-5 text-xl font-black tracking-tight md:text-2xl">
+                                            {item.name}
+                                        </h3>
+                                        <p className="mt-2 text-sm leading-6 text-gray-600">
+                                            {item.description}
+                                        </p>
+                                    </div>
+                                </Reveal>
+                            )
+                        })}
+                    </div>
                 </Section>
 
                 <section
@@ -173,9 +190,7 @@ export default async function HomePage({ params }: HomePageProps) {
                     <div className="mx-auto max-w-6xl px-5 md:px-8">
                         <Reveal className="grid gap-5 md:grid-cols-[0.75fr_1.25fr] md:items-end">
                             <div>
-                                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-gray-400">
-                                    {services.cases.eyebrow}
-                                </p>
+                                <Eyebrow tone="dark">{services.cases.eyebrow}</Eyebrow>
                                 <h2 className="mt-4 text-3xl font-black tracking-tight md:text-5xl">
                                     {services.cases.title}
                                 </h2>
@@ -192,7 +207,7 @@ export default async function HomePage({ params }: HomePageProps) {
                                 delay={index * 0.05}
                                 className="min-w-[88vw] snap-start md:min-w-[720px] lg:min-w-[840px]"
                             >
-                                <article className="group overflow-hidden rounded-lg border border-white/15 bg-white text-black shadow-[0_24px_90px_rgba(0,0,0,0.38)] transition-all duration-300 hover:-translate-y-1 hover:border-white/40 hover:shadow-[0_30px_110px_rgba(0,0,0,0.5)]">
+                                <article className="group overflow-hidden rounded-lg border border-white/15 bg-white text-black shadow-[0_24px_90px_rgba(0,0,0,0.38)] transition-[transform,border-color,box-shadow] duration-300 hover:-translate-y-1 hover:border-white/40 hover:shadow-[0_30px_110px_rgba(0,0,0,0.5)]">
                                     <div className="border-b border-black/10 bg-neutral-100 px-4 py-3">
                                         <div className="flex items-center gap-1.5">
                                             <div className="flex gap-1.5" aria-hidden="true">
@@ -235,6 +250,15 @@ export default async function HomePage({ params }: HomePageProps) {
                                 </article>
                             </Reveal>
                         ))}
+                    </div>
+                    <div className="mx-auto mt-4 max-w-6xl px-5 text-right md:px-8">
+                        <Link
+                            href={`/${lang}/projects`}
+                            className="inline-flex items-center gap-2 px-1 py-2 text-sm font-semibold text-white underline underline-offset-4 transition-opacity hover:opacity-60"
+                        >
+                            {lang === 'it' ? 'Vedi tutti i progetti' : 'See all projects'}
+                            <ArrowUpRight className="h-4 w-4" />
+                        </Link>
                     </div>
                 </section>
 
@@ -291,9 +315,7 @@ export default async function HomePage({ params }: HomePageProps) {
                         </Reveal>
 
                         <Reveal delay={0.08} className="flex flex-col justify-center">
-                            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-gray-500">
-                                {services.profile.eyebrow}
-                            </p>
+                            <Eyebrow>{services.profile.eyebrow}</Eyebrow>
                             <h2 className="mt-4 max-w-2xl text-3xl font-black tracking-tight md:text-5xl">
                                 {services.profile.title}
                             </h2>
@@ -315,6 +337,17 @@ export default async function HomePage({ params }: HomePageProps) {
                                     </div>
                                 ))}
                             </div>
+                            <div className="mt-6">
+                                <TrackedLink
+                                    href={bookingHref}
+                                    event="booking_cta_click"
+                                    eventParams={{ locale: lang, location: 'profile' }}
+                                    className="inline-flex items-center gap-2 px-1 py-2 text-sm font-semibold text-black underline underline-offset-4 transition-opacity hover:opacity-60"
+                                >
+                                    {content.common.cta.tellProject}{' '}
+                                    <ArrowRight className="h-4 w-4" />
+                                </TrackedLink>
+                            </div>
                         </Reveal>
                     </div>
                 </section>
@@ -324,7 +357,7 @@ export default async function HomePage({ params }: HomePageProps) {
                     title={services.faq.title}
                     className="border-b border-black"
                 >
-                    <div className="max-w-4xl border-t border-black">
+                    <div className="max-w-3xl border-t border-black">
                         {services.faq.items.map((item) => (
                             <AccordionItem key={item.question} question={item.question}>
                                 {item.answer}
@@ -345,14 +378,29 @@ export default async function HomePage({ params }: HomePageProps) {
                     />
                     <div className="mt-10 grid gap-6 lg:grid-cols-[0.75fr_1.25fr]">
                         <BookingEmphasisCard>
-                            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-gray-400">
+                            <Eyebrow tone="dark">
                                 {lang === 'it' ? '30 minuti' : '30 minutes'}
-                            </p>
+                            </Eyebrow>
                             <p className="mt-4 text-3xl font-black tracking-tight md:text-4xl">
                                 {content.common.cta.book}
                             </p>
                             <p className="mt-4 text-sm leading-7 text-gray-300">
-                                {services.booking.description}
+                                {lang === 'it'
+                                    ? 'Una chiacchierata, non una presentazione di vendita. Se non sono la persona giusta, te lo dico subito.'
+                                    : 'Every project starts with a conversation. Tell me where you are stuck: in 30 minutes we work out if and how I can help.'}
+                            </p>
+                            <p className="mt-4 text-xs text-gray-400">
+                                {content.common.cta.bookMicrocopy}
+                            </p>
+                            <p className="mt-6 text-sm">
+                                <Link
+                                    href={`/${lang}/contacts`}
+                                    className="underline underline-offset-4 transition-opacity hover:opacity-70"
+                                >
+                                    {lang === 'it'
+                                        ? 'Preferisci scrivere? Vai al form →'
+                                        : 'Prefer to write? Go to the form →'}
+                                </Link>
                             </p>
                         </BookingEmphasisCard>
                         <div className="overflow-hidden rounded-lg border border-gray-200">

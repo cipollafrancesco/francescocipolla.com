@@ -1,5 +1,6 @@
 import type { HTMLAttributes, ReactNode } from 'react'
 import { cn } from '@/lib/utils'
+import { Eyebrow } from './Eyebrow'
 
 interface SectionProps extends HTMLAttributes<HTMLElement> {
     eyebrow?: string
@@ -21,11 +22,7 @@ export function Section({
             <div className="mx-auto max-w-6xl px-5 md:px-8">
                 {(eyebrow || title || description) && (
                     <div className="mb-12 max-w-3xl">
-                        {eyebrow && (
-                            <p className="mb-4 text-xs font-semibold uppercase tracking-[0.28em] text-gray-500">
-                                {eyebrow}
-                            </p>
-                        )}
+                        {eyebrow && <Eyebrow className="mb-4">{eyebrow}</Eyebrow>}
                         {title && (
                             <h2 className="text-3xl font-black tracking-tight md:text-5xl">
                                 {title}

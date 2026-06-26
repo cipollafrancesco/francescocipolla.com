@@ -95,19 +95,19 @@ export default function StackedProjects({
                 <button
                     type="button"
                     onClick={goPrevious}
-                    className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-black bg-white text-black transition-colors hover:bg-black hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+                    className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-black bg-white text-black transition-[color,background-color,border-color,transform] hover:bg-black hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black active:scale-[0.96]"
                     aria-label={previousLabel}
                 >
                     <ArrowLeft className="h-4 w-4" />
                 </button>
-                <p className="min-w-16 text-center text-xs font-semibold uppercase tracking-[0.22em] text-gray-500">
+                <p className="min-w-16 text-center text-xs font-semibold uppercase tabular-nums tracking-[0.22em] text-gray-500">
                     {String(activeIndex + 1).padStart(2, '0')} /{' '}
                     {String(totalProjects).padStart(2, '0')}
                 </p>
                 <button
                     type="button"
                     onClick={goNext}
-                    className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-black bg-white text-black transition-colors hover:bg-black hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+                    className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-black bg-white text-black transition-[color,background-color,border-color,transform] hover:bg-black hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black active:scale-[0.96]"
                     aria-label={nextLabel}
                 >
                     <ArrowRight className="h-4 w-4" />

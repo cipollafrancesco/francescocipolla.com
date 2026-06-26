@@ -15,6 +15,7 @@ export type AnalyticsEvent =
     | 'calendar_section_view'
     | 'language_switch'
     | 'case_study_click'
+    | 'contact_form_submit'
 
 export function hasAnalyticsConsent() {
     if (typeof document === 'undefined') return false

@@ -19,7 +19,7 @@ const ExperienceCard: React.FC<IExperienceCardProps> = ({
     description,
 }) => {
     return (
-        <div className="flex flex-1 items-start rounded-2xl border-2 border-gray-200 p-4 transition-all duration-300 hover:border-gray-400 hover:shadow-sm">
+        <div className="flex flex-1 items-start rounded-2xl border-2 border-gray-200 p-4 transition-[border-color,box-shadow] duration-300 hover:border-gray-400 hover:shadow-sm">
             <Image
                 src={logo}
                 alt={`${company} logo`}

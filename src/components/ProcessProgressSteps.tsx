@@ -59,7 +59,7 @@ export function ProcessProgressSteps({ steps }: ProcessProgressStepsProps) {
                             className="block text-6xl font-black text-gray-100 transition-colors duration-300 group-focus-within:text-black group-hover:text-black"
                             variants={{
                                 rest: { color: 'rgb(243 244 246)' },
-                                active: { color: 'rgb(17 24 39)' },
+                                active: { color: 'rgb(0 0 0)' },
                             }}
                             transition={{ duration: 0.35, ease: 'easeOut', delay: index * 0.05 }}
                         >

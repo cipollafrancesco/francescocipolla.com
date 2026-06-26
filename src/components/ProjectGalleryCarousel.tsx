@@ -90,7 +90,7 @@ export function ProjectGalleryCarousel({
                 </label>
 
                 <div className="flex items-center justify-between gap-3 sm:justify-end">
-                    <p className="font-mono text-xs text-gray-500">
+                    <p className="font-mono text-xs tabular-nums text-gray-500">
                         {(activeIndex + 1).toString().padStart(2, '0')} /{' '}
                         {selectedMedia.length.toString().padStart(2, '0')}
                     </p>
@@ -98,7 +98,7 @@ export function ProjectGalleryCarousel({
                         <button
                             type="button"
                             onClick={goToPrevious}
-                            className="grid h-10 w-10 place-items-center border border-black bg-white text-black transition-colors hover:bg-black hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
+                            className="grid h-10 w-10 place-items-center border border-black bg-white text-black transition-[color,background-color,border-color,transform] hover:bg-black hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 active:scale-[0.96]"
                             aria-label={labels.previous}
                         >
                             <ChevronLeft className="h-4 w-4" />
@@ -106,7 +106,7 @@ export function ProjectGalleryCarousel({
                         <button
                             type="button"
                             onClick={goToNext}
-                            className="grid h-10 w-10 place-items-center border border-black bg-white text-black transition-colors hover:bg-black hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
+                            className="grid h-10 w-10 place-items-center border border-black bg-white text-black transition-[color,background-color,border-color,transform] hover:bg-black hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 active:scale-[0.96]"
                             aria-label={labels.next}
                         >
                             <ChevronRight className="h-4 w-4" />

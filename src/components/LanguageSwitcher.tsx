@@ -44,7 +44,7 @@ export function LanguageSwitcher({
                         })
                     }}
                     className={cn(
-                        'rounded px-2 py-1 text-xs font-semibold uppercase tracking-wide transition-colors',
+                        'inline-flex min-h-10 items-center rounded px-2 text-xs font-semibold uppercase tracking-wide transition-colors',
                         locale === currentLocale
                             ? 'bg-black text-white'
                             : 'text-gray-500 hover:bg-gray-100 hover:text-black'

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import StackedProjects from '@/components/StackedProjects'
+import { Eyebrow } from '@/components/ui/Eyebrow'
 import { getI18nContent } from '@/i18n/server'
 import { isLocale } from '@/i18n/config'
 import { withLocaleMetadata } from '@/lib/metadata'
@@ -35,9 +36,7 @@ export default async function ProjectsPage({ params }: ProjectsPageProps) {
                 <section className="border-b border-black">
                     <div className="mx-auto grid max-w-6xl gap-8 px-5 py-16 md:px-8 md:py-24 lg:grid-cols-[0.75fr_1.25fr] lg:items-end">
                         <div>
-                            <p className="mb-5 text-xs font-semibold uppercase tracking-[0.28em] text-gray-500">
-                                {eyebrow}
-                            </p>
+                            <Eyebrow className="mb-5">{eyebrow}</Eyebrow>
                             <h1 className="max-w-4xl text-6xl font-black leading-none tracking-tight md:text-8xl lg:text-9xl">
                                 {content.home.projectsTitle}
                             </h1>

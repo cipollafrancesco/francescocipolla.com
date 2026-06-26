@@ -39,7 +39,7 @@ const personJsonLd = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="it">
-            <body className={`${inter.className}`}>
+            <body className={`${inter.className} antialiased`}>
                 {/* JSON-LD structured data */}
                 <script
                     type="application/ld+json"
