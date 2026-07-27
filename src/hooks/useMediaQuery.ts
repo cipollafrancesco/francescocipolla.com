@@ -8,16 +8,16 @@ import { useEffect, useState } from 'react'
  * and a mobile bottom sheet.
  */
 export function useMediaQuery(query: string): boolean {
-  const [matches, setMatches] = useState(false)
+    const [matches, setMatches] = useState(false)
 
-  useEffect(() => {
-    const mql = window.matchMedia(query)
-    setMatches(mql.matches)
+    useEffect(() => {
+        const mql = window.matchMedia(query)
+        setMatches(mql.matches)
 
-    const onChange = (event: MediaQueryListEvent) => setMatches(event.matches)
-    mql.addEventListener('change', onChange)
-    return () => mql.removeEventListener('change', onChange)
-  }, [query])
+        const onChange = (event: MediaQueryListEvent) => setMatches(event.matches)
+        mql.addEventListener('change', onChange)
+        return () => mql.removeEventListener('change', onChange)
+    }, [query])
 
-  return matches
+    return matches
 }

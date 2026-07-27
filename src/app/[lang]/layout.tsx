@@ -75,6 +75,12 @@ function Footer({
                             {copy.footer.links.projects}
                         </Link>
                         <Link
+                            href={`/${lang}/books`}
+                            className="underline-offset-2 hover:underline"
+                        >
+                            {copy.footer.links.books}
+                        </Link>
+                        <Link
                             href={`/${lang}/services`}
                             className="underline-offset-2 hover:underline"
                         >

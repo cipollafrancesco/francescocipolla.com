@@ -8,7 +8,7 @@ const inter = Inter({ subsets: ['latin'], weight: ['400', '500', '700', '900'] }
 export const metadata: Metadata = {
     title: 'Francesco Cipolla - Digital Product Partner',
     description:
-        'Siti web, applicazioni e digitalizzazione per aziende. Digital product partner per trasformare idee, processi e presenza online in strumenti concreti.',
+        'Digital product partner e ingegnere informatico: prodotti web, streaming, design e sistemi digitali.',
     metadataBase: new URL('https://francescocipolla.com'),
 }
 

@@ -19,9 +19,10 @@ const Header = ({ lang, copy }: HeaderProps) => {
     const reduceMotion = useReducedMotion()
 
     const menuItems = [
-        { href: `/${lang}/#services`, label: copy.nav.services },
-        { href: `/${lang}/about`, label: copy.nav.about },
+        { href: `/${lang}/#about-me`, label: copy.nav.about },
         { href: `/${lang}/projects`, label: copy.nav.projects },
+        { href: `/${lang}/books`, label: copy.nav.books },
+        { href: `/${lang}/services`, label: copy.nav.services },
         { href: `/${lang}/contacts`, label: copy.nav.contacts },
     ]
 
@@ -62,7 +63,7 @@ const Header = ({ lang, copy }: HeaderProps) => {
                             </Link>
                         ))}
                         <Link
-                            href={`/${lang}/#booking`}
+                            href={`/${lang}/services#booking`}
                             className="rounded-md bg-black px-4 py-2 text-white transition-[color,background-color,transform] duration-200 hover:bg-gray-800 active:scale-[0.96] lg:text-base"
                         >
                             {copy.nav.bookCall}
@@ -160,7 +161,7 @@ const Header = ({ lang, copy }: HeaderProps) => {
                             }}
                         >
                             <Link
-                                href={`/${lang}/#booking`}
+                                href={`/${lang}/services#booking`}
                                 className="mt-2 rounded-md bg-black px-5 py-3 text-base font-semibold text-white transition-[color,background-color,transform] duration-200 hover:bg-gray-800 active:scale-[0.96]"
                                 onClick={toggleDrawer}
                             >

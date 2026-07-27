@@ -1,244 +1,244 @@
 [
-  {
-    "id": "subtle-art",
-    "category": "Crescita personale",
-    "title": "The Subtle Art of Not Giving a F*ck",
-    "author": "Mark Manson",
-    "publishedDate": "2016-09-13",
-    "description": "A counterintuitive self-help argument: caring about fewer things, and choosing them well, is the path to a better life.",
-    "coverUrl": "/covers/subtle-art.jpg",
-    "spineColor": "#e8492b"
-  },
-  {
-    "id": "scrum",
-    "category": "Business",
-    "title": "Scrum: The Art of Doing Twice the Work in Half the Time",
-    "author": "Jeff Sutherland, J.J. Sutherland",
-    "publishedDate": "2014-09-30",
-    "description": "The co-creator of Scrum on how small, focused, self-organising teams get dramatically more done.",
-    "coverUrl": "/covers/scrum.jpg",
-    "spineColor": "#f3b50a",
-    "isbn": "9781847941107"
-  },
-  {
-    "id": "startup-hoepli",
-    "category": "Business",
-    "title": "Startup",
-    "author": "Eleonora Chioda, Giancarlo Donadio, Lucia Ingrosso, Tiziana Tripepi",
-    "publishedDate": "2017-01-01",
-    "description": "A practical Italian handbook on turning an idea into a company, from validation to growth.",
-    "coverUrl": "/covers/startup-hoepli.jpg",
-    "spineColor": "#29b6e0",
-    "thickness": 1.4
-  },
-  {
-    "id": "let-my-people-go-surfing",
-    "category": "Business",
-    "title": "Let My People Go Surfing",
-    "author": "Yvon Chouinard",
-    "publishedDate": "2005-09-01",
-    "description": "Patagonia's founder on building a company around environmental and ethical principles — the education of a reluctant businessman.",
-    "coverUrl": "/covers/let-my-people-go-surfing.jpg",
-    "spineColor": "#5d87a8",
-    "isbn": "9781594200724"
-  },
-  {
-    "id": "il-piacere-del-vino",
-    "category": "Cibo & vino",
-    "title": "Il piacere del vino",
-    "author": "Paola Gho, Giovanni Ruffa",
-    "publishedDate": "2012-01-01",
-    "description": "Slow Food's classic manual for learning to taste, understand and enjoy wine.",
-    "coverUrl": "/covers/i-piaceri-del-vino.jpg",
-    "spineColor": "#ece6da",
-    "isbn": "9788884994196"
-  },
-  {
-    "id": "clima-come-evitare-un-disastro",
-    "category": "Scienza",
-    "title": "Clima. Come evitare un disastro",
-    "author": "Bill Gates",
-    "publishedDate": "2021-02-16",
-    "description": "Bill Gates lays out a concrete plan for reaching zero greenhouse-gas emissions and avoiding climate catastrophe.",
-    "coverUrl": "/covers/clima-come-evitare-un-disastro.jpg",
-    "spineColor": "#15244a",
-    "thickness": 1.7
-  },
-  {
-    "id": "la-caffettiera-del-masochista",
-    "category": "Design",
-    "title": "La caffettiera del masochista",
-    "author": "Donald A. Norman",
-    "publishedDate": "1988-01-01",
-    "description": "The classic on human-centred design: why good design is invisible and bad design quietly drives us mad.",
-    "coverUrl": "/covers/caffettiera-del-masochista.jpg",
-    "spineColor": "#f2c200",
-    "isbn": "9788809986862"
-  },
-  {
-    "id": "l-arte-della-vittoria",
-    "category": "Business",
-    "title": "L'arte della vittoria",
-    "author": "Phil Knight",
-    "publishedDate": "2016-04-26",
-    "description": "Italian edition of 'Shoe Dog' — the Nike founder's candid memoir of building the company from the trunk of his car.",
-    "coverUrl": "/covers/l-arte-della-vittoria.jpg",
-    "spineColor": "#4a5bb0"
-  },
-  {
-    "id": "clamoroso",
-    "category": "Sport",
-    "title": "Clamoroso",
-    "author": "Gianmarco Pozzecco, Filippo Venturi",
-    "publishedDate": "2023-01-01",
-    "description": "The exuberant memoir of Gianmarco Pozzecco, one of Italian basketball's most beloved and unpredictable figures.",
-    "coverUrl": "/covers/clamoroso.jpg",
-    "spineColor": "#b9b1a3",
-    "thickness": 1.5
-  },
-  {
-    "id": "sette-peccati-economia-italiana",
-    "category": "Economia",
-    "title": "I sette peccati capitali dell'economia italiana",
-    "author": "Carlo Cottarelli",
-    "publishedDate": "2018-02-01",
-    "description": "Economist Carlo Cottarelli diagnoses the seven chronic flaws holding back the Italian economy.",
-    "coverUrl": "/covers/sette-peccati-economia-italiana.jpg",
-    "spineColor": "#f2efe9"
-  },
-  {
-    "id": "kobe-bryant-il-basket",
-    "category": "Sport",
-    "title": "Kobe Bryant. L'uomo che ha incantato il basket",
-    "author": "La Gazzetta dello Sport",
-    "publishedDate": "2020-01-01",
-    "description": "A tribute to Kobe Bryant — his career, his Mamba mentality and the mark he left on basketball.",
-    "coverUrl": "/placeholder.svg",
-    "spineColor": "#161b27"
-  },
-  {
-    "id": "patagonia-express",
-    "category": "Viaggi",
-    "title": "Patagonia Express",
-    "author": "Luis Sepúlveda",
-    "publishedDate": "1995-01-01",
-    "description": "Luis Sepúlveda's travel tales across Patagonia — journalism and storytelling from the end of the world.",
-    "coverUrl": "/covers/patagonia-express.jpg",
-    "spineColor": "#6a4a9c"
-  },
-  {
-    "id": "autostop-con-buddha",
-    "category": "Viaggi",
-    "title": "Autostop con Buddha",
-    "author": "Will Ferguson",
-    "publishedDate": "2011-01-01",
-    "description": "Will Ferguson hitchhikes the length of Japan chasing the cherry-blossom front — a wry, affectionate travelogue.",
-    "coverUrl": "/covers/autostop-con-buddha.jpg",
-    "spineColor": "#cdd9e2"
-  },
-  {
-    "id": "ux-writing",
-    "category": "Design",
-    "title": "UX Writing. Micro testi, macro impatto",
-    "author": "Serena Giust",
-    "publishedDate": "2021-01-01",
-    "description": "A practical Italian guide to UX writing: how microcopy and emotion guide people through a product.",
-    "coverUrl": "/covers/ux-writing.jpg",
-    "spineColor": "#e7ddca"
-  },
-  {
-    "id": "manuale-sopravvivenza-ux-designer",
-    "category": "Design",
-    "title": "Manuale di sopravvivenza per UX Designer",
-    "author": "Matteo di Pascale",
-    "publishedDate": "2019-01-01",
-    "description": "A hands-on Italian field guide to UX design, from research to practical product work.",
-    "coverUrl": "/covers/manuale-sopravvivenza-ux-designer.jpg",
-    "spineColor": "#ece8e0",
-    "thickness": 1.3
-  },
-  {
-    "id": "la-nazione-delle-piante",
-    "category": "Scienza",
-    "title": "La nazione delle piante",
-    "author": "Stefano Mancuso",
-    "publishedDate": "2019-01-01",
-    "description": "Neurobiologist Stefano Mancuso imagines a constitution written by plants — a manifesto for a wiser way to live.",
-    "coverUrl": "/covers/la-nazione-delle-piante.jpg",
-    "spineColor": "#e9e7d3",
-    "thickness": 0.8
-  },
-  {
-    "id": "storia-balena-bianca",
-    "category": "Narrativa",
-    "title": "Storia di una balena bianca raccontata da lei stessa",
-    "author": "Luis Sepúlveda",
-    "publishedDate": "2018-01-01",
-    "description": "A fable narrated by a white whale, on memory, freedom and our bond with the sea.",
-    "coverUrl": "/covers/storia-balena-bianca.jpg",
-    "spineColor": "#7fa8c9",
-    "thickness": 0.7
-  },
-  {
-    "id": "storia-lumaca-lentezza",
-    "category": "Narrativa",
-    "title": "Storia di una lumaca che scoprì l'importanza della lentezza",
-    "author": "Luis Sepúlveda",
-    "publishedDate": "2013-01-01",
-    "description": "A gentle fable about a snail who sets out to understand the value of slowness.",
-    "coverUrl": "/covers/storia-lumaca-lentezza.jpg",
-    "spineColor": "#8cbf3f",
-    "thickness": 0.7
-  },
-  {
-    "id": "il-vecchio-che-leggeva",
-    "category": "Narrativa",
-    "title": "Il vecchio che leggeva romanzi d'amore",
-    "author": "Luis Sepúlveda",
-    "publishedDate": "1993-01-01",
-    "description": "In the Amazon, an old man who reads love stories is drawn into a hunt — a short, vivid eco-parable.",
-    "coverUrl": "/covers/il-vecchio-che-leggeva.jpg",
-    "spineColor": "#1f3b2e",
-    "thickness": 0.85
-  },
-  {
-    "id": "questo-e-il-marketing",
-    "category": "Marketing",
-    "title": "Questo è il marketing",
-    "author": "Seth Godin",
-    "publishedDate": "2019-01-01",
-    "description": "Seth Godin reframes marketing as empathy and service: earning trust by helping people become who they want to be.",
-    "coverUrl": "/covers/questo-e-il-marketing.jpg",
-    "spineColor": "#e8631a"
-  },
-  {
-    "id": "marketing-luther-king",
-    "category": "Marketing",
-    "title": "Marketing Luther King",
-    "author": "Simone Ciaruffoli",
-    "publishedDate": "2021-01-01",
-    "description": "Simone Ciaruffoli on storytelling as the heart of marketing — your product is the story you can tell.",
-    "coverUrl": "/covers/marketing-luther-king.jpg",
-    "spineColor": "#9ecbd8"
-  },
-  {
-    "id": "il-vicolo-cieco",
-    "category": "Business",
-    "title": "Il vicolo cieco",
-    "author": "Seth Godin",
-    "publishedDate": "2014-01-01",
-    "description": "Seth Godin's small book ('The Dip') on knowing when to quit and when to push through.",
-    "coverUrl": "/covers/il-vicolo-cieco.jpg",
-    "spineColor": "#ef7d1a"
-  },
-  {
-    "id": "ruba-come-un-artista",
-    "category": "Creatività",
-    "title": "Ruba come un artista",
-    "author": "Austin Kleon",
-    "publishedDate": "2013-01-01",
-    "description": "Austin Kleon's illustrated manifesto on creativity: nothing is original, so steal like an artist.",
-    "coverUrl": "/covers/ruba-come-un-artista.jpg",
-    "spineColor": "#1a1a1a"
-  }
+    {
+        "id": "subtle-art",
+        "category": "Crescita personale",
+        "title": "The Subtle Art of Not Giving a F*ck",
+        "author": "Mark Manson",
+        "publishedDate": "2016-09-13",
+        "description": "A counterintuitive self-help argument: caring about fewer things, and choosing them well, is the path to a better life.",
+        "coverUrl": "/covers/subtle-art.jpg",
+        "spineColor": "#e8492b"
+    },
+    {
+        "id": "scrum",
+        "category": "Business",
+        "title": "Scrum: The Art of Doing Twice the Work in Half the Time",
+        "author": "Jeff Sutherland, J.J. Sutherland",
+        "publishedDate": "2014-09-30",
+        "description": "The co-creator of Scrum on how small, focused, self-organising teams get dramatically more done.",
+        "coverUrl": "/covers/scrum.jpg",
+        "spineColor": "#f3b50a",
+        "isbn": "9781847941107"
+    },
+    {
+        "id": "startup-hoepli",
+        "category": "Business",
+        "title": "Startup",
+        "author": "Eleonora Chioda, Giancarlo Donadio, Lucia Ingrosso, Tiziana Tripepi",
+        "publishedDate": "2017-01-01",
+        "description": "A practical Italian handbook on turning an idea into a company, from validation to growth.",
+        "coverUrl": "/covers/startup-hoepli.jpg",
+        "spineColor": "#29b6e0",
+        "thickness": 1.4
+    },
+    {
+        "id": "let-my-people-go-surfing",
+        "category": "Business",
+        "title": "Let My People Go Surfing",
+        "author": "Yvon Chouinard",
+        "publishedDate": "2005-09-01",
+        "description": "Patagonia's founder on building a company around environmental and ethical principles — the education of a reluctant businessman.",
+        "coverUrl": "/covers/let-my-people-go-surfing.jpg",
+        "spineColor": "#5d87a8",
+        "isbn": "9781594200724"
+    },
+    {
+        "id": "il-piacere-del-vino",
+        "category": "Cibo & vino",
+        "title": "Il piacere del vino",
+        "author": "Paola Gho, Giovanni Ruffa",
+        "publishedDate": "2012-01-01",
+        "description": "Slow Food's classic manual for learning to taste, understand and enjoy wine.",
+        "coverUrl": "/covers/i-piaceri-del-vino.jpg",
+        "spineColor": "#ece6da",
+        "isbn": "9788884994196"
+    },
+    {
+        "id": "clima-come-evitare-un-disastro",
+        "category": "Scienza",
+        "title": "Clima. Come evitare un disastro",
+        "author": "Bill Gates",
+        "publishedDate": "2021-02-16",
+        "description": "Bill Gates lays out a concrete plan for reaching zero greenhouse-gas emissions and avoiding climate catastrophe.",
+        "coverUrl": "/covers/clima-come-evitare-un-disastro.jpg",
+        "spineColor": "#15244a",
+        "thickness": 1.7
+    },
+    {
+        "id": "la-caffettiera-del-masochista",
+        "category": "Design",
+        "title": "La caffettiera del masochista",
+        "author": "Donald A. Norman",
+        "publishedDate": "1988-01-01",
+        "description": "The classic on human-centred design: why good design is invisible and bad design quietly drives us mad.",
+        "coverUrl": "/covers/caffettiera-del-masochista.jpg",
+        "spineColor": "#f2c200",
+        "isbn": "9788809986862"
+    },
+    {
+        "id": "l-arte-della-vittoria",
+        "category": "Business",
+        "title": "L'arte della vittoria",
+        "author": "Phil Knight",
+        "publishedDate": "2016-04-26",
+        "description": "Italian edition of 'Shoe Dog' — the Nike founder's candid memoir of building the company from the trunk of his car.",
+        "coverUrl": "/covers/l-arte-della-vittoria.jpg",
+        "spineColor": "#4a5bb0"
+    },
+    {
+        "id": "clamoroso",
+        "category": "Sport",
+        "title": "Clamoroso",
+        "author": "Gianmarco Pozzecco, Filippo Venturi",
+        "publishedDate": "2023-01-01",
+        "description": "The exuberant memoir of Gianmarco Pozzecco, one of Italian basketball's most beloved and unpredictable figures.",
+        "coverUrl": "/covers/clamoroso.jpg",
+        "spineColor": "#b9b1a3",
+        "thickness": 1.5
+    },
+    {
+        "id": "sette-peccati-economia-italiana",
+        "category": "Economia",
+        "title": "I sette peccati capitali dell'economia italiana",
+        "author": "Carlo Cottarelli",
+        "publishedDate": "2018-02-01",
+        "description": "Economist Carlo Cottarelli diagnoses the seven chronic flaws holding back the Italian economy.",
+        "coverUrl": "/covers/sette-peccati-economia-italiana.jpg",
+        "spineColor": "#f2efe9"
+    },
+    {
+        "id": "kobe-bryant-il-basket",
+        "category": "Sport",
+        "title": "Kobe Bryant. L'uomo che ha incantato il basket",
+        "author": "La Gazzetta dello Sport",
+        "publishedDate": "2020-01-01",
+        "description": "A tribute to Kobe Bryant — his career, his Mamba mentality and the mark he left on basketball.",
+        "coverUrl": "/placeholder.svg",
+        "spineColor": "#161b27"
+    },
+    {
+        "id": "patagonia-express",
+        "category": "Viaggi",
+        "title": "Patagonia Express",
+        "author": "Luis Sepúlveda",
+        "publishedDate": "1995-01-01",
+        "description": "Luis Sepúlveda's travel tales across Patagonia — journalism and storytelling from the end of the world.",
+        "coverUrl": "/covers/patagonia-express.jpg",
+        "spineColor": "#6a4a9c"
+    },
+    {
+        "id": "autostop-con-buddha",
+        "category": "Viaggi",
+        "title": "Autostop con Buddha",
+        "author": "Will Ferguson",
+        "publishedDate": "2011-01-01",
+        "description": "Will Ferguson hitchhikes the length of Japan chasing the cherry-blossom front — a wry, affectionate travelogue.",
+        "coverUrl": "/covers/autostop-con-buddha.jpg",
+        "spineColor": "#cdd9e2"
+    },
+    {
+        "id": "ux-writing",
+        "category": "Design",
+        "title": "UX Writing. Micro testi, macro impatto",
+        "author": "Serena Giust",
+        "publishedDate": "2021-01-01",
+        "description": "A practical Italian guide to UX writing: how microcopy and emotion guide people through a product.",
+        "coverUrl": "/covers/ux-writing.jpg",
+        "spineColor": "#e7ddca"
+    },
+    {
+        "id": "manuale-sopravvivenza-ux-designer",
+        "category": "Design",
+        "title": "Manuale di sopravvivenza per UX Designer",
+        "author": "Matteo di Pascale",
+        "publishedDate": "2019-01-01",
+        "description": "A hands-on Italian field guide to UX design, from research to practical product work.",
+        "coverUrl": "/covers/manuale-sopravvivenza-ux-designer.jpg",
+        "spineColor": "#ece8e0",
+        "thickness": 1.3
+    },
+    {
+        "id": "la-nazione-delle-piante",
+        "category": "Scienza",
+        "title": "La nazione delle piante",
+        "author": "Stefano Mancuso",
+        "publishedDate": "2019-01-01",
+        "description": "Neurobiologist Stefano Mancuso imagines a constitution written by plants — a manifesto for a wiser way to live.",
+        "coverUrl": "/covers/la-nazione-delle-piante.jpg",
+        "spineColor": "#e9e7d3",
+        "thickness": 0.8
+    },
+    {
+        "id": "storia-balena-bianca",
+        "category": "Narrativa",
+        "title": "Storia di una balena bianca raccontata da lei stessa",
+        "author": "Luis Sepúlveda",
+        "publishedDate": "2018-01-01",
+        "description": "A fable narrated by a white whale, on memory, freedom and our bond with the sea.",
+        "coverUrl": "/covers/storia-balena-bianca.jpg",
+        "spineColor": "#7fa8c9",
+        "thickness": 0.7
+    },
+    {
+        "id": "storia-lumaca-lentezza",
+        "category": "Narrativa",
+        "title": "Storia di una lumaca che scoprì l'importanza della lentezza",
+        "author": "Luis Sepúlveda",
+        "publishedDate": "2013-01-01",
+        "description": "A gentle fable about a snail who sets out to understand the value of slowness.",
+        "coverUrl": "/covers/storia-lumaca-lentezza.jpg",
+        "spineColor": "#8cbf3f",
+        "thickness": 0.7
+    },
+    {
+        "id": "il-vecchio-che-leggeva",
+        "category": "Narrativa",
+        "title": "Il vecchio che leggeva romanzi d'amore",
+        "author": "Luis Sepúlveda",
+        "publishedDate": "1993-01-01",
+        "description": "In the Amazon, an old man who reads love stories is drawn into a hunt — a short, vivid eco-parable.",
+        "coverUrl": "/covers/il-vecchio-che-leggeva.jpg",
+        "spineColor": "#1f3b2e",
+        "thickness": 0.85
+    },
+    {
+        "id": "questo-e-il-marketing",
+        "category": "Marketing",
+        "title": "Questo è il marketing",
+        "author": "Seth Godin",
+        "publishedDate": "2019-01-01",
+        "description": "Seth Godin reframes marketing as empathy and service: earning trust by helping people become who they want to be.",
+        "coverUrl": "/covers/questo-e-il-marketing.jpg",
+        "spineColor": "#e8631a"
+    },
+    {
+        "id": "marketing-luther-king",
+        "category": "Marketing",
+        "title": "Marketing Luther King",
+        "author": "Simone Ciaruffoli",
+        "publishedDate": "2021-01-01",
+        "description": "Simone Ciaruffoli on storytelling as the heart of marketing — your product is the story you can tell.",
+        "coverUrl": "/covers/marketing-luther-king.jpg",
+        "spineColor": "#9ecbd8"
+    },
+    {
+        "id": "il-vicolo-cieco",
+        "category": "Business",
+        "title": "Il vicolo cieco",
+        "author": "Seth Godin",
+        "publishedDate": "2014-01-01",
+        "description": "Seth Godin's small book ('The Dip') on knowing when to quit and when to push through.",
+        "coverUrl": "/covers/il-vicolo-cieco.jpg",
+        "spineColor": "#ef7d1a"
+    },
+    {
+        "id": "ruba-come-un-artista",
+        "category": "Creatività",
+        "title": "Ruba come un artista",
+        "author": "Austin Kleon",
+        "publishedDate": "2013-01-01",
+        "description": "Austin Kleon's illustrated manifesto on creativity: nothing is original, so steal like an artist.",
+        "coverUrl": "/covers/ruba-come-un-artista.jpg",
+        "spineColor": "#1a1a1a"
+    }
 ]

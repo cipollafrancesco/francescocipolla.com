@@ -30,6 +30,19 @@ export function middleware(request: NextRequest) {
     const firstSegment = pathname.split('/')[1]
 
     if (isLocale(firstSegment)) {
+        // The portfolio lives at the locale root again, so `/about` is a leftover.
+        // Redirected here rather than from a page, because `redirect()` inside a
+        // prerendered route only ships a 200 shell that navigates after hydration.
+        // Temporary (307): the landing page is meant to take over the root later.
+        const rest = pathname.slice(firstSegment.length + 1)
+
+        if (rest === '/about' || rest === '/about/') {
+            const url = request.nextUrl.clone()
+            url.pathname = `/${firstSegment}`
+
+            return NextResponse.redirect(url, 307)
+        }
+
         return NextResponse.next()
     }
 

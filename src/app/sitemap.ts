@@ -2,7 +2,8 @@ import { MetadataRoute } from 'next'
 import { absoluteLocalizedUrl, getProjectSlugs } from '@/content/site'
 import { locales } from '@/i18n/config'
 
-const staticRoutes = ['', '/services', '/about', '/projects', '/contacts', '/blog']
+// `/about` is intentionally absent — it redirects to the locale root.
+const staticRoutes = ['', '/services', '/projects', '/books', '/contacts', '/blog']
 
 export default function sitemap(): MetadataRoute.Sitemap {
     const now = new Date()

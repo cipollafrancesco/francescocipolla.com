@@ -6,11 +6,13 @@ import Shelf from './Shelf'
 import { thicknessScale } from './visuals'
 
 interface BookcaseProps {
-  books: Book[]
-  openId: string | null
-  /** Ids filtered out — those books collapse away (handled in BookSpine/CSS). */
-  hiddenIds: Set<string>
-  onOpen: (book: Book, trigger: HTMLButtonElement) => void
+    books: Book[]
+    openId: string | null
+    /** Ids filtered out — those books collapse away (handled in BookSpine/CSS). */
+    hiddenIds: Set<string>
+    onOpen: (book: Book, trigger: HTMLButtonElement) => void
+    /** Accessible name template for each spine — see BookSpine. */
+    spineLabel: string
 }
 
 /** Smallest a book may get before the cabinet scrolls instead of squashing.
@@ -21,19 +23,19 @@ const LIP_ALLOWANCE = 20
 
 /** Greedy pack books into shelves so no row exceeds the available width. */
 function packShelves(books: Book[], availW: number, base: number): Book[][] {
-  const shelves: Book[][] = [[]]
-  let used = 0
-  for (const book of books) {
-    const w = base * thicknessScale(book)
-    const current = shelves[shelves.length - 1]
-    if (used + w > availW && current.length > 0) {
-      shelves.push([])
-      used = 0
+    const shelves: Book[][] = [[]]
+    let used = 0
+    for (const book of books) {
+        const w = base * thicknessScale(book)
+        const current = shelves[shelves.length - 1]
+        if (used + w > availW && current.length > 0) {
+            shelves.push([])
+            used = 0
+        }
+        shelves[shelves.length - 1].push(book)
+        used += w
     }
-    shelves[shelves.length - 1].push(book)
-    used += w
-  }
-  return shelves
+    return shelves
 }
 
 const signature = (shelves: Book[][]) => shelves.map((s) => s.length).join(',')
@@ -45,104 +47,99 @@ const signature = (shelves: Book[][]) => shelves.map((s) => s.length).join(',')
  * narrows. `--book-height`/`--book-depth` are set on the `.bookcase` theme scope
  * so the shelf and the extracted/featured book stay in sync.
  */
-function Bookcase({ books, openId, hiddenIds, onOpen }: BookcaseProps) {
-  const sceneRef = useRef<HTMLDivElement>(null)
-  const frameRef = useRef<HTMLDivElement>(null)
-  // depth:height ratio of the base tokens (captured before we override them).
-  const depthRatioRef = useRef<number | null>(null)
-  const [shelves, setShelves] = useState<Book[][]>([books])
+function Bookcase({ books, openId, hiddenIds, onOpen, spineLabel }: BookcaseProps) {
+    const sceneRef = useRef<HTMLDivElement>(null)
+    const frameRef = useRef<HTMLDivElement>(null)
+    // depth:height ratio of the base tokens (captured before we override them).
+    const depthRatioRef = useRef<number | null>(null)
+    const [shelves, setShelves] = useState<Book[][]>([books])
 
-  useEffect(() => {
-    const scene = sceneRef.current
-    const frame = frameRef.current
-    if (!scene || !frame) return
-    const root = frame.closest('.bookcase') as HTMLElement | null
+    useEffect(() => {
+        const scene = sceneRef.current
+        const frame = frameRef.current
+        if (!scene || !frame) return
+        const root = frame.closest('.bookcase') as HTMLElement | null
 
-    const measure = () => {
-      const sceneCs = getComputedStyle(scene)
-      const frameCs = getComputedStyle(frame)
+        const measure = () => {
+            const sceneCs = getComputedStyle(scene)
+            const frameCs = getComputedStyle(frame)
 
-      if (depthRatioRef.current == null) {
-        const baseH = parseFloat(frameCs.getPropertyValue('--book-height')) || 230
-        const baseD = parseFloat(frameCs.getPropertyValue('--book-depth')) || 150
-        depthRatioRef.current = baseD / baseH
-      }
+            if (depthRatioRef.current == null) {
+                const baseH = parseFloat(frameCs.getPropertyValue('--book-height')) || 230
+                const baseD = parseFloat(frameCs.getPropertyValue('--book-depth')) || 150
+                depthRatioRef.current = baseD / baseH
+            }
 
-      // --- Width: pack books into shelves so a row never overflows. Measure the
-      // actual usable width of a rendered row (its content box, after the row's
-      // own horizontal padding) so the estimate matches what books really get. ---
-      const row = frame.querySelector('.shelf__row') as HTMLElement | null
-      let innerW: number
-      if (row) {
-        const rcs = getComputedStyle(row)
-        innerW =
-          row.clientWidth -
-          parseFloat(rcs.paddingLeft || '0') -
-          parseFloat(rcs.paddingRight || '0')
-      } else {
-        const padX =
-          parseFloat(frameCs.paddingLeft || '0') +
-          parseFloat(frameCs.paddingRight || '0')
-        innerW = frame.clientWidth - padX
-      }
-      const base = parseFloat(frameCs.getPropertyValue('--book-thickness')) || 32
-      const packed = packShelves(books, innerW - 2, base) // tiny safety margin
-      const n = packed.length
+            // --- Width: pack books into shelves so a row never overflows. Measure the
+            // actual usable width of a rendered row (its content box, after the row's
+            // own horizontal padding) so the estimate matches what books really get. ---
+            const row = frame.querySelector('.shelf__row') as HTMLElement | null
+            let innerW: number
+            if (row) {
+                const rcs = getComputedStyle(row)
+                innerW =
+                    row.clientWidth -
+                    parseFloat(rcs.paddingLeft || '0') -
+                    parseFloat(rcs.paddingRight || '0')
+            } else {
+                const padX =
+                    parseFloat(frameCs.paddingLeft || '0') + parseFloat(frameCs.paddingRight || '0')
+                innerW = frame.clientWidth - padX
+            }
+            const base = parseFloat(frameCs.getPropertyValue('--book-thickness')) || 32
+            const packed = packShelves(books, innerW - 2, base) // tiny safety margin
+            const n = packed.length
 
-      // --- Height: a stable, viewport-based target (not content-driven, so
-      // overflow can't feed back into the measurement and oscillate). ---
-      const targetH =
-        parseFloat(sceneCs.minHeight) || window.innerHeight - 220
-      const scenePadY =
-        parseFloat(sceneCs.paddingTop || '0') +
-        parseFloat(sceneCs.paddingBottom || '0')
-      const framePadY =
-        parseFloat(frameCs.paddingTop || '0') +
-        parseFloat(frameCs.paddingBottom || '0')
-      const gap = parseFloat(frameCs.rowGap || frameCs.gap || '0') || 28
-      const innerH = targetH - scenePadY - framePadY
+            // --- Height: a stable, viewport-based target (not content-driven, so
+            // overflow can't feed back into the measurement and oscillate). ---
+            const targetH = parseFloat(sceneCs.minHeight) || window.innerHeight - 220
+            const scenePadY =
+                parseFloat(sceneCs.paddingTop || '0') + parseFloat(sceneCs.paddingBottom || '0')
+            const framePadY =
+                parseFloat(frameCs.paddingTop || '0') + parseFloat(frameCs.paddingBottom || '0')
+            const gap = parseFloat(frameCs.rowGap || frameCs.gap || '0') || 28
+            const innerH = targetH - scenePadY - framePadY
 
-      const h = Math.max(
-        MIN_BOOK_HEIGHT,
-        Math.floor((innerH - (n - 1) * gap) / n) - LIP_ALLOWANCE,
-      )
-      root?.style.setProperty('--book-height', `${h}px`)
-      root?.style.setProperty(
-        '--book-depth',
-        `${Math.round(h * (depthRatioRef.current ?? 0.65))}px`,
-      )
+            const h = Math.max(
+                MIN_BOOK_HEIGHT,
+                Math.floor((innerH - (n - 1) * gap) / n) - LIP_ALLOWANCE
+            )
+            root?.style.setProperty('--book-height', `${h}px`)
+            root?.style.setProperty(
+                '--book-depth',
+                `${Math.round(h * (depthRatioRef.current ?? 0.65))}px`
+            )
 
-      // Only re-render when the per-shelf grouping actually changes.
-      setShelves((prev) =>
-        signature(prev) === signature(packed) ? prev : packed,
-      )
-    }
+            // Only re-render when the per-shelf grouping actually changes.
+            setShelves((prev) => (signature(prev) === signature(packed) ? prev : packed))
+        }
 
-    measure()
-    const ro = new ResizeObserver(measure)
-    ro.observe(scene)
-    return () => {
-      ro.disconnect()
-      root?.style.removeProperty('--book-height')
-      root?.style.removeProperty('--book-depth')
-    }
-  }, [books])
+        measure()
+        const ro = new ResizeObserver(measure)
+        ro.observe(scene)
+        return () => {
+            ro.disconnect()
+            root?.style.removeProperty('--book-height')
+            root?.style.removeProperty('--book-depth')
+        }
+    }, [books])
 
-  return (
-    <div className="bookcase__scene" ref={sceneRef}>
-      <div className="bookcase__frame" ref={frameRef}>
-        {shelves.map((shelfBooks, i) => (
-          <Shelf
-            key={i}
-            books={shelfBooks}
-            openId={openId}
-            hiddenIds={hiddenIds}
-            onOpen={onOpen}
-          />
-        ))}
-      </div>
-    </div>
-  )
+    return (
+        <div className="bookcase__scene" ref={sceneRef}>
+            <div className="bookcase__frame" ref={frameRef}>
+                {shelves.map((shelfBooks, i) => (
+                    <Shelf
+                        key={i}
+                        books={shelfBooks}
+                        openId={openId}
+                        hiddenIds={hiddenIds}
+                        onOpen={onOpen}
+                        spineLabel={spineLabel}
+                    />
+                ))}
+            </div>
+        </div>
+    )
 }
 
 export default Bookcase

@@ -29,6 +29,7 @@ export type SiteContent = {
             experiences: string
             projects: string
             services: string
+            books: string
             contacts: string
             bookCall: string
             resume: string
@@ -43,6 +44,7 @@ export type SiteContent = {
                 experiences: string
                 projects: string
                 blog: string
+                books: string
                 contacts: string
                 services: string
             }
@@ -72,6 +74,21 @@ export type SiteContent = {
         projects: Metadata
         contacts: Metadata
         blog: Metadata
+        books: Metadata
+    }
+    books: {
+        title: string
+        lead: string
+        filterLabel: string
+        filterAll: string
+        close: string
+        published: string
+        read: string
+        notes: string
+        /** `{value}` is replaced with the book's rating. */
+        ratingLabel: string
+        /** Accessible name of a spine — `{title}` and `{author}` are substituted. */
+        spineLabel: string
     }
     home: {
         heroDisclaimer: string
@@ -498,6 +515,7 @@ export const siteContent: Record<Locale, SiteContent> = {
                 experiences: 'Esperienze',
                 projects: 'Progetti',
                 services: 'Servizi',
+                books: 'Libreria',
                 contacts: 'Contatti',
                 bookCall: 'Consulenza gratuita',
                 resume: 'CV',
@@ -513,6 +531,7 @@ export const siteContent: Record<Locale, SiteContent> = {
                     experiences: 'Esperienze',
                     projects: 'Progetti',
                     blog: 'Blog',
+                    books: 'Libreria',
                     contacts: 'Contatti',
                     services: 'Servizi',
                 },
@@ -539,7 +558,7 @@ export const siteContent: Record<Locale, SiteContent> = {
             home: {
                 title: 'Francesco Cipolla - Digital Product Partner',
                 description:
-                    'Aiuto aziende e professionisti a trasformare siti, applicazioni e processi digitali in strumenti concreti di crescita.',
+                    'Digital product partner e ingegnere informatico: esperienza in prodotti web, streaming, design e sistemi digitali.',
             },
             services: {
                 title: 'Siti web e digitalizzazione per aziende - Francesco Cipolla',
@@ -565,6 +584,23 @@ export const siteContent: Record<Locale, SiteContent> = {
                 title: 'Blog - Francesco Cipolla',
                 description: 'Appunti su prodotto digitale, sviluppo web, design e tecnologia.',
             },
+            books: {
+                title: 'Libreria - Francesco Cipolla',
+                description:
+                    'I libri che ho letto, allineati sullo scaffale: business, design, crescita personale e narrativa.',
+            },
+        },
+        books: {
+            title: 'Libreria',
+            lead: 'I libri che ho letto, allineati per dorso. Toccane uno per sfilarlo dallo scaffale.',
+            filterLabel: 'Filtra per categoria',
+            filterAll: 'Tutti',
+            close: 'Chiudi dettagli',
+            published: 'Pubblicato',
+            read: 'Letto',
+            notes: 'Note',
+            ratingLabel: 'Valutazione: {value} su 5',
+            spineLabel: '{title} di {author}. Apri i dettagli.',
         },
         home: {
             heroDisclaimer:
@@ -869,6 +905,7 @@ export const siteContent: Record<Locale, SiteContent> = {
                 experiences: 'Experience',
                 projects: 'Projects',
                 services: 'Services',
+                books: 'Bookshelf',
                 contacts: 'Contacts',
                 bookCall: 'Free call',
                 resume: 'Resume',
@@ -884,6 +921,7 @@ export const siteContent: Record<Locale, SiteContent> = {
                     experiences: 'Experience',
                     projects: 'Projects',
                     blog: 'Blog',
+                    books: 'Bookshelf',
                     contacts: 'Contacts',
                     services: 'Services',
                 },
@@ -910,7 +948,7 @@ export const siteContent: Record<Locale, SiteContent> = {
             home: {
                 title: 'Francesco Cipolla - Digital Product Partner',
                 description:
-                    'I help businesses turn websites, applications, and digital workflows into practical tools for growth.',
+                    'Digital product partner and senior engineer with experience across web products, streaming platforms, design, and business systems.',
             },
             services: {
                 title: 'Websites and digitalization for businesses - Francesco Cipolla',
@@ -937,6 +975,23 @@ export const siteContent: Record<Locale, SiteContent> = {
                 description:
                     'Notes on digital product, frontend engineering, design, and technology.',
             },
+            books: {
+                title: 'Bookshelf - Francesco Cipolla',
+                description:
+                    'The books I have read, lined up on the shelf: business, design, personal growth, and fiction.',
+            },
+        },
+        books: {
+            title: 'Bookshelf',
+            lead: "Books I've read, lined up by spine. Tap one to pull it off the shelf.",
+            filterLabel: 'Filter by category',
+            filterAll: 'All',
+            close: 'Close details',
+            published: 'Published',
+            read: 'Read',
+            notes: 'Notes',
+            ratingLabel: 'Rating: {value} out of 5',
+            spineLabel: '{title} by {author}. Open details.',
         },
         home: {
             heroDisclaimer:
