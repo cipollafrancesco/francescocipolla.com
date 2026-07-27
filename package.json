@@ -5,6 +5,7 @@
     "scripts": {
         "dev": "next dev",
         "build": "next build",
+        "covers": "node scripts/fetch-covers.mjs",
         "gallery:sync": "node scripts/sync-project-gallery.mjs",
         "start": "next start",
         "lint": "next lint",
