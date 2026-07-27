@@ -62,12 +62,6 @@ const Header = ({ lang, copy }: HeaderProps) => {
                                 {item.label}
                             </Link>
                         ))}
-                        <Link
-                            href={`/${lang}/services#booking`}
-                            className="rounded-md bg-black px-4 py-2 text-white transition-[color,background-color,transform] duration-200 hover:bg-gray-800 active:scale-[0.96] lg:text-base"
-                        >
-                            {copy.nav.bookCall}
-                        </Link>
                         <LanguageSwitcher
                             currentLocale={lang}
                             label={copy.nav.switchLanguage}
@@ -160,19 +154,13 @@ const Header = ({ lang, copy }: HeaderProps) => {
                                 ease,
                             }}
                         >
-                            <Link
-                                href={`/${lang}/services#booking`}
-                                className="mt-2 rounded-md bg-black px-5 py-3 text-base font-semibold text-white transition-[color,background-color,transform] duration-200 hover:bg-gray-800 active:scale-[0.96]"
-                                onClick={toggleDrawer}
-                            >
-                                {copy.nav.bookCall}
-                            </Link>
+                            <LanguageSwitcher
+                                currentLocale={lang}
+                                label={copy.nav.switchLanguage}
+                                className="mt-4"
+                                placement="top"
+                            />
                         </motion.div>
-                        <LanguageSwitcher
-                            currentLocale={lang}
-                            label={copy.nav.switchLanguage}
-                            className="mt-8"
-                        />
                     </motion.div>
                 )}
             </AnimatePresence>
