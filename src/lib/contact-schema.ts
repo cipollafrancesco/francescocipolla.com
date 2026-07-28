@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-export const contactTopics = ['growth', 'operations', 'product', 'support'] as const
+export const contactTopics = ['growth', 'operations', 'product', 'support', 'other'] as const
 export type ContactTopic = (typeof contactTopics)[number]
 
 export const contactSchema = z.object({

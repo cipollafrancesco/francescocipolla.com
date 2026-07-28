@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
-import { Calendar, Linkedin, Mail } from 'lucide-react'
+import { ArrowUpRight, Calendar, Github, Linkedin, Mail } from 'lucide-react'
 import { ContactForm } from '@/components/ContactForm'
 import { Eyebrow } from '@/components/ui/Eyebrow'
+import { Reveal } from '@/components/Reveal'
 import CalEmbed from '@/components/CalEmbed'
 import { getI18nContent } from '@/i18n/server'
 import { isLocale } from '@/i18n/config'
@@ -10,6 +11,27 @@ import { withLocaleMetadata } from '@/lib/metadata'
 interface ContactsPageProps {
     params: Promise<{ lang: string }>
 }
+
+const channels = [
+    {
+        Icon: Mail,
+        label: 'info@francescocipolla.com',
+        href: 'mailto:info@francescocipolla.com',
+        external: false,
+    },
+    {
+        Icon: Linkedin,
+        label: 'LinkedIn',
+        href: 'https://www.linkedin.com/in/francesco-cipolla-41768411b',
+        external: true,
+    },
+    {
+        Icon: Github,
+        label: 'GitHub',
+        href: 'https://github.com/cipollafrancesco',
+        external: true,
+    },
+]
 
 export async function generateMetadata({ params }: ContactsPageProps): Promise<Metadata> {
     const { lang: langParam } = await params
@@ -26,99 +48,97 @@ export default async function ContactsPage({ params }: ContactsPageProps) {
     }
 
     const { lang, content } = await getI18nContent(langParam)
-    const eyebrow = lang === 'it' ? 'Parliamone' : 'Let’s talk'
-    const intro =
-        lang === 'it'
-            ? 'Compila il form qui sotto oppure usa il calendario per fissare una call di 30 minuti — gratuita, senza impegno.'
-            : 'Fill in the form below or use the calendar to book a free 30-minute call — no commitment.'
-    const bookingEyebrow = lang === 'it' ? 'Disponibilita' : 'Availability'
-    const bookingLabel =
-        lang === 'it'
-            ? 'Scegli un orario per parlare del progetto.'
-            : 'Choose a time to talk through the project.'
+    const page = content.contact.page
+    const newTab = lang === 'it' ? 'si apre in una nuova scheda' : 'opens in a new tab'
 
     return (
         <div className="min-h-screen bg-white text-black md:mt-[88px]">
-            <main id="main-content" className="border-b border-black">
-                <section className="mx-auto max-w-6xl px-5 py-16 md:px-8 md:py-24">
-                    <div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
-                        <div>
-                            <Eyebrow className="mb-5">{eyebrow}</Eyebrow>
-                            <h1 className="max-w-4xl text-6xl font-black leading-none tracking-tight md:text-8xl lg:text-9xl">
-                                {content.home.contactsTitle}
-                            </h1>
-                            <p className="mt-8 max-w-2xl text-lg leading-8 text-gray-700">
-                                {intro}
-                            </p>
-                        </div>
+            <main id="main-content">
+                <section className="border-b border-black">
+                    <div className="mx-auto max-w-6xl px-5 py-16 md:px-8 md:py-24">
+                        <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
+                            <Reveal>
+                                <Eyebrow className="mb-5">{page.eyebrow}</Eyebrow>
+                                <h1 className="max-w-4xl text-6xl font-black leading-none tracking-tight md:text-8xl lg:text-[7rem]">
+                                    {content.home.contactsTitle}
+                                </h1>
+                                <p className="mt-8 max-w-2xl text-lg leading-8 text-gray-700">
+                                    {page.intro}
+                                </p>
+                            </Reveal>
 
-                        <div className="grid content-start border border-black">
-                            <a
-                                href="mailto:info@francescocipolla.com"
-                                className="group flex min-h-24 items-center justify-between gap-5 border-b border-black p-5 transition-colors hover:bg-black hover:text-white md:p-6"
+                            <Reveal
+                                delay={0.08}
+                                className="grid self-start border border-black bg-white"
                             >
-                                <span className="flex min-w-0 items-center gap-4 break-all text-lg font-semibold tracking-tight md:text-2xl">
-                                    <Mail className="h-5 w-5 shrink-0" />
-                                    info@francescocipolla.com
-                                </span>
-                                <span className="text-sm uppercase tracking-[0.2em] text-gray-500 transition-colors group-hover:text-white/70">
-                                    {lang === 'it' ? 'diretto' : 'direct'}
-                                </span>
-                            </a>
-                            <a
-                                href="https://www.linkedin.com/in/francesco-cipolla-41768411b"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="group flex min-h-24 items-center justify-between gap-5 border-b border-black p-5 transition-colors hover:bg-black hover:text-white md:p-6"
-                            >
-                                <span className="flex items-center gap-4 text-lg font-semibold tracking-tight md:text-2xl">
-                                    <Linkedin className="h-5 w-5 shrink-0" />
-                                    LinkedIn
-                                </span>
-                                <span className="text-sm uppercase tracking-[0.2em] text-gray-500 transition-colors group-hover:text-white/70">
-                                    {lang === 'it' ? 'professionale' : 'professional'}
-                                </span>
-                            </a>
+                                {channels.map(({ Icon, label, href, external }) => (
+                                    <a
+                                        key={href}
+                                        href={href}
+                                        aria-label={external ? `${label} — ${newTab}` : undefined}
+                                        {...(external
+                                            ? { target: '_blank', rel: 'noopener noreferrer' }
+                                            : {})}
+                                        className="group flex min-h-24 items-center justify-between gap-5 border-b border-black p-5 transition-colors last:border-b-0 hover:bg-black hover:text-white md:p-6"
+                                    >
+                                        <span className="flex min-w-0 items-center gap-4 break-words text-lg font-semibold tracking-tight md:text-2xl">
+                                            <Icon className="h-5 w-5 shrink-0" aria-hidden="true" />
+                                            {label}
+                                        </span>
+                                        <ArrowUpRight
+                                            className="h-5 w-5 shrink-0 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+                                            aria-hidden="true"
+                                        />
+                                    </a>
+                                ))}
+                            </Reveal>
                         </div>
                     </div>
                 </section>
 
-                <section className="border-t border-black">
+                <section className="border-b border-black">
                     <div className="mx-auto max-w-6xl px-5 py-16 md:px-8 md:py-24">
-                        <Eyebrow className="mb-5">{content.contact.form.eyebrow}</Eyebrow>
                         <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
-                            <div>
+                            <Reveal>
+                                <Eyebrow className="mb-5">{content.contact.form.eyebrow}</Eyebrow>
                                 <h2 className="text-3xl font-black tracking-tight md:text-5xl">
                                     {content.contact.form.title}
                                 </h2>
-                                <p className="mt-5 text-base leading-7 text-gray-700">
+                                <p className="mt-5 max-w-2xl text-base leading-7 text-gray-600 md:text-lg">
                                     {content.contact.form.intro}
                                 </p>
-                            </div>
-                            <ContactForm form={content.contact.form} lang={lang} />
+                            </Reveal>
+                            <Reveal delay={0.08}>
+                                <ContactForm form={content.contact.form} lang={lang} />
+                            </Reveal>
                         </div>
                     </div>
                 </section>
 
-                <section className="border-t border-black bg-black text-white">
-                    <div className="mx-auto grid max-w-6xl gap-8 px-5 py-16 md:px-8 md:py-24 lg:grid-cols-[0.75fr_1.25fr]">
-                        <div>
-                            <Eyebrow
-                                tone="dark"
-                                icon={<Calendar className="h-4 w-4" />}
-                                className="mb-4"
-                            >
-                                {bookingEyebrow}
-                            </Eyebrow>
-                            <h2 className="text-3xl font-black tracking-tight md:text-5xl">
-                                {content.common.cta.book}
-                            </h2>
-                            <p className="mt-5 max-w-xl text-base leading-7 text-gray-300">
-                                {bookingLabel}
-                            </p>
-                        </div>
-                        <div className="overflow-hidden rounded-lg border border-white/20 bg-white text-black">
-                            <CalEmbed calLink="francescocipolla/free-intro-call-30-minutes" />
+                <section className="border-b border-black bg-black text-white">
+                    <div className="mx-auto max-w-6xl px-5 py-16 md:px-8 md:py-24">
+                        <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
+                            <Reveal>
+                                <Eyebrow
+                                    tone="dark"
+                                    icon={<Calendar className="h-4 w-4" />}
+                                    className="mb-5"
+                                >
+                                    {page.booking.eyebrow}
+                                </Eyebrow>
+                                <h2 className="text-3xl font-black tracking-tight md:text-5xl">
+                                    {content.common.cta.book}
+                                </h2>
+                                <p className="mt-5 max-w-2xl text-base leading-7 text-gray-300 md:text-lg">
+                                    {page.booking.description}
+                                </p>
+                            </Reveal>
+                            {/* Not wrapped in Reveal: the Cal embed measures its own
+                                container to size the iframe, so it must not mount
+                                inside an animated/transformed element. */}
+                            <div className="overflow-hidden rounded-lg border border-white/20 bg-white text-black">
+                                <CalEmbed calLink="francescocipolla/free-intro-call-30-minutes" />
+                            </div>
                         </div>
                     </div>
                 </section>

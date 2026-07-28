@@ -195,6 +195,14 @@ export type SiteContent = {
         reject: string
     }
     contact: {
+        page: {
+            eyebrow: string
+            intro: string
+            booking: {
+                eyebrow: string
+                description: string
+            }
+        }
         form: {
             eyebrow: string
             title: string
@@ -217,6 +225,7 @@ export type SiteContent = {
                 operations: string
                 product: string
                 support: string
+                other: string
             }
             success: {
                 title: string
@@ -541,7 +550,7 @@ export const siteContent: Record<Locale, SiteContent> = {
                     email: 'Email',
                 },
                 privacySettings: 'Impostazioni privacy',
-                rights: 'Realizzato in Italia, per aziende che vogliono crescere online.',
+                rights: '',
             },
             cta: {
                 book: 'Prenota una consulenza gratuita',
@@ -861,10 +870,19 @@ export const siteContent: Record<Locale, SiteContent> = {
             reject: 'Rifiuta',
         },
         contact: {
+            page: {
+                eyebrow: 'Scegli il canale',
+                intro: 'Email, LinkedIn o GitHub per un contatto diretto. Qui sotto trovi il form e il calendario, se preferisci partire da lì.',
+                booking: {
+                    eyebrow: '30 minuti',
+                    description:
+                        "Scegli uno slot e portami il problema così com'è: niente da preparare, nessun preventivo a sorpresa. In mezz'ora capiamo se e come posso aiutarti.",
+                },
+            },
             form: {
-                eyebrow: 'Scrivi',
+                eyebrow: 'Scrivimi',
                 title: 'Dimmi come posso aiutarti.',
-                intro: 'Compila il form e ti rispondo entro 24 ore. Se preferisci parlare subito, usa il calendario qui sotto.',
+                intro: 'Più contesto mi dai, più la risposta sarà utile: bastano due righe sul problema e sul risultato che vuoi ottenere. Rispondo entro 24 ore, sempre io.',
                 fields: {
                     name: 'Nome',
                     namePlaceholder: 'Mario Rossi',
@@ -883,6 +901,7 @@ export const siteContent: Record<Locale, SiteContent> = {
                     operations: 'Ridurre il lavoro manuale nei processi',
                     product: 'Costruire un prodotto o app web',
                     support: 'Supporto tecnico su un progetto esistente',
+                    other: 'Altro',
                 },
                 success: {
                     title: 'Messaggio ricevuto.',
@@ -931,7 +950,7 @@ export const siteContent: Record<Locale, SiteContent> = {
                     email: 'Email',
                 },
                 privacySettings: 'Privacy settings',
-                rights: 'Built in Italy for businesses that want to grow online.',
+                rights: '',
             },
             cta: {
                 book: 'Book a free call',
@@ -1249,10 +1268,19 @@ export const siteContent: Record<Locale, SiteContent> = {
             reject: 'Reject',
         },
         contact: {
+            page: {
+                eyebrow: 'Pick your channel',
+                intro: "Email, LinkedIn, or GitHub for a direct line. Below you'll find the form and the calendar, if you'd rather start there.",
+                booking: {
+                    eyebrow: '30 minutes',
+                    description:
+                        'Pick a slot and bring the problem as it is: nothing to prepare, no surprise quotes. In half an hour we work out if and how I can help.',
+                },
+            },
             form: {
-                eyebrow: 'Write',
+                eyebrow: 'Write to me',
                 title: 'Tell me how I can help.',
-                intro: "Fill in the form and I'll get back to you within 24 hours. If you'd rather talk straight away, use the calendar below.",
+                intro: 'The more context you give me, the more useful my reply: a couple of lines on the problem and the outcome you want is enough. I reply within 24 hours, always personally.',
                 fields: {
                     name: 'Name',
                     namePlaceholder: 'John Smith',
@@ -1271,6 +1299,7 @@ export const siteContent: Record<Locale, SiteContent> = {
                     operations: 'Reduce manual work in processes',
                     product: 'Build a product or web app',
                     support: 'Technical support on an existing project',
+                    other: 'Something else',
                 },
                 success: {
                     title: 'Message received.',
