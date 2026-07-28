@@ -7,6 +7,14 @@
  * refactor — extra fields can be appended, and the optional fields already
  * model the "may or may not exist" shape a backend would return.
  */
+/**
+ * The three bindings a shelf like this actually mixes:
+ * - `cloth`   — bound hardback: rounded spine, raised bands, foil title
+ * - `jacket`  — dust-jacketed hardback: flat, printed, slightly glossy
+ * - `paper`   — matte paperback: thin, short, creased, no boards
+ */
+export type Binding = 'cloth' | 'jacket' | 'paper'
+
 export interface Book {
     id: string
     title: string
@@ -31,6 +39,12 @@ export interface Book {
     thickness?: number
     /** Optional artwork that overrides the generated spine. */
     spineImage?: string
+    /**
+     * How the book is bound. Drives its whole material recipe — spine profile,
+     * height, thickness, page-block colour and wear. Omit it and `bindingOf()`
+     * derives a stable one from the id, so an un-annotated shelf still mixes.
+     */
+    binding?: Binding
     /** Optional personal rating, conventionally 1–5. */
     rating?: number
     /** Optional free-form personal notes. */

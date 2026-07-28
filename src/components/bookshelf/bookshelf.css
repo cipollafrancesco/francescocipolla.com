@@ -21,15 +21,43 @@
     /* spine width; per-book override via inline style   */
     --book-depth: 116px;
     /* cover width / how deep the book sits in the shelf    */
-    --book-radius: 0px;
+    --book-radius: 1.5px;
+    /* just off razor-sharp; real boards are milled, not cut */
+
+    /* ---- Paper ------------------------------------------------------------- */
+    /* One page-block texture shared by every cut edge in the scene — the head of
+       an in-shelf book and the fore-edge/head/tail of the extracted one. The
+       repeat is deliberately uneven (1px, 2px, 1px, 2px over an 8px cycle) so a
+       page block never resolves into the moiré a strict 1px stripe produces. */
+    --page-cream: #f4efe1;
+    --page-shade: #d9d1bd;
+    --page-block: repeating-linear-gradient(
+        to right,
+        var(--page-cream) 0 1px,
+        var(--page-shade) 1px 2px,
+        var(--page-cream) 2px 4px,
+        var(--page-shade) 4px 5px,
+        var(--page-cream) 5px 7px,
+        var(--page-shade) 7px 8px
+    );
 
     /* ---- Bookcase material (default = white cabinet) ------------------------ */
+    --frame-pad: clamp(10px, 2.5vw, 22px);
+    /* The cabinet's rail/stile width. Shared between the frame's padding and
+       the planks' negative offsets, so every board runs wall-to-wall no matter
+       what the clamp resolves to. */
     --shelf-frame: #f7f6f3;
     --shelf-plank: #efece4;
     --shelf-plank-edge: #ddd7c8;
+    --shelf-plank-light: #f8f6f0;
+    /* where the board catches the light near the lip     */
     --shelf-back: #e9e5db;
     --shelf-back-bottom: #d8d2c4;
     /* darker where back meets the plank          */
+    --shelf-side: #f1eee6;
+    /* inner face of a cabinet side panel, at the front      */
+    --shelf-side-dark: #ddd8cb;
+    /* ...and where it meets the back wall                   */
     --shelf-gap: 22px;
     /* breathing room between the row and the shelf above    */
 
@@ -39,7 +67,9 @@
     --ao-strength: 0.4;
     /* ambient occlusion where books meet the back wall      */
     --spine-sheen: rgba(255, 255, 255, 0.16);
-    --spine-edge-dark: rgba(0, 0, 0, 0.28);
+    --spine-edge-dark: rgba(0, 0, 0, 0.34);
+    /* Two adjacent books meet edge-to-edge, so each spine's own edge darkening
+       is half of the crevice between them — hence the fairly heavy value. */
 
     /* ---- Open-book scrim ---------------------------------------------------- */
     /* There is no panel behind the details — this one full-screen layer is the
@@ -74,8 +104,6 @@
    ========================================================================= */
 
 .bookcase__scene {
-    perspective: var(--scene-perspective);
-    perspective-origin: 50% var(--scene-origin-y);
     padding: clamp(16px, 4vw, 48px) clamp(8px, 3vw, 40px) clamp(40px, 8vw, 90px);
     /* Fill the viewport so the cabinet reads as full-height furniture even with a
      small collection; the shelves below grow to share this height. */
@@ -92,14 +120,116 @@
     width: 100%;
     max-width: 1100px;
     margin: 0 auto;
-    padding: clamp(10px, 2.5vw, 22px);
-    border-radius: 10px;
+    padding: var(--frame-pad);
     background: var(--shelf-frame);
+    position: relative;
+    /* The vanishing point for the whole cabinet, and load-bearing in two ways.
+       It has to live HERE, not on `.bookcase__scene`: perspective only reaches
+       elements inside the same 3D rendering context, and a `flat` element (the
+       default) ends that context at itself — from the scene it never got past
+       this frame, so the entire cabinet rendered orthographically, with planks
+       edge-on and every spine a flat card facing the camera.
+       It equally must NOT be `transform-style: preserve-3d`. An element that is
+       itself part of a 3D context paints its own background on its own z-plane
+       and then depth-sorts its descendants against it — this frame's cabinet
+       face would swallow every book pushed back by `--bk-inset`. Declaring the
+       perspective instead makes the frame the *root* of the context: its
+       background paints flat, and the shelves inside it paint over it. */
+    perspective: var(--scene-perspective);
+    perspective-origin: 50% var(--scene-origin-y);
+    /* Clips the 3D scene to the frame's own rounded silhouette. Without it,
+       nothing stops the (deliberately oversized — see `.bookcase__back`) 3D
+       content from spilling past this rounded corner; with it, any overscan
+       past this rect is simply cropped away, the same way a real cabinet's
+       front frame crops the view into the box behind it. Safe here: this
+       element only declares `perspective`, never `transform-style: preserve-3d`,
+       so it stays a normal 2D box for clipping purposes. */
+    overflow: hidden;
     box-shadow:
         0 1px 0 rgba(255, 255, 255, 0.8) inset,
         /* cabinet side stiles */ inset 10px 0 14px -10px rgba(0, 0, 0, 0.18),
         inset -10px 0 14px -10px rgba(0, 0, 0, 0.18),
+        /* ...and the top rail, so the cabinet head reads as a board too */ inset 0 12px 14px -12px
+            rgba(0, 0, 0, 0.14),
         0 40px 70px -40px var(--shadow-color);
+}
+
+/* The cabinet's back panel: ONE continuous board across the whole carcass.
+   It spans the same padding box as the side panels, so the two meet exactly at
+   every corner — per-shelf wall segments could never manage that, because they
+   were inset by the frame padding and left a sliver of raw cabinet front
+   showing at each far corner, which is what made the case look broken.
+
+   Overscanned well past the frame's own edges (rather than a plain `inset: 0`)
+   because `translateZ` shrinks this panel toward the vanishing point, and
+   `--scene-origin-y: 32%` puts that point near the top — so the panel's
+   projected top edge lands ~14px short of the frame's true top, its bottom
+   edge ~30px short, at 1440px measured live. A flat rectangle can't reach a
+   frame it's being shrunk away from; oversizing it first, by an amount tied to
+   `--book-depth` (the value driving the shrink) rather than a fixed pixel
+   guess, means it still fully covers the opening after perspective — and
+   `.bookcase__frame`'s new `overflow: hidden` crops away the excess. */
+.bookcase__back {
+    position: absolute;
+    inset: calc(var(--book-depth) * -0.5);
+    transform: translateZ(calc(var(--book-depth) * -1));
+    background: linear-gradient(
+        to bottom,
+        var(--shelf-back) 0%,
+        var(--shelf-back) 55%,
+        var(--shelf-back-bottom) 100%
+    );
+    pointer-events: none;
+}
+
+/* The cabinet's two inner side panels, folded back from the frame's inner edges.
+   They are what closes the box: under a real vanishing point the back wall
+   projects smaller than the opening, and without sides you look through the
+   wedge at either edge straight out of the furniture. They also give the case
+   its only asymmetric light — the left wall faces the lamp, the right one is
+   turned away from it. */
+.bookcase__side {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: var(--book-depth);
+    pointer-events: none;
+}
+
+.bookcase__side--left {
+    left: 0;
+    transform-origin: left center;
+    transform: rotateY(90deg);
+    /* Element-left is the FRONT of the panel once folded, so the near stop
+       comes first and the wall falls off toward the back wall. The vertical
+       streaks are the board's figure, running front-to-back the way a side
+       panel is cut — same technique as the plank's. */
+    background-image:
+        repeating-linear-gradient(
+            90deg,
+            rgba(0, 0, 0, 0.022) 0 1px,
+            rgba(255, 255, 255, 0.025) 1px 3px,
+            rgba(0, 0, 0, 0.014) 3px 4px,
+            rgba(0, 0, 0, 0) 4px 12px
+        ),
+        linear-gradient(to right, var(--shelf-side) 0%, var(--shelf-side-dark) 100%);
+}
+
+.bookcase__side--right {
+    right: 0;
+    transform-origin: right center;
+    transform: rotateY(-90deg);
+    /* Mirrored: element-right is this panel's front edge. */
+    background-image:
+        repeating-linear-gradient(
+            90deg,
+            rgba(0, 0, 0, 0.022) 0 1px,
+            rgba(255, 255, 255, 0.025) 1px 3px,
+            rgba(0, 0, 0, 0.014) 3px 4px,
+            rgba(0, 0, 0, 0) 4px 12px
+        ),
+        linear-gradient(to left, var(--shelf-side) 0%, var(--shelf-side-dark) 100%);
+    filter: brightness(0.93);
 }
 
 /* Shelves share the cabinet height (flex), with books sized via --book-height to
@@ -115,19 +245,31 @@
     transform-style: preserve-3d;
 }
 
-/* The back wall of the shelf, pushed away from the viewer. Provides the dark
-   "ambient occlusion" backdrop the books sit against. */
+/* Not a wall any more — the wall is `.bookcase__back`, one continuous panel
+   (see there for why). This element is now just the LIGHT on that wall: the
+   shadow band the shelf board above throws down it, and the ambient pool where
+   it meets the plank. Translucent, so it can never punch a hole in the case. */
 .shelf__back {
     position: absolute;
-    inset: 0 0 var(--plank-thickness, 14px) 0;
-    transform: translateZ(calc(var(--book-depth) * -1));
+    inset: 0;
+    /* 1px proud of the wall so the two never z-fight. */
+    transform: translateZ(calc(var(--book-depth) * -1 + 1px));
     background: linear-gradient(
         to bottom,
-        var(--shelf-back) 0%,
-        var(--shelf-back) 62%,
-        var(--shelf-back-bottom) 100%
+        rgba(40, 32, 22, 0.15) 0%,
+        rgba(40, 32, 22, 0) 30%,
+        rgba(40, 32, 22, 0) 78%,
+        rgba(40, 32, 22, 0.16) 100%
     );
-    border-radius: 4px;
+    pointer-events: none;
+}
+
+/* Every shelf but the top one starts its shadow up inside the flex gap, right
+   under the plank above — where the board actually casts it — instead of at
+   its own band's edge. The top shelf's shadow comes from the cabinet's top
+   rail, which sits at its own top: no extension needed. */
+.shelf:not(:first-child) .shelf__back {
+    top: calc(var(--shelf-gap) * -1);
 }
 
 /* The horizontal board the books rest on. Its front edge is faked with a
@@ -143,23 +285,58 @@
     transform-style: preserve-3d;
 }
 
+/* Hinged at its FRONT edge (the line the books stand on) and folded away from
+   the camera. With `transform-origin: top center` the board folded forwards
+   instead — invisible while the scene was flat, a plank lying across the books
+   the moment real perspective was switched on. The same rule applies to every
+   rotateX face below: hinge on the edge that touches the front plane, and send
+   the body backwards (`rotateX(90deg)` when the body extends up from the hinge,
+   `rotateX(-90deg)` when it extends down). */
 .shelf__plank {
     position: absolute;
-    left: 0;
-    right: 0;
+    /* Housed into the side panels: the row is inset by the frame padding, so
+       the board reaches past it to the panels at the frame's edges — a shelf
+       that stops short of its own walls is what furniture looks like broken. */
+    left: calc(var(--frame-pad) * -1);
+    right: calc(var(--frame-pad) * -1);
     bottom: 0;
     height: var(--book-depth);
-    transform-origin: top center;
+    transform-origin: center bottom;
     transform: rotateX(90deg);
-    background: linear-gradient(to bottom, var(--shelf-plank) 0%, var(--shelf-plank-edge) 100%);
+    /* Top of the element is the BACK of the board once folded, so every gradient
+       here runs far → near. */
+    background-image:
+        /* the joint where the board is housed into the back panel */
+        linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 0.24) 0 1.5px,
+            rgba(0, 0, 0, 0.09) 1.5px 5px,
+            rgba(0, 0, 0, 0) 5px
+        ),
+        /* figure in the board, running front-to-back the way a plank is cut */
+        repeating-linear-gradient(
+                to right,
+                rgba(0, 0, 0, 0.03) 0 1px,
+                rgba(255, 255, 255, 0.03) 1px 3px,
+                rgba(0, 0, 0, 0.018) 3px 4px,
+                rgba(0, 0, 0, 0) 4px 11px
+            ),
+        /* shadowed in the corner, brightest where it meets the lip */
+        linear-gradient(
+                to bottom,
+                var(--shelf-plank-edge) 0%,
+                var(--shelf-plank) 58%,
+                var(--shelf-plank-light) 100%
+            );
     border-radius: 2px;
 }
 
-/* Front lip of the shelf board — gives the plank a sense of thickness. */
+/* Front lip of the shelf board — gives the plank a sense of thickness. Runs
+   wall-to-wall like the plank whose edge it is. */
 .shelf__lip {
     position: absolute;
-    left: 0;
-    right: 0;
+    left: calc(var(--frame-pad) * -1);
+    right: calc(var(--frame-pad) * -1);
     bottom: calc(var(--plank-thickness, 14px) * -1);
     height: var(--plank-thickness, 14px);
     background: linear-gradient(to bottom, var(--shelf-plank-edge) 0%, var(--shelf-frame) 100%);
@@ -175,20 +352,52 @@
     /* Per-book dimensions = responsive base tokens × inline scales. */
     --bk-thickness: calc(var(--book-thickness) * var(--bk-scale, 1));
     --bk-height: calc(var(--book-height) * var(--bk-height-scale, 1));
+    /* How far this book is pushed back from the shelf's front plane. */
+    --bk-z: calc(var(--book-depth) * var(--bk-inset, 0) * -1);
+    /* Cover-board shading, derived from the book's own spine colour so a sliver
+       of board always belongs to the book it came off. Near = at the shelf lip
+       and lit; far = at the back wall and in shadow. */
+    --board-near: color-mix(in srgb, var(--spine-color, #444) 84%, #fff);
+    --board-mid: var(--spine-color, #444);
+    --board-far: color-mix(in srgb, var(--spine-color, #444) 62%, #000);
+    /* One lamp, up and to the left of the case. Two consequences, both keyed off
+       the book's position in its row: the highlight slides across the spine as
+       the row recedes from the light, and the far end of the row sits in a
+       little more shade. Without this every book carries an identical highlight
+       in an identical place, which is the giveaway that they are 23 copies of
+       one CSS box. */
+    --sheen-x: calc(34% + var(--bk-pos, 0.5) * 26%);
+    --bk-shade: calc(var(--bk-pos, 0.5) * 0.07);
     position: relative;
     flex: 0 0 auto;
     width: var(--bk-thickness);
     min-width: 0;
     /* allow collapsing to 0 when filtered out */
     height: var(--bk-height);
-    transform-style: preserve-3d;
     transform-origin: center bottom;
+    /* Deliberately NO `transform-style: preserve-3d` and no 3D transform on this
+       element. It is the flex item and the box the <button> is sized from, and
+       Chrome stops hit-testing into a subtree that carries a 3D translate once a
+       real perspective is live — putting `translateZ` here made all 23 books
+       unclickable while still painting perfectly. Depth lives on `.book__body`,
+       which nothing needs to click. Only 2D transforms belong here. */
     /* The row is bottom-aligned, so every book rests flush on the plank; only the
      top edges vary, like real books on a shelf. */
     transition:
         width 0.42s cubic-bezier(0.22, 1, 0.36, 1),
         opacity 0.32s ease,
         transform 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Everything the reader sees, and the only thing carrying the book's depth.
+   Transparent to the pointer so the flat button beneath it takes the click. */
+.book__body {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    transform: translateZ(var(--bk-z));
+    pointer-events: none;
+    transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* Filtered out: collapse the slot so neighbours slide in to fill the gap. */
@@ -205,18 +414,39 @@
     }
 }
 
+/* The hit target: an empty, flat, untransformed box covering the whole book.
+   It carries no artwork and no 3D at all — see the note on `.book` for why. */
 .book__button {
     appearance: none;
-    display: block;
-    width: 100%;
-    height: 100%;
+    position: absolute;
+    inset: 0;
     padding: 0;
     margin: 0;
     border: 0;
     background: transparent;
     cursor: pointer;
-    transform-style: preserve-3d;
     border-radius: var(--book-radius);
+}
+
+/* Tip the book out of the row the way a hand actually takes one off a shelf:
+   a finger hooks the head and the top rocks forward while the foot stays put.
+   Sliding it straight out on Z alone is nearly invisible — against a 1700px
+   perspective, 20px of travel is a 1% change in size — so the rotation is what
+   carries the gesture and the translate just clears the neighbours. 24° is the
+   sweet spot: unmistakably angled, opening a clear look down onto the head and
+   along the cover, without reading as the book falling off the shelf. The small
+   added `rotateY` turns the whole book slightly so its right board — the front
+   cover, now carrying real artwork (`--cover-image`) rather than a flat tint —
+   catches the light and peeks out instead of staying edge-on to the camera.
+
+   Driven off the button but applied to `.book__body` via `~`, which is why the
+   button has to come first in the markup. The body's resting `translateZ` is
+   replaced outright, so every book arrives at the same point proud of the row
+   rather than the deeply-shelved ones barely moving. */
+.book:not(.is-empty) .book__button:hover ~ .book__body,
+.book:not(.is-empty) .book__button:focus-visible ~ .book__body {
+    transform: translateZ(20px) rotateY(-10deg) rotateX(-24deg);
+    transform-origin: center bottom;
 }
 
 .book__button:focus-visible {
@@ -224,40 +454,191 @@
     outline-offset: 3px;
 }
 
-/* The visible spine face. */
+@media (prefers-reduced-motion: reduce) {
+    .book__body {
+        transition: none;
+    }
+}
+
+/* The visible spine face. Colour, bands and light-falloff live here; the
+   material itself (cloth / jacket / paperback) is layered on per binding below,
+   because the three read as genuinely different objects only if their highlight
+   shape, texture and printed furniture all differ together. */
 .book__spine {
     position: absolute;
     inset: 0;
     border-radius: var(--book-radius);
     background-color: var(--spine-color, #444);
-    background-image:
-    /* edge darkening (rounded spine illusion) */
-        linear-gradient(
-            to right,
-            var(--spine-edge-dark) 0%,
-            rgba(0, 0, 0, 0) 16%,
-            var(--spine-sheen) 50%,
-            rgba(0, 0, 0, 0) 84%,
-            var(--spine-edge-dark) 100%
-        ),
-        /* cloth weave texture */
-        repeating-linear-gradient(
-                0deg,
-                rgba(255, 255, 255, 0.045) 0px,
-                rgba(255, 255, 255, 0.045) 1px,
-                rgba(0, 0, 0, 0.05) 1px,
-                rgba(0, 0, 0, 0.05) 2px
-            );
     box-shadow:
     /* head & tail bands */
         inset 0 3px 0 rgba(255, 255, 255, 0.12),
         inset 0 -3px 0 rgba(0, 0, 0, 0.22),
         /* ambient occlusion at the foot, where it meets the shelf */ inset 0 -10px 12px -8px
-            rgba(0, 0, 0, var(--ao-strength));
+            rgba(0, 0, 0, var(--ao-strength)),
+        /* One light source for the whole case: books further along the row are
+           further from it and sit a flat shade darker. A spread this large just
+           floods the face — it paints over the background layers but under
+           `.book__title`, which is a child element. */
+        inset 0 0 0 999px rgba(20, 14, 8, var(--bk-shade, 0));
     overflow: hidden;
 }
 
-.book__spine--image {
+/* Bound in cloth over boards: the spine is rounded, so its highlight is a narrow
+   band pulled toward the light rather than a mirror image. Smooth by default —
+   see `.book--banded` below for the rarer sewn-cord variant. */
+.book--cloth .book__spine {
+    background-image:
+        /* rounded profile: bright line off-centre, falling away fast on the far side */
+        linear-gradient(
+            to right,
+            var(--spine-edge-dark) 0%,
+            rgba(0, 0, 0, 0) 15%,
+            var(--spine-sheen) var(--sheen-x, 42%),
+            rgba(0, 0, 0, 0) 72%,
+            var(--spine-edge-dark) 100%
+        ),
+        /* woven cloth: a warp and a weft, not one set of stripes */
+        repeating-linear-gradient(
+                0deg,
+                rgba(255, 255, 255, 0.038) 0 1px,
+                rgba(0, 0, 0, 0.038) 1px 2px
+            ),
+        repeating-linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.026) 0 1px,
+            rgba(0, 0, 0, 0.026) 1px 2px
+        );
+}
+
+/* Raised cord bands: a leather/traditionally-sewn binding trait, mainly antique
+   or special editions — not the ordinary contemporary cloth hardback this shelf
+   is mostly made of. `hasBands()` keeps it to roughly 1 in 6 cloth books, so
+   most cloth spines stay smooth, and only the odd "special edition" gets cords.
+   A separate `::before` rather than a layer in `.book__spine`'s own
+   background-image, so the two are independent instead of one giant
+   conditional gradient list. Kept very low-contrast and widely spaced: at a
+   34px spine width anything stronger stops reading as a ridge under cloth and
+   turns into printed stripes. */
+.book--cloth.book--banded .book__spine::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0) 0 19%,
+        rgba(255, 255, 255, 0.055) 19% 20%,
+        rgba(0, 0, 0, 0.09) 20% 21.4%,
+        rgba(0, 0, 0, 0) 21.4% 23%
+    );
+    pointer-events: none;
+}
+
+/* Dust-jacketed hardback: laminated paper over boards. Flat rather than rounded,
+   so one broad specular sweep, a glint down each folded edge, and the printed
+   white panel most jackets carry at the foot of the spine. */
+.book--jacket .book__spine {
+    background-image:
+        /* The printed panel at the foot of the spine. A real jacket prints this
+           solid, but a solid block on a 34px spine reads as a rendering fault,
+           so it stays a tint — enough to say "something is printed here". */
+        linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 0) 0 87%,
+            rgba(255, 255, 255, 0.2) 87.5% 95%,
+            rgba(0, 0, 0, 0) 95.5%
+        ),
+        /* lamination gloss */
+        linear-gradient(
+                166deg,
+                rgba(255, 255, 255, 0) 32%,
+                rgba(255, 255, 255, 0.2) 47%,
+                rgba(255, 255, 255, 0) 62%
+            ),
+        /* flat face + the two folded jacket edges */
+        linear-gradient(
+                to right,
+                var(--spine-edge-dark) 0%,
+                rgba(255, 255, 255, 0.16) 5%,
+                rgba(0, 0, 0, 0) 24%,
+                var(--spine-sheen) var(--sheen-x, 50%),
+                rgba(0, 0, 0, 0) 76%,
+                rgba(255, 255, 255, 0.13) 95%,
+                var(--spine-edge-dark) 100%
+            );
+}
+
+/* Matte paperback: uncoated stock, so no glint anywhere — a wide, weak diffuse
+   band is the whole of its lighting. */
+.book--paper .book__spine {
+    background-image:
+        linear-gradient(
+            to right,
+            var(--spine-edge-dark) 0%,
+            rgba(0, 0, 0, 0) 22%,
+            rgba(255, 255, 255, 0.07) var(--sheen-x, 50%),
+            rgba(0, 0, 0, 0) 78%,
+            var(--spine-edge-dark) 100%
+        ),
+        repeating-linear-gradient(
+            0deg,
+            rgba(255, 255, 255, 0.028) 0 1px,
+            rgba(0, 0, 0, 0.038) 1px 2px
+        );
+}
+
+/* Reading creases — the white breaks that run the length of a paperback spine
+   once it has been opened flat. Paperback-only, and scaled by how used the copy
+   is, so a pristine one has none. */
+.book--paper .book__spine::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: calc(var(--bk-wear, 0) * 0.85);
+    background-image: linear-gradient(
+        to right,
+        rgba(0, 0, 0, 0) 0 24%,
+        rgba(255, 255, 255, 0.16) 24% 25%,
+        rgba(0, 0, 0, 0) 25% 62%,
+        rgba(255, 255, 255, 0.11) 62% 62.8%,
+        rgba(0, 0, 0, 0) 62.8%
+    );
+    pointer-events: none;
+}
+
+/* Wear, common to every binding but capped much lower on boards than on paper
+   (see `wear()`): a bleached head, and corners rubbed light at the top where a
+   book is pulled off the shelf and dark at the foot where it grinds on the
+   board. */
+.book__spine::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: var(--bk-wear, 0);
+    background-image:
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 16%),
+        radial-gradient(closest-side, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0)),
+        radial-gradient(closest-side, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0)),
+        radial-gradient(closest-side, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0)),
+        radial-gradient(closest-side, rgba(0, 0, 0, 0.26), rgba(0, 0, 0, 0));
+    background-size:
+        100% 100%,
+        14px 10px,
+        11px 8px,
+        16px 12px,
+        12px 9px;
+    background-position:
+        0 0,
+        left top,
+        right top,
+        left bottom,
+        right bottom;
+    background-repeat: no-repeat;
+    pointer-events: none;
+}
+
+/* Scoped to `.book` only to out-specify the per-binding recipes above, which
+   would otherwise win and paint a cloth weave over the artwork. */
+.book .book__spine--image {
     background-image: var(--spine-image);
     background-size: cover;
     background-position: center;
@@ -294,8 +675,94 @@
     white-space: nowrap;
 }
 
-/* Top page-edge: a strip folded back over the top of the book, showing the
-   stacked paper. Visible because the scene looks slightly down on the shelf. */
+/* Cloth titles are foil-stamped into the board, not printed — a metallic
+   gradient fill standing in for the foil, with a small emboss pair (a light
+   highlight up-left, a dark shadow down-right) standing in for the bevel a
+   stamping die actually leaves. The plain `color` fires first as a fallback for
+   any browser without background-clip: text, which is effectively none today;
+   more specific than the shared `.book__title` color above, so it wins without
+   `!important`. Jacket and paper titles are printed ink and keep that rule. */
+.book--cloth .book__title-text {
+    color: var(--foil-a, #f6dfa0);
+    background-image: linear-gradient(
+        180deg,
+        var(--foil-a, #f6dfa0) 0%,
+        var(--foil-b, #a97a2e) 100%
+    );
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow:
+        -1px -1px 0 rgba(255, 255, 255, 0.35),
+        1px 1px 1px rgba(0, 0, 0, 0.55);
+}
+
+/* The cover boards, folded back from the spine's two long edges. Each is hinged
+   on the edge it shares with the spine and swung away from the camera, so its
+   outward normal points out of the book — the one turned away is then dropped by
+   `backface-visibility`, and neither needs to know where the vanishing point is.
+
+   In a perfectly flush row these are invisible: every board is hidden behind the
+   neighbouring spine. They only appear where `--bk-inset` leaves one book
+   standing proud of the next, which is exactly when a real shelf shows them. */
+.book__side {
+    position: absolute;
+    top: 0;
+    width: var(--book-depth);
+    height: 100%;
+    backface-visibility: hidden;
+    pointer-events: none;
+}
+
+/* The right board is the FRONT cover — universally: stand any closed book
+   spine-out and its front cover faces the viewer's right. So this face shows
+   the real cover scan, not a colour. Element-left is the spine edge (near the
+   camera once folded), so the artwork is pinned `left`: the sliver perspective
+   reveals is the spine-adjacent strip of the actual cover. A translucent
+   lighting ramp sits on top — lit at the spine edge, falling off toward the
+   fore-edge — and doubles as the shading for the no-scan fallback colour. */
+.book__side--right {
+    /* Sits just past the spine's right edge, then folds back about that edge. */
+    left: 100%;
+    transform-origin: left center;
+    transform: rotateY(90deg);
+    background-image:
+        linear-gradient(
+            to right,
+            rgba(255, 255, 255, 0.2) 0%,
+            rgba(255, 255, 255, 0) 18%,
+            rgba(0, 0, 0, 0.14) 58%,
+            rgba(0, 0, 0, 0.42) 100%
+        ),
+        var(--cover-image, linear-gradient(var(--board-mid), var(--board-mid)));
+    background-size:
+        100% 100%,
+        cover;
+    background-position:
+        0 0,
+        left center;
+    background-repeat: no-repeat;
+}
+
+/* The left board is the back cover — no scan exists for those, so it stays a
+   colour derived from the spine, "near" (the lit stop) at the shelf's front
+   edge to mirror the right board's light. */
+.book__side--left {
+    right: 100%;
+    transform-origin: right center;
+    transform: rotateY(-90deg);
+    background: linear-gradient(
+        to left,
+        var(--board-near) 0%,
+        var(--board-mid) 34%,
+        var(--board-far) 100%
+    );
+}
+
+/* The head of the book: the page block seen from above, folded back over the
+   top edge. Visible because the scene looks slightly down on the shelf.
+   Element-top is the FRONT edge here and element-bottom is the back of the
+   shelf, so every gradient on it runs near → far. */
 .book__top {
     position: absolute;
     top: 0;
@@ -304,22 +771,50 @@
     height: var(--book-depth);
     transform-origin: top center;
     transform: rotateX(-90deg);
-    background:
-        linear-gradient(to bottom, rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0) 60%),
-        repeating-linear-gradient(to right, #f3efe3 0px, #f3efe3 1px, #d8d1bf 1px, #d8d1bf 2px);
     border-radius: 1px;
 }
 
-/* Soft contact shadow cast onto the plank directly under the book. */
+/* Perfect binding: the cover is glued flush around the block, so the paper runs
+   almost the full thickness with only a hairline of cover colour at each side. */
+.book--paper .book__top {
+    background:
+        linear-gradient(to bottom, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0.26) 100%) 0 0 / 100% 100%
+            no-repeat,
+        var(--page-block) center / calc(100% - 2px) 100% no-repeat,
+        var(--spine-color, #444);
+}
+
+/* Cased-in bindings: the boards are cut larger than the text block and stand
+   proud of it (the "square"), so the page block is inset and the board edges
+   show either side of it — with the woven headband glued across the front. */
+.book--cloth .book__top,
+.book--jacket .book__top {
+    background:
+        linear-gradient(to bottom, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0.26) 100%) 0 0 / 100% 100%
+            no-repeat,
+        repeating-linear-gradient(
+                to right,
+                rgba(255, 255, 255, 0.75) 0 2px,
+                var(--board-far) 2px 4px
+            )
+            center top / calc(100% - 6px) 4px no-repeat,
+        var(--page-block) center / calc(100% - 6px) 100% no-repeat,
+        var(--board-far);
+}
+
+/* Soft contact shadow, lying on the plank and pooling backwards from the book's
+   foot. Hinged at the foot itself (`top: 100%`) so it starts exactly where the
+   book meets the board. Its spread is a fraction of the book's own thickness,
+   not a fixed inset, so a fat volume casts a wider pool than a slim one. */
 .book__contact {
     position: absolute;
-    left: -8%;
-    right: -8%;
-    bottom: -2px;
-    height: 16px;
-    transform-origin: top center;
-    transform: rotateX(90deg);
-    background: radial-gradient(60% 90% at 50% 0%, var(--contact-shadow), rgba(0, 0, 0, 0) 72%);
+    top: 100%;
+    left: calc(var(--bk-thickness) * -0.28);
+    right: calc(var(--bk-thickness) * -0.28);
+    height: calc(var(--book-depth) * 0.62);
+    transform-origin: center top;
+    transform: rotateX(-90deg);
+    background: radial-gradient(58% 78% at 50% 0%, var(--contact-shadow), rgba(0, 0, 0, 0) 74%);
     filter: blur(2px);
     pointer-events: none;
 }
@@ -491,13 +986,7 @@
     margin-left: calc(var(--book-depth) / -2);
     margin-top: calc(var(--bk-height) / -2);
     transform: rotateY(-90deg) translateZ(calc(var(--bk-thickness) / 2));
-    background: repeating-linear-gradient(
-        to right,
-        #f6f2e8 0px,
-        #f6f2e8 1px,
-        #ddd6c4 1px,
-        #ddd6c4 2px
-    );
+    background: var(--page-block);
     box-shadow: inset 0 0 14px rgba(0, 0, 0, 0.18);
 }
 
@@ -508,13 +997,7 @@
     height: var(--book-depth);
     margin-left: calc(var(--bk-thickness) / -2);
     margin-top: calc(var(--book-depth) / -2);
-    background: repeating-linear-gradient(
-        to right,
-        #f3efe3 0px,
-        #f3efe3 1px,
-        #d8d1bf 1px,
-        #d8d1bf 2px
-    );
+    background: var(--page-block);
 }
 
 .face--top {
