@@ -54,6 +54,7 @@ export default async function ProjectsPage({ params }: ProjectsPageProps) {
                                 caseStudy: content.common.cta.caseStudy,
                                 liveSite: content.common.cta.liveSite,
                             }}
+                            className=""
                         />
                     </div>
                 </section>

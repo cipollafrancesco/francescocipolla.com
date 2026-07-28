@@ -16,6 +16,7 @@ export default function StackedProjects({
     projects,
     lang,
     labels,
+    className = 'lg:mt-96',
 }: {
     projects: LocalizedProject[]
     lang: Locale
@@ -23,6 +24,7 @@ export default function StackedProjects({
         caseStudy: string
         liveSite: string
     }
+    className?: string
 }) {
     const swiperRef = useRef<SwiperInstance | null>(null)
     const [activeIndex, setActiveIndex] = useState(0)
@@ -39,7 +41,7 @@ export default function StackedProjects({
     }
 
     return (
-        <div className="flex flex-col items-center justify-center gap-5 lg:mt-96 lg:h-[80vh]">
+        <div className={`flex flex-col items-center justify-center gap-5 lg:h-[80vh] ${className}`}>
             <Swiper
                 onSwiper={(swiper) => {
                     swiperRef.current = swiper

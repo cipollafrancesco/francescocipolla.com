@@ -22,7 +22,8 @@ const Header = ({ lang, copy }: HeaderProps) => {
         { href: `/${lang}/#about-me`, label: copy.nav.about },
         { href: `/${lang}/projects`, label: copy.nav.projects },
         { href: `/${lang}/books`, label: copy.nav.books },
-        { href: `/${lang}/services`, label: copy.nav.services },
+        // Services page temporarily hidden from nav — re-add when ready
+        // { href: `/${lang}/services`, label: copy.nav.services },
         { href: `/${lang}/contacts`, label: copy.nav.contacts },
     ]
 
