@@ -114,7 +114,12 @@ export default function HomeClient({ lang, content }: { lang: Locale; content: S
                         viewport={{ once: true, margin: '-20%' }}
                         transition={dur(0.8)}
                     >
-                        <Experiences ref={experienceRef} experiences={content.experiences} />
+                        <Experiences
+                            ref={experienceRef}
+                            title={content.home.experiencesTitle}
+                            qualifier={content.home.experiencesQualifier}
+                            experiences={content.experiences}
+                        />
                     </motion.div>
 
                     <div className="h-[10vh] lg:h-[20vh]" />

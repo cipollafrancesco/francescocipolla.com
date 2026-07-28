@@ -1,15 +1,18 @@
 'use client'
 
 import React, { useEffect, useRef } from 'react'
-import { motion, type PanInfo } from 'framer-motion'
+import type { CSSProperties, ReactNode } from 'react'
+import { motion } from 'framer-motion'
 import { X, Star } from 'lucide-react'
 import type { Book } from '@/lib/bookshelf/types'
 import type { Locale } from '@/i18n/config'
 import type { SiteContent } from '@/content/site'
+import { accentOnDark } from './visuals'
 
 interface BookDetailsPanelProps {
     book: Book
-    isMobile: boolean
+    /** True on the two-column layout (>= 1024px): book left, details right. */
+    isSplit: boolean
     reducedMotion: boolean
     onClose: () => void
     lang: Locale
@@ -24,11 +27,6 @@ function formatLongDate(iso: string, lang: Locale): string {
         month: 'long',
         day: 'numeric',
     })
-}
-
-function publishedLabel(value: string): string {
-    const year = value.match(/\d{4}/)?.[0]
-    return year ?? value
 }
 
 function Rating({ value, label }: { value: number; label: string }) {
@@ -52,12 +50,14 @@ function Rating({ value, label }: { value: number; label: string }) {
 }
 
 /**
- * Book details. Desktop: a panel on the right of the featured book. Mobile: a
- * bottom sheet that can be dragged down to dismiss. Acts as a modal dialog.
+ * Book details, set as type directly on the scrim — there is no panel, card or
+ * sheet behind it. Split layout (>= 1024px): a column to the right of the
+ * extracted book, sharing its centre line. Stacked layout: along the bottom of
+ * the screen, draggable downwards to dismiss. Acts as a modal dialog.
  */
 function BookDetailsPanel({
     book,
-    isMobile,
+    isSplit,
     reducedMotion,
     onClose,
     lang,
@@ -65,98 +65,167 @@ function BookDetailsPanel({
 }: BookDetailsPanelProps) {
     const closeRef = useRef<HTMLButtonElement>(null)
     const titleId = `book-title-${book.id}`
+    const category = book.category ? (copy.categories[book.category] ?? book.category) : null
 
     // Move focus into the dialog on open (focus is restored by the page on close).
     useEffect(() => {
         closeRef.current?.focus()
     }, [])
 
-    const transition = reducedMotion
-        ? { duration: 0.12 }
-        : { type: 'spring' as const, stiffness: 260, damping: 30 }
+    // Two groups, not six: the masthead arrives, then the reading matter.
+    const group = (delay: number) =>
+        reducedMotion
+            ? { initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { duration: 0.12 } }
+            : {
+                  initial: { opacity: 0, y: 12 },
+                  animate: { opacity: 1, y: 0 },
+                  transition: { duration: 0.42, delay, ease: [0.22, 1, 0.36, 1] as const },
+              }
 
-    const motionProps = isMobile
-        ? {
-              initial: { y: '100%' },
-              animate: { y: 0 },
-              exit: { y: '100%' },
-              drag: 'y' as const,
-              dragConstraints: { top: 0, bottom: 0 },
-              dragElastic: { top: 0, bottom: 0.6 },
-              onDragEnd: (_e: unknown, info: PanInfo) => {
-                  if (info.offset.y > 120 || info.velocity.y > 700) onClose()
-              },
-          }
-        : {
-              initial: { x: 40, opacity: 0 },
-              animate: { x: 0, opacity: 1 },
-              exit: { x: 40, opacity: 0 },
-          }
+    const style = { ['--panel-accent' as string]: accentOnDark(book.spineColor) } as CSSProperties
 
-    const positionClasses = isMobile
-        ? 'inset-x-0 bottom-0 rounded-t-2xl max-h-[72vh]'
-        : 'right-0 top-0 h-full w-[min(420px,40vw)] rounded-l-2xl'
-
-    return (
-        <motion.div
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby={titleId}
-            tabIndex={-1}
-            className={`pointer-events-auto fixed z-[70] overflow-y-auto bg-white text-black shadow-2xl ${positionClasses}`}
-            transition={transition}
-            {...motionProps}
+    const closeButton = (
+        <button
+            ref={closeRef}
+            type="button"
+            onClick={onClose}
+            aria-label={copy.close}
+            /* No negative margins: the details block is an `overflow-y-auto`
+               scroll container, which forces the other axis to clip too, and
+               the round hover fill would be sliced off. */
+            className="shrink-0 rounded-full p-2 text-white/70 transition-colors hover:bg-white hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
         >
-            {isMobile && (
-                <div className="flex justify-center pt-3" aria-hidden="true">
-                    <span className="h-1.5 w-12 rounded-full bg-gray-300" />
+            <X className="h-5 w-5" />
+        </button>
+    )
+
+    const body: ReactNode = (
+        <>
+            <motion.div {...group(0)}>
+                <div className="flex items-center justify-between gap-6">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/60">
+                        {category}
+                    </p>
+                    {/* Stacked puts the close in the screen corner instead, clear
+                        of the text — see below. */}
+                    {isSplit && closeButton}
                 </div>
-            )}
 
-            <div className="relative p-6 md:p-8">
-                <button
-                    ref={closeRef}
-                    type="button"
-                    onClick={onClose}
-                    aria-label={copy.close}
-                    className="absolute right-4 top-4 rounded-full p-2 text-gray-500 transition hover:bg-gray-100 hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+                {/* The one colour on screen, and it comes from the book's own data. */}
+                <span className="book-details__accent mt-5" aria-hidden="true" />
+
+                <h2
+                    id={titleId}
+                    className={`mt-6 font-black tracking-tight text-white ${
+                        isSplit
+                            ? 'text-[clamp(32px,3.4vw,52px)] leading-[0.96]'
+                            : 'text-[clamp(26px,6.4vw,34px)] leading-[1.0]'
+                    }`}
                 >
-                    <X className="h-5 w-5" />
-                </button>
-
-                <h2 id={titleId} className="pr-10 text-2xl font-bold leading-tight">
                     {book.title}
                 </h2>
-                <p className="mt-1 text-base text-gray-600">{book.author}</p>
+            </motion.div>
 
-                <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-gray-500">
-                    <span>
-                        {copy.published} {publishedLabel(book.publishedDate)}
-                    </span>
-                    {book.dateRead && (
-                        <span>
-                            {copy.read} {formatLongDate(book.dateRead, lang)}
-                        </span>
-                    )}
-                    {typeof book.rating === 'number' && (
-                        <Rating value={book.rating} label={copy.ratingLabel} />
-                    )}
-                </div>
+            <motion.div {...group(reducedMotion ? 0 : 0.06)}>
+                <p className={`mt-4 text-white/70 ${isSplit ? 'text-[17px]' : 'text-[15px]'}`}>
+                    {book.author}
+                </p>
 
-                <p className="mt-5 text-[15px] leading-relaxed text-gray-800">{book.description}</p>
+                {(book.dateRead || typeof book.rating === 'number') && (
+                    <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-white/60">
+                        {book.dateRead && (
+                            <span>
+                                {copy.read} {formatLongDate(book.dateRead, lang)}
+                            </span>
+                        )}
+                        {typeof book.rating === 'number' && (
+                            <Rating value={book.rating} label={copy.ratingLabel} />
+                        )}
+                    </div>
+                )}
+
+                <hr className="mt-7 border-0 border-t border-white/20" />
+
+                <p
+                    className={`mt-7 max-w-[54ch] text-white/90 ${
+                        isSplit ? 'text-[17px] leading-[1.65]' : 'text-[15px] leading-[1.6]'
+                    }`}
+                >
+                    {book.description}
+                </p>
 
                 {book.personalNotes && (
-                    <div className="mt-6 border-l-2 border-gray-300 pl-4">
-                        <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                    <div className="mt-7 border-l-2 border-white/25 pl-5">
+                        <h3 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/50">
                             {copy.notes}
                         </h3>
-                        <p className="mt-1 text-[15px] italic leading-relaxed text-gray-700">
+                        <p className="mt-2 max-w-[54ch] text-[15px] italic leading-relaxed text-white/75">
                             {book.personalNotes}
                         </p>
                     </div>
                 )}
-            </div>
-        </motion.div>
+
+                {/* Colophon. The publication year is deliberately not shown; with
+                    it gone the ISBN is all that is left, and only 4 of 23 books
+                    carry one, so the line drops entirely for the rest rather than
+                    leaving a stranded label. `copy.published` stays in the
+                    dictionary for when the year comes back. */}
+                {book.isbn && (
+                    <p className="mt-10 text-[11px] uppercase tabular-nums tracking-[0.2em] text-white/45">
+                        ISBN {book.isbn}
+                    </p>
+                )}
+            </motion.div>
+        </>
+    )
+
+    const dialogProps = {
+        role: 'dialog' as const,
+        'aria-modal': true,
+        'aria-labelledby': titleId,
+        tabIndex: -1,
+        style,
+    }
+
+    if (!isSplit) {
+        // Not a bottom sheet: the column is anchored to the top of the space the
+        // book leaves free (its bottom edge lands around 48vh), so the two can
+        // never collide. The wrapper animates opacity only — a transform here
+        // would turn its `fixed` children into `absolute` ones.
+        return (
+            <motion.div
+                {...dialogProps}
+                className="book-details pointer-events-none fixed inset-0 z-[70]"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: reducedMotion ? 0.12 : 0.25 }}
+            >
+                <div className="pointer-events-auto absolute right-4 top-4">{closeButton}</div>
+                {/* Height hugs the content, up to everything the book leaves
+                    free, so short entries keep the space below them tappable —
+                    that is what closes the book on touch — and long ones still
+                    get the full run before they have to scroll. */}
+                <div className="pointer-events-auto absolute inset-x-0 top-[48vh] max-h-[calc(52vh-16px)] overflow-y-auto px-6 pb-10">
+                    {body}
+                </div>
+            </motion.div>
+        )
+    }
+
+    // The column shares the book's centre line (it settles at h * 0.5). Framer
+    // animates `transform` on the children, so the -50% shift lives on this
+    // plain wrapper or it would be clobbered.
+    return (
+        <div className="fixed left-[48%] top-1/2 z-[70] w-[min(44vw,620px)] -translate-y-1/2">
+            <motion.div
+                {...dialogProps}
+                className="book-details max-h-[80vh] overflow-y-auto pr-2"
+                exit={{ opacity: 0, transition: { duration: 0.15 } }}
+            >
+                {body}
+            </motion.div>
+        </div>
     )
 }
 

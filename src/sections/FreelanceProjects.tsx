@@ -1,9 +1,9 @@
 'use client'
-import React from 'react'
 import StackedProjects from '@/components/StackedProjects'
-import { motion, useScroll, useTransform } from 'framer-motion'
 import type { LocalizedProject } from '@/content/site'
 import type { Locale } from '@/i18n/config'
+import { motion, useScroll, useTransform } from 'framer-motion'
+import React from 'react'
 
 interface IFreelanceProjectsProps {
     ref: React.RefObject<HTMLDivElement | null>

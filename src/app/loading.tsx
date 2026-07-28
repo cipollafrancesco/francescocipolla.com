@@ -1,7 +1,9 @@
 export default function Loading() {
     return (
-        <div className="min-h-screen bg-white flex items-center justify-center">
-            <span className="font-extrabold text-2xl animate-pulse">cipo.</span>
+        <div className="flex min-h-screen items-center justify-center bg-white">
+            {/* `inline-block` so the rotation applies — transforms are ignored on
+                inline boxes, and the flex parent blockifying this is incidental. */}
+            <span className="loading-mark inline-block text-2xl font-extrabold">cipo.</span>
         </div>
     )
 }

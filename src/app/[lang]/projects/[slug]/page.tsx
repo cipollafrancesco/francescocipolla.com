@@ -144,14 +144,16 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                                 </li>
                             ))}
                         </ul>
-                        <a
-                            href={project.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="mt-8 inline-flex items-center gap-2 rounded-md border border-black px-4 py-2 text-sm font-semibold text-black transition-colors hover:bg-black hover:text-white"
-                        >
-                            {content.common.cta.liveSite} <ArrowUpRight className="h-4 w-4" />
-                        </a>
+                        {project.url && (
+                            <a
+                                href={project.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="mt-8 inline-flex items-center gap-2 rounded-md border border-black px-4 py-2 text-sm font-semibold text-black transition-colors hover:bg-black hover:text-white"
+                            >
+                                {content.common.cta.liveSite} <ArrowUpRight className="h-4 w-4" />
+                            </a>
+                        )}
                     </aside>
                 </div>
             </main>

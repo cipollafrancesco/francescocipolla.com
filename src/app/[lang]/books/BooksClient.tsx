@@ -38,9 +38,13 @@ export default function BooksClient({ lang, copy }: BooksClientProps) {
             if (!b.category) continue
             counts[b.category] = (counts[b.category] || 0) + 1
         }
-        const categories = Object.keys(counts).sort((a, b) => a.localeCompare(b, lang))
+        // Sorted by the label the reader actually sees, not the raw key, or the
+        // English chips would come out in Italian alphabetical order.
+        const categories = Object.keys(counts).sort((a, b) =>
+            (copy.categories[a] ?? a).localeCompare(copy.categories[b] ?? b, lang)
+        )
         return { categories, counts }
-    }, [books, lang])
+    }, [books, lang, copy.categories])
 
     const [activeCats, setActiveCats] = useState<Set<string>>(new Set())
     // Books stay mounted; filtered-out ones collapse away (CSS). We just compute
@@ -64,7 +68,10 @@ export default function BooksClient({ lang, copy }: BooksClientProps) {
     const [selected, setSelected] = useState<Selection | null>(null)
     const triggerRef = useRef<HTMLButtonElement | null>(null)
 
-    const isMobile = useMediaQuery('(max-width: 767px)')
+    // One flag drives the whole open-book composition: where the book lands, how
+    // big it gets, whether the details sit beside it or below it, and whether
+    // they can be dragged away. Below 1024px the two columns collide.
+    const isSplit = useMediaQuery('(min-width: 1024px)')
     const reducedMotion = Boolean(useReducedMotion())
 
     const handleOpen = useCallback((book: Book, trigger: HTMLButtonElement) => {
@@ -97,7 +104,7 @@ export default function BooksClient({ lang, copy }: BooksClientProps) {
     }, [selected, handleClose])
 
     return (
-        <div className="bookcase min-h-screen bg-neutral-50 text-black md:mt-[88px]">
+        <div className="bookcase min-h-screen bg-white text-black md:mt-[88px]">
             <main
                 id="main-content"
                 className="container relative mx-auto overflow-x-hidden px-4 pb-24"
@@ -105,7 +112,7 @@ export default function BooksClient({ lang, copy }: BooksClientProps) {
                 {/* Full-width hero title pinned to the top, layered behind the shelf
                     (z-0) so the shelf rides on top of it. */}
                 <motion.h1
-                    className="pointer-events-none relative z-0 select-none whitespace-nowrap pt-8 text-center text-[17vw] font-extrabold leading-[0.8] tracking-tighter md:pt-2 md:text-left"
+                    className="pointer-events-none relative z-0 select-none whitespace-nowrap pt-8 text-center text-[17vw] font-black leading-[0.8] tracking-tight md:pt-2 md:text-left"
                     initial={{ opacity: 0, y: 24 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, ease: 'easeOut' }}
@@ -118,12 +125,13 @@ export default function BooksClient({ lang, copy }: BooksClientProps) {
                 <div className="md:relative md:z-10 md:-mt-[13vw] md:flex md:items-start md:gap-6">
                     {/* Description + filters — left-aligned, below the title. */}
                     <div className="relative z-20 mt-5 text-center md:mt-0 md:w-[40%] md:pt-[14.5vw] md:text-left">
-                        <p className="text-base text-gray-600 md:text-lg">{copy.lead}</p>
+                        <p className="text-lg leading-8 text-gray-700">{copy.lead}</p>
                         <div className="mt-5">
                             <CategoryFilter
                                 categories={categories}
                                 active={activeCats}
                                 counts={counts}
+                                labels={copy.categories}
                                 onToggle={toggleCat}
                                 onClear={clearCats}
                                 allLabel={copy.filterAll}
@@ -146,43 +154,55 @@ export default function BooksClient({ lang, copy }: BooksClientProps) {
                 </div>
             </main>
 
+            {/* The scrim and the details both sit OUTSIDE `.featured-layer` on
+                purpose. That layer sets `perspective`, which makes it a backdrop
+                root — anything rendered inside it would have nothing but the flat
+                layer to blur, and `backdrop-filter` would silently do nothing.
+                Order matters: scrim (z-55) → book (z-60) → details (z-70). */}
+            <AnimatePresence>
+                {selected && (
+                    <motion.div
+                        key="backdrop"
+                        className="featured-backdrop"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: reducedMotion ? 0.1 : 0.3 }}
+                        onClick={handleClose}
+                    />
+                )}
+            </AnimatePresence>
+
             {/* Always-mounted perspective layer so the featured book's rotateY has a
-                perspective ancestor; its contents animate in/out via AnimatePresence. */}
+                perspective ancestor; its contents animate in/out via AnimatePresence.
+                It stays `pointer-events: none`, so clicks fall through to the scrim. */}
             <div className="featured-layer" aria-hidden={selected ? undefined : true}>
                 <AnimatePresence>
-                    {selected && (
-                        <motion.div
-                            key="backdrop"
-                            className="featured-backdrop"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: reducedMotion ? 0.1 : 0.25 }}
-                            onClick={handleClose}
-                        />
-                    )}
                     {selected && (
                         <BookFeatured
                             key="featured"
                             book={selected.book}
                             originRect={selected.rect}
-                            isMobile={isMobile}
+                            isSplit={isSplit}
                             reducedMotion={reducedMotion}
-                        />
-                    )}
-                    {selected && (
-                        <BookDetailsPanel
-                            key="panel"
-                            book={selected.book}
-                            isMobile={isMobile}
-                            reducedMotion={reducedMotion}
-                            onClose={handleClose}
-                            lang={lang}
-                            copy={copy}
                         />
                     )}
                 </AnimatePresence>
             </div>
+
+            <AnimatePresence>
+                {selected && (
+                    <BookDetailsPanel
+                        key="panel"
+                        book={selected.book}
+                        isSplit={isSplit}
+                        reducedMotion={reducedMotion}
+                        onClose={handleClose}
+                        lang={lang}
+                        copy={copy}
+                    />
+                )}
+            </AnimatePresence>
         </div>
     )
 }

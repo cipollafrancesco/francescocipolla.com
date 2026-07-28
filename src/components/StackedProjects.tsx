@@ -1,16 +1,16 @@
 'use client'
 import Image from 'next/image'
 import { useRef, useState } from 'react'
+import type { Swiper as SwiperInstance } from 'swiper'
 import { EffectCards, Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
-import type { Swiper as SwiperInstance } from 'swiper'
 
+import type { LocalizedProject } from '@/content/site'
+import type { Locale } from '@/i18n/config'
 import { ArrowLeft, ArrowRight, ArrowUpRight } from 'lucide-react'
 import Link from 'next/link'
 import 'swiper/css'
 import 'swiper/css/effect-cards'
-import type { LocalizedProject } from '@/content/site'
-import type { Locale } from '@/i18n/config'
 
 export default function StackedProjects({
     projects,
@@ -39,7 +39,7 @@ export default function StackedProjects({
     }
 
     return (
-        <div className="flex flex-col items-center justify-center gap-5 lg:h-[80vh]">
+        <div className="flex flex-col items-center justify-center gap-5 lg:mt-96 lg:h-[80vh]">
             <Swiper
                 onSwiper={(swiper) => {
                     swiperRef.current = swiper

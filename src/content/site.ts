@@ -10,7 +10,8 @@ export type LocalizedProject = {
     client: string
     image: string
     mobileImage: string
-    url: string
+    /** Omitted when the live site no longer matches this case study. */
+    url?: string
     role: string
     year: string
     technologies: string[]
@@ -89,10 +90,28 @@ export type SiteContent = {
         ratingLabel: string
         /** Accessible name of a spine — `{title}` and `{author}` are substituted. */
         spineLabel: string
+        /**
+         * Display labels for the categories in `books.json`, keyed by the raw
+         * (Italian) value stored there — the data keeps one key per category so
+         * filtering never depends on the locale.
+         */
+        categories: Record<string, string>
     }
     home: {
         heroDisclaimer: string
         descriptions: { text: string; color?: string }[][]
+        experiencesTitle: string
+        /**
+         * Qualifier anchored to a corner of the giant experiences heading, to
+         * distinguish employed work from the freelance section below.
+         * `placement` follows the language's adjective order: English puts the
+         * adjective before the noun (rendered top-left), Italian after it
+         * (bottom-right).
+         */
+        experiencesQualifier: {
+            label: string
+            placement: 'before' | 'after'
+        }
         projectsTitle: string
         contactsTitle: string
         scheduleTitle: string
@@ -187,6 +206,12 @@ export type SiteContent = {
     notFound: {
         title: string
         label: string
+        description: string
+    }
+    error: {
+        title: string
+        description: string
+        retry: string
     }
     consent: {
         title: string
@@ -271,7 +296,8 @@ const sharedProjects = {
         client: 'Dpulses',
         image: '/projects/dpulses/cover.webp',
         mobileImage: '/projects/dpulses/mobile.webp',
-        url: 'https://www.dpulses.com/',
+        // No `url`: dpulses.com now serves the 2.0 redesign, so a live-site link
+        // here would land on a site that looks nothing like this case study.
         year: '2024',
         technologies: ['Next.js', 'Tailwind CSS', 'Vercel'],
     },
@@ -296,6 +322,20 @@ const sharedProjects = {
         url: 'https://www.reclamigaseluce.it/',
         year: '2026',
         technologies: ['Next.js', 'Tailwind CSS', 'Vercel'],
+    },
+    // Slug is dot-free on purpose: `PUBLIC_FILE` in `src/middleware.ts` treats any
+    // dotted path as a static file, so `/projects/dpulses2.0` would skip the
+    // locale redirect and 404. Assets still live in the `dpulses2.0/` folder.
+    dpulses2: {
+        id: 6,
+        slug: 'dpulses-2-0',
+        title: 'Dpulses 2.0',
+        client: 'Dpulses',
+        image: '/projects/dpulses2.0/cover.webp',
+        mobileImage: '/projects/dpulses2.0/mobile.webp',
+        url: 'https://www.dpulses.com/',
+        year: '2026',
+        technologies: ['Next.js', 'Tailwind CSS', 'Vercel', 'Strapi'],
     },
 }
 
@@ -406,6 +446,29 @@ const itProjects: LocalizedProject[] = [
         showcaseOutcome:
             'MVP evoluto che raccoglie reclami strutturati e riduce il lavoro operativo del team.',
     },
+    {
+        ...sharedProjects.dpulses2,
+        role: 'Digital product partner',
+        description:
+            "La seconda versione del sito Dpulses, che accompagna il riposizionamento dello studio da presenza brand-first a piattaforma di sistemi AI per le operations B2B. Il sito spiega come i dati sparsi tra ERP, CRM, caselle email e fogli di calcolo diventano un unico layer decisionale, con un quiz di assessment AI come porta d'ingresso e un backend Strapi che lascia al cliente il pieno controllo dei contenuti.",
+        highlights: [
+            'Ricostruzione completa attorno al nuovo posizionamento, da vetrina di studio a sito di prodotto',
+            'Quiz di assessment AI che guida il visitatore a individuare il proprio collo di bottiglia operativo e qualifica il lead',
+            'Contenuti gestiti in Strapi: testi, case study e sezioni si aggiornano senza intervento dev',
+            'Metriche chiave in evidenza fin dalla hero per rendere misurabile la proposta',
+            'Sezioni solutions, before/after e case study per settore su componenti riutilizzabili',
+            'Tabella comparativa e FAQ per sciogliere le obiezioni prima del contatto',
+            'Quiz e form di contatto come punti di conversione, richiamati da CTA ricorrenti',
+        ],
+        problem:
+            "Dopo il cambio di posizionamento il sito esistente non raccontava più cosa vende Dpulses: parlava di identità visiva mentre l'azienda proponeva sistemi AI per le operations, una vendita che ha bisogno di prove e numeri. Ogni modifica ai contenuti passava inoltre dallo sviluppo, rallentando un racconto commerciale che cambia spesso.",
+        solution:
+            "Ho riprogettato e ricostruito il sito attorno al nuovo racconto: hero con promessa e metriche chiave, sezione solutions sui tre problemi operativi risolti, case study per settore con risultati misurati e un quiz di assessment AI che porta il visitatore a scoprire il proprio collo di bottiglia operativo prima di lasciare i contatti. L'intero sito è gestito da Strapi, così il team aggiorna testi, case study e sezioni in autonomia.",
+        outcome:
+            "Dpulses ha un sito che rende comprensibile un'offerta tecnica complessa a un pubblico business, qualifica le richieste tramite il quiz prima della prima call e resta aggiornabile dal team senza passare dallo sviluppo.",
+        showcaseOutcome:
+            'Offerta AI resa comprensibile, lead qualificati dal quiz e contenuti aggiornabili in autonomia.',
+    },
 ]
 
 const enProjects: LocalizedProject[] = [
@@ -514,6 +577,29 @@ const enProjects: LocalizedProject[] = [
         showcaseOutcome:
             'An evolved MVP that collects structured complaints and reduces team workload.',
     },
+    {
+        ...sharedProjects.dpulses2,
+        role: 'Digital product partner',
+        description:
+            "The second iteration of the Dpulses website, built around the studio's repositioning from a brand-first presence to AI systems for B2B operations. The site explains how data scattered across ERP, CRM, inboxes, and spreadsheets becomes a single decision layer, with an AI assessment quiz as the way in and a Strapi backend that hands the client full control of the content.",
+        highlights: [
+            'Rebuilt the site around a new positioning, from studio showcase to product site',
+            'Built an AI assessment quiz that walks visitors to their own operational bottleneck and qualifies the lead',
+            'Wired the site to Strapi so copy, case studies, and sections change with no dev involvement',
+            'Led with headline metrics so the promise reads as measurable from the hero',
+            'Built solutions, before/after, and per-industry case studies from reusable components',
+            'Added a comparison table and FAQ to answer objections ahead of contact',
+            'Funnelled CTAs into the quiz and the contact form as the two conversion points',
+        ],
+        problem:
+            'After the repositioning the existing site no longer described what Dpulses sells: it spoke about visual identity while the company was selling AI systems for operations, a sale that needs evidence and numbers. Every content change also had to go through development, slowing down a commercial story that shifts often.',
+        solution:
+            'I redesigned and rebuilt the site around the new story: a hero carrying the promise and the key metrics, a solutions section covering the three operational problems solved, per-industry case studies with measured results, and an AI assessment quiz that leads visitors to their own operational bottleneck before they hand over their details. The whole site runs on Strapi, so the team updates copy, case studies, and sections on its own.',
+        outcome:
+            'Dpulses now has a site that makes a complex technical offer legible to business buyers, qualifies enquiries through the quiz before the first call, and stays editable by the team without going through development.',
+        showcaseOutcome:
+            'A complex AI offer made legible, leads qualified by the quiz, content owned by the client.',
+    },
 ]
 
 export const siteContent: Record<Locale, SiteContent> = {
@@ -596,12 +682,12 @@ export const siteContent: Record<Locale, SiteContent> = {
             books: {
                 title: 'Libreria - Francesco Cipolla',
                 description:
-                    'I libri che ho letto, allineati sullo scaffale: business, design, crescita personale e narrativa.',
+                    'Qualche libro che ho letto e che mi è piaciuto — business, design, crescita personale e narrativa. La mia libreria digitale, solo per divertimento.',
             },
         },
         books: {
             title: 'Libreria',
-            lead: 'I libri che ho letto, allineati per dorso. Toccane uno per sfilarlo dallo scaffale.',
+            lead: 'Qualche libro che ho letto e che mi è piaciuto: la mia libreria digitale, solo per divertimento. Sfilane uno dallo scaffale.',
             filterLabel: 'Filtra per categoria',
             filterAll: 'Tutti',
             close: 'Chiudi dettagli',
@@ -610,17 +696,32 @@ export const siteContent: Record<Locale, SiteContent> = {
             notes: 'Note',
             ratingLabel: 'Valutazione: {value} su 5',
             spineLabel: '{title} di {author}. Apri i dettagli.',
+            categories: {
+                Business: 'Business',
+                'Cibo & vino': 'Cibo & vino',
+                Creatività: 'Creatività',
+                'Crescita personale': 'Crescita personale',
+                Design: 'Design',
+                Economia: 'Economia',
+                Marketing: 'Marketing',
+                Narrativa: 'Narrativa',
+                Scienza: 'Scienza',
+                Sport: 'Sport',
+                Viaggi: 'Viaggi',
+            },
         },
         home: {
             heroDisclaimer:
                 'Costruisco prodotti digitali, siti e sistemi web con Next.js, React e attenzione al risultato di business.',
             descriptions: [
                 [{ text: 'digital product partner' }],
-                [{ text: 'Ingegnere Informatico' }],
+                [{ text: 'ingegnere informatico' }],
                 [{ text: 'appassionato di design' }],
-                [{ text: 'basketball passionate' }],
-                [{ text: 'beginner kitesurfer' }],
+                [{ text: 'cestista della domenica' }],
+                [{ text: 'kitesurfer principiante' }],
             ],
+            experiencesTitle: 'esperienze',
+            experiencesQualifier: { label: 'in azienda', placement: 'after' },
             projectsTitle: 'progetti freelance',
             contactsTitle: 'contatti',
             scheduleTitle: 'Prenota una consulenza',
@@ -861,6 +962,12 @@ export const siteContent: Record<Locale, SiteContent> = {
         notFound: {
             title: 'perso?',
             label: '404',
+            description: 'La pagina che cercavi non esiste o è stata spostata altrove.',
+        },
+        error: {
+            title: 'ops.',
+            description: 'Qualcosa è andato storto da parte nostra. Non è colpa tua — è nostra.',
+            retry: 'Riprova',
         },
         consent: {
             title: 'Privacy e analytics',
@@ -997,12 +1104,12 @@ export const siteContent: Record<Locale, SiteContent> = {
             books: {
                 title: 'Bookshelf - Francesco Cipolla',
                 description:
-                    'The books I have read, lined up on the shelf: business, design, personal growth, and fiction.',
+                    "A few books I've read and enjoyed — business, design, personal growth, and fiction. My digital library, just for fun.",
             },
         },
         books: {
             title: 'Bookshelf',
-            lead: "Books I've read, lined up by spine. Tap one to pull it off the shelf.",
+            lead: "A few books I've read and enjoyed: my digital library, just for fun. Pull one off the shelf.",
             filterLabel: 'Filter by category',
             filterAll: 'All',
             close: 'Close details',
@@ -1011,6 +1118,19 @@ export const siteContent: Record<Locale, SiteContent> = {
             notes: 'Notes',
             ratingLabel: 'Rating: {value} out of 5',
             spineLabel: '{title} by {author}. Open details.',
+            categories: {
+                Business: 'Business',
+                'Cibo & vino': 'Food & wine',
+                Creatività: 'Creativity',
+                'Crescita personale': 'Personal growth',
+                Design: 'Design',
+                Economia: 'Economics',
+                Marketing: 'Marketing',
+                Narrativa: 'Fiction',
+                Scienza: 'Science',
+                Sport: 'Sport',
+                Viaggi: 'Travel',
+            },
         },
         home: {
             heroDisclaimer:
@@ -1019,9 +1139,11 @@ export const siteContent: Record<Locale, SiteContent> = {
                 [{ text: 'digital product partner' }],
                 [{ text: 'senior software engineer' }],
                 [{ text: 'design enthusiast' }],
-                [{ text: 'basketball passionate' }],
+                [{ text: 'weekend baller' }],
                 [{ text: 'beginner kitesurfer' }],
             ],
+            experiencesTitle: 'experiences',
+            experiencesQualifier: { label: 'corporate', placement: 'before' },
             projectsTitle: 'freelance projects',
             contactsTitle: 'contacts',
             scheduleTitle: 'Book a project discovery call',
@@ -1259,6 +1381,12 @@ export const siteContent: Record<Locale, SiteContent> = {
         notFound: {
             title: 'lost?',
             label: '404',
+            description: "The page you were looking for doesn't exist, or it moved somewhere else.",
+        },
+        error: {
+            title: 'oops.',
+            description: "Something went wrong on our end. It's not you — it's us.",
+            retry: 'Try again',
         },
         consent: {
             title: 'Privacy and analytics',

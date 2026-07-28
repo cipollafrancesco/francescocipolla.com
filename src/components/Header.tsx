@@ -1,11 +1,11 @@
 'use client'
-import React, { useState, useEffect } from 'react'
-import Link from 'next/link'
+import { LanguageSwitcher } from '@/components/LanguageSwitcher'
+import type { SiteContent } from '@/content/site'
+import type { Locale } from '@/i18n/config'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
-import type { Locale } from '@/i18n/config'
-import type { SiteContent } from '@/content/site'
-import { LanguageSwitcher } from '@/components/LanguageSwitcher'
+import Link from 'next/link'
+import { useEffect, useState } from 'react'
 
 interface HeaderProps {
     lang: Locale
@@ -47,7 +47,7 @@ const Header = ({ lang, copy }: HeaderProps) => {
     return (
         <header className="sticky left-0 right-0 top-0 z-50 md:fixed">
             {/* Desktop nav */}
-            <nav className="mx-auto hidden max-w-screen-2xl bg-white/85 px-8 py-6 backdrop-blur-sm lg:block">
+            <nav className="mx-auto hidden max-w-screen-2xl px-8 py-6 lg:block">
                 <div className="flex items-center justify-center lg:justify-end">
                     <Link href={`/${lang}`} aria-label="Home">
                         <BrandLogo />
@@ -72,7 +72,7 @@ const Header = ({ lang, copy }: HeaderProps) => {
             </nav>
 
             {/* Mobile hamburger button */}
-            <div className="flex w-full items-center justify-between bg-white/85 px-8 py-6 backdrop-blur-sm lg:hidden">
+            <div className="flex w-full items-center justify-between bg-white px-8 py-4 lg:hidden">
                 <Link href={`/${lang}`} aria-label="Home">
                     <BrandLogo />
                 </Link>
@@ -120,7 +120,7 @@ const Header = ({ lang, copy }: HeaderProps) => {
                     >
                         <button
                             onClick={toggleDrawer}
-                            className="absolute right-8 top-8 -m-1 p-1 text-black"
+                            className="absolute right-8 top-4 -m-1 p-1 text-black"
                             aria-label={copy.nav.closeMenu}
                         >
                             <X width={40} height={40} />

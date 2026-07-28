@@ -1,5 +1,11 @@
 import { NextResponse, type NextRequest } from 'next/server'
-import { defaultLocale, isLocale, localeCookieName, type Locale } from '@/i18n/config'
+import {
+    defaultLocale,
+    isLocale,
+    localeCookieName,
+    localeHeaderName,
+    type Locale,
+} from '@/i18n/config'
 
 const PUBLIC_FILE = /\.(.*)$/
 
@@ -13,8 +19,20 @@ function preferredLocale(request: NextRequest): Locale {
     return defaultLocale
 }
 
+/** Passes the request through with the resolved locale attached. `not-found.tsx`
+ *  gets no route params, so this header is the only way it can tell which
+ *  language to render — without it the prerendered 404 is always Italian. */
+function passThrough(request: NextRequest, locale: Locale) {
+    const headers = new Headers(request.headers)
+    headers.set(localeHeaderName, locale)
+
+    return NextResponse.next({ request: { headers } })
+}
+
 export function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl
+    const firstSegment = pathname.split('/')[1]
+    const locale = isLocale(firstSegment) ? firstSegment : preferredLocale(request)
 
     if (
         pathname.startsWith('/_next') ||
@@ -24,10 +42,8 @@ export function middleware(request: NextRequest) {
         pathname === '/sitemap.xml' ||
         PUBLIC_FILE.test(pathname)
     ) {
-        return NextResponse.next()
+        return passThrough(request, locale)
     }
-
-    const firstSegment = pathname.split('/')[1]
 
     if (isLocale(firstSegment)) {
         // The portfolio lives at the locale root again, so `/about` is a leftover.
@@ -43,10 +59,9 @@ export function middleware(request: NextRequest) {
             return NextResponse.redirect(url, 307)
         }
 
-        return NextResponse.next()
+        return passThrough(request, locale)
     }
 
-    const locale = preferredLocale(request)
     const url = request.nextUrl.clone()
     url.pathname = `/${locale}${pathname === '/' ? '' : pathname}`
 

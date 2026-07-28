@@ -41,7 +41,23 @@
     --spine-sheen: rgba(255, 255, 255, 0.16);
     --spine-edge-dark: rgba(0, 0, 0, 0.28);
 
-    color: #2a241d;
+    /* ---- Open-book scrim ---------------------------------------------------- */
+    /* There is no panel behind the details — this one full-screen layer is the
+       only surface, so it alone carries legibility. It runs light behind the
+       book (the cabinet stays a visible room) and deep behind the type. The
+       blur is what does the real work: it dissolves the spine labels, which are
+       the high-frequency detail that white text cannot survive. */
+    --scrim-near: rgba(12, 10, 8, 0.5);
+    --scrim-far: rgba(12, 10, 8, 0.9);
+    --scrim-blur: 12px;
+
+    /* Deliberately no `color` here. `.bookcase` sits on the page wrapper next to
+       Tailwind's `text-black`, and both are single-class selectors on the same
+       element — this file is imported by the page component so it loads after the
+       utilities, and any colour set here silently wins and tints the page title
+       off-black. Every piece of furniture text already sets its own colour
+       (--spine-text, .cover__*), so nothing needs to inherit one.
+       If future furniture text does, scope it to `.bookcase__scene`. */
 }
 
 @media (min-width: 768px) {
@@ -345,11 +361,52 @@
     pointer-events: none;
 }
 
+/* The scrim. Rendered as a SIBLING of `.featured-layer`, never a child: that
+   layer sets `perspective`, which makes it a backdrop root, and a scrim inside
+   it would have nothing but itself to blur. Fixed rather than absolute for the
+   same reason — it no longer has a fixed ancestor to inherit from.
+
+   Split layout: light on the left behind the book, deep on the right behind the
+   type. Stacked layout flips the axis (see below), because there the text sits
+   under the book rather than beside it. */
 .featured-backdrop {
-    position: absolute;
+    position: fixed;
     inset: 0;
-    background: rgba(15, 12, 9, 0.46);
+    z-index: 55;
+    /* Full depth is reached by 46% — just before the text column starts at 48% —
+       so no line of copy ever sits on the lighter part of the ramp. */
+    background: linear-gradient(
+        100deg,
+        var(--scrim-near) 0%,
+        var(--scrim-near) 18%,
+        var(--scrim-far) 46%,
+        var(--scrim-far) 100%
+    );
+    backdrop-filter: blur(var(--scrim-blur)) saturate(115%);
+    -webkit-backdrop-filter: blur(var(--scrim-blur)) saturate(115%);
     pointer-events: auto;
+}
+
+@media (max-width: 1023px) {
+    .featured-backdrop {
+        /* Full depth by 50% — the book bottoms out around there and the text
+           starts immediately below it. */
+        background: linear-gradient(
+            to bottom,
+            var(--scrim-near) 0%,
+            var(--scrim-near) 16%,
+            var(--scrim-far) 50%,
+            var(--scrim-far) 100%
+        );
+    }
+}
+
+/* No blur means the dim alone has to carry the type over a lit cabinet. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .featured-backdrop {
+        --scrim-near: rgba(12, 10, 8, 0.72);
+        --scrim-far: rgba(12, 10, 8, 0.96);
+    }
 }
 
 .featured {
@@ -509,11 +566,33 @@
 }
 
 /* =========================================================================
+   Open-book details — type on the scrim, with no surface of its own.
+
+   There is deliberately nothing here for a panel: no fill, no border, no
+   radius, no shadow. `.featured-backdrop` above is the only surface, and the
+   details block is plain text sitting on top of it.
+
+   Note the absent `position` and `color`. This file is imported by the page
+   component, so it loads after Tailwind's utilities — either property on a
+   single-class selector silently beats `fixed` / `text-white` on the same
+   element. The component sets both itself. Same trap as the `color` note on
+   `.bookcase` above.
+   ========================================================================= */
+
+.book-details__accent {
+    display: block;
+    width: 40px;
+    height: 3px;
+    background: var(--panel-accent, currentColor);
+}
+
+/* =========================================================================
    Reduced motion — the spring / rotation choreography collapses to a fade.
    ========================================================================= */
 @media (prefers-reduced-motion: reduce) {
     .featured-backdrop,
-    .featured {
+    .featured,
+    .book-details {
         transition: none !important;
     }
 }

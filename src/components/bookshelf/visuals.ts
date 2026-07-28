@@ -10,32 +10,46 @@ function hash(str: string): number {
     return Math.abs(h)
 }
 
-/** Relative luminance (0–1) of a hex / rgb color, for picking spine text. */
-function luminance(color: string): number {
-    let r = 0
-    let g = 0
-    let b = 0
+/** Parse a hex or rgb() color. Falls back to a mid grey on anything else. */
+function toRgb(color: string): { r: number; g: number; b: number } {
     const hex = color.replace('#', '')
     if (/^[0-9a-f]{6}$/i.test(hex)) {
-        r = parseInt(hex.slice(0, 2), 16)
-        g = parseInt(hex.slice(2, 4), 16)
-        b = parseInt(hex.slice(4, 6), 16)
-    } else {
-        const m = color.match(/rgba?\(\s*(\d+)[,\s]+(\d+)[,\s]+(\d+)/i)
-        if (m) {
-            r = Number(m[1])
-            g = Number(m[2])
-            b = Number(m[3])
-        } else {
-            return 0.2
+        return {
+            r: parseInt(hex.slice(0, 2), 16),
+            g: parseInt(hex.slice(2, 4), 16),
+            b: parseInt(hex.slice(4, 6), 16),
         }
     }
+    const m = color.match(/rgba?\(\s*(\d+)[,\s]+(\d+)[,\s]+(\d+)/i)
+    if (m) return { r: Number(m[1]), g: Number(m[2]), b: Number(m[3]) }
+    return { r: 51, g: 51, b: 51 }
+}
+
+/** Relative luminance (0–1) of a hex / rgb color, for picking spine text. */
+function luminance(color: string): number {
+    const { r, g, b } = toRgb(color)
     return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255
 }
 
 /** White or near-black title text, whichever reads on the spine color. */
 export function spineTextColor(spineColor: string): string {
     return luminance(spineColor) > 0.6 ? 'rgba(20,16,12,0.86)' : '#f6f3ec'
+}
+
+/**
+ * The details accent sits on the near-black scrim, where a dark spine color
+ * (several books use near-black or deep navy) would simply vanish. Lift it
+ * toward white only as far as it needs to read; already-bright spines pass
+ * through untouched, so the color still identifies the book.
+ */
+export function accentOnDark(spineColor: string): string {
+    const target = 0.5
+    const l = luminance(spineColor)
+    if (l >= target) return spineColor
+    const { r, g, b } = toRgb(spineColor)
+    const t = Math.min(0.72, (target - l) / target)
+    const lift = (c: number) => Math.round(c + (255 - c) * t)
+    return `rgb(${lift(r)}, ${lift(g)}, ${lift(b)})`
 }
 
 /** Bounds for a book's spine-width multiplier. The max keeps even a deliberately

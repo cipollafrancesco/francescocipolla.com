@@ -147,6 +147,46 @@ section {
     }
 }
 
+/* ── Loading wordmark ─────────────────────────────────────────── */
+/* `rotate` and `scale` animate as separate properties on purpose: folded into a
+   single `transform` keyframe they would share one easing curve, and the spin
+   would visibly hesitate at the half-turn where the scale bottoms out. */
+.loading-mark {
+    animation:
+        loading-mark-spin 1.5s cubic-bezier(0.76, 0, 0.24, 1) infinite,
+        loading-mark-breathe 1.5s ease-in-out infinite;
+}
+
+/* Rests upright for a beat, then sweeps a full turn and decelerates back onto
+   its feet — so the mark reads as a word between revolutions, not a blur. */
+@keyframes loading-mark-spin {
+    0%,
+    14% {
+        rotate: 0deg;
+    }
+    100% {
+        rotate: 360deg;
+    }
+}
+
+/* Dips through the turn so the spin has some weight to it. */
+@keyframes loading-mark-breathe {
+    0%,
+    14%,
+    100% {
+        scale: 1;
+    }
+    57% {
+        scale: 0.9;
+    }
+}
+
+@keyframes loading-mark-fade {
+    50% {
+        opacity: 0.4;
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     .company-marquee {
         overflow-x: auto;
@@ -155,5 +195,10 @@ section {
 
     .company-marquee__track {
         animation: none;
+    }
+
+    /* Still needs to read as "busy", just without the spin. */
+    .loading-mark {
+        animation: loading-mark-fade 2s ease-in-out infinite;
     }
 }

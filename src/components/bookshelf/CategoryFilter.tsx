@@ -7,6 +7,8 @@ interface CategoryFilterProps {
     /** Currently active categories (empty = show everything). */
     active: Set<string>
     counts: Record<string, number>
+    /** Localised display labels, keyed by the raw category value. */
+    labels: Record<string, string>
     onToggle: (category: string) => void
     onClear: () => void
     /** Label of the chip that clears the filter. */
@@ -60,6 +62,7 @@ function CategoryFilter({
     categories,
     active,
     counts,
+    labels,
     onToggle,
     onClear,
     allLabel,
@@ -77,7 +80,7 @@ function CategoryFilter({
             {categories.map((category) => (
                 <Chip
                     key={category}
-                    label={category}
+                    label={labels[category] ?? category}
                     count={counts[category]}
                     selected={active.has(category)}
                     onClick={() => onToggle(category)}
