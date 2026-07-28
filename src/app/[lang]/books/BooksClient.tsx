@@ -21,6 +21,42 @@ interface Selection {
     rect: DOMRect
 }
 
+/** Fallback vanishing point for `.featured-layer`, matching the static value
+ *  already in `bookshelf.css` — used only if a click somehow reaches `onOpen`
+ *  without a `.bookcase__frame` ancestor to measure. */
+const DEFAULT_VP = { x: 50, y: 45 }
+
+/**
+ * `.bookcase__frame` and `.featured-layer` are two independent 3D contexts:
+ * the shelf's own `perspective-origin` is relative to the frame's box, while
+ * the featured layer is a `position: fixed` sheet covering the whole viewport.
+ * Left as two hardcoded percentages, they imply two different cameras — most
+ * visibly on the split desktop layout, where the frame sits in the right-hand
+ * column rather than at viewport-centre, so the extracted book would turn as
+ * though watched from a different vantage point than the one that was just
+ * looking at it on the shelf.
+ *
+ * This reprojects the frame's real vanishing point into viewport percentages
+ * so `.featured-layer` can be pointed at the same one. Computed fresh on each
+ * open rather than cached: the frame moves with the page on scroll, but the
+ * fixed layer doesn't, so a value cached on resize would go stale the instant
+ * the user scrolls before opening a book. `--scene-origin-y` is read from the
+ * frame's own computed style rather than re-declared here, so the vanishing
+ * point's vertical position still has exactly one source of truth.
+ */
+function frameVanishingPoint(trigger: HTMLButtonElement): { vpX: number; vpY: number } {
+    const frame = trigger.closest('.bookcase__frame')
+    if (!frame || typeof window === 'undefined') return { vpX: DEFAULT_VP.x, vpY: DEFAULT_VP.y }
+
+    const originY = parseFloat(getComputedStyle(frame).getPropertyValue('--scene-origin-y'))
+    const originYFraction = Number.isFinite(originY) ? originY / 100 : 0.32
+
+    const r = frame.getBoundingClientRect()
+    const vpX = ((r.left + r.width * 0.5) / window.innerWidth) * 100
+    const vpY = ((r.top + r.height * originYFraction) / window.innerHeight) * 100
+    return { vpX, vpY }
+}
+
 interface BooksClientProps {
     lang: Locale
     copy: SiteContent['books']
@@ -67,6 +103,13 @@ export default function BooksClient({ lang, copy }: BooksClientProps) {
 
     const [selected, setSelected] = useState<Selection | null>(null)
     const triggerRef = useRef<HTMLButtonElement | null>(null)
+    // `AnimatePresence` keeps `BookFeatured` mounted and playing its exit
+    // transition for a moment after `selected` goes back to null — the flight
+    // back to the shelf needs the same vanishing point as the flight out, or
+    // the close would reintroduce exactly the camera jump this was meant to
+    // remove. Kept outside React state since it drives a style value that
+    // should never itself trigger a render.
+    const lastVpRef = useRef<{ vpX: number; vpY: number }>({ vpX: DEFAULT_VP.x, vpY: DEFAULT_VP.y })
 
     // One flag drives the whole open-book composition: where the book lands, how
     // big it gets, whether the details sit beside it or below it, and whether
@@ -76,6 +119,7 @@ export default function BooksClient({ lang, copy }: BooksClientProps) {
 
     const handleOpen = useCallback((book: Book, trigger: HTMLButtonElement) => {
         triggerRef.current = trigger
+        lastVpRef.current = frameVanishingPoint(trigger)
         setSelected({ book, rect: trigger.getBoundingClientRect() })
     }, [])
 
@@ -175,8 +219,23 @@ export default function BooksClient({ lang, copy }: BooksClientProps) {
 
             {/* Always-mounted perspective layer so the featured book's rotateY has a
                 perspective ancestor; its contents animate in/out via AnimatePresence.
-                It stays `pointer-events: none`, so clicks fall through to the scrim. */}
-            <div className="featured-layer" aria-hidden={selected ? undefined : true}>
+                It stays `pointer-events: none`, so clicks fall through to the scrim.
+                `perspectiveOrigin` is set inline to the shelf's own vanishing point
+                (see `frameVanishingPoint`) — this fixed, full-viewport layer would
+                otherwise use its own camera, independent of and different from the
+                one that was just rendering the book on the shelf. Read from
+                `lastVpRef` rather than `selected` directly: `selected` is already
+                null partway through the close, while `BookFeatured` is still
+                mounted and flying back to the shelf under `AnimatePresence`'s exit
+                transition, and the camera can't jump mid-flight. Falls back to the
+                CSS rule's `50% 45%` before anything has ever been selected. */}
+            <div
+                className="featured-layer"
+                aria-hidden={selected ? undefined : true}
+                style={{
+                    perspectiveOrigin: `${lastVpRef.current.vpX}% ${lastVpRef.current.vpY}%`,
+                }}
+            >
                 <AnimatePresence>
                     {selected && (
                         <BookFeatured

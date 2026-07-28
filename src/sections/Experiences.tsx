@@ -43,7 +43,9 @@ const TitleWithQualifier: React.FC<{
                 // descender band under the final glyph, 80% clears the top of
                 // the lowercase letters. No margins: they would offset the
                 // percentage.
-                qualifier.placement === 'before' ? 'bottom-[80%] left-0' : 'right-0 top-[85%]',
+                qualifier.placement === 'before'
+                    ? 'bottom-[80%] left-0 ml-8'
+                    : 'right-0 top-[85%] mr-8',
                 labelClassName
             )}
         >

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 import type { CSSProperties } from 'react'
 import { motion } from 'framer-motion'
 import type { Book } from '@/lib/bookshelf/types'
@@ -30,12 +30,19 @@ function targetCenter(isSplit: boolean) {
 }
 
 /** Scale the cover to a comfortable size — books may already be tall on a
- *  full-height shelf, so allow scaling down as well as up. */
-function targetScale(originRect: DOMRect, isSplit: boolean) {
+ *  full-height shelf, so allow scaling down as well as up. Budgets both height
+ *  and width: the cover now takes its own artwork's aspect ratio, so a wide
+ *  (near-square) cover needs its own ceiling to stay clear of the details
+ *  column beside it in the split layout. */
+function targetScale(originRect: DOMRect, isSplit: boolean, coverAr: number) {
+    const w = typeof window === 'undefined' ? 1024 : window.innerWidth
     const h = typeof window === 'undefined' ? 768 : window.innerHeight
-    const desired = isSplit ? Math.min(h * 0.62, 460) : Math.min(h * 0.3, 280)
+    const desiredH = isSplit ? Math.min(h * 0.62, 460) : Math.min(h * 0.3, 280)
+    // The details column starts at 48vw in the split layout; a near-square cover
+    // (up to ~0.87) grown to `desiredH` would otherwise crowd it.
+    const maxW = isSplit ? w * 0.36 : w * 0.8
     const base = originRect.height || 200
-    return Math.min(3, Math.max(0.5, desired / base))
+    return Math.min(3, Math.max(0.5, Math.min(desiredH, maxW / coverAr) / base))
 }
 
 /**
@@ -47,13 +54,35 @@ function BookFeatured({ book, originRect, isSplit, reducedMotion }: BookFeatured
     const [coverFailed, setCoverFailed] = useState(false)
     const showImage = hasRealCover(book) && !coverFailed
 
+    // The cover face takes this book's own artwork proportions (see --cover-ar in
+    // bookshelf.css) rather than the shelf's shared depth. Defaults to the most
+    // common trade-book ratio so a not-yet-decoded image still reads as a normal
+    // book rather than momentarily square.
+    const [coverAr, setCoverAr] = useState(2 / 3)
+    const imgRef = useRef<HTMLImageElement>(null)
+
+    const readCoverAr = (img: HTMLImageElement) => {
+        const { naturalWidth: w, naturalHeight: h } = img
+        if (w > 0 && h > 0) setCoverAr(w / h)
+    }
+
+    // The shelf has typically already fetched this exact file for the book's
+    // spine-adjacent board (BookSpine's --cover-image), so on a real click the
+    // image is often already decoded — read it before paint so the cover never
+    // visibly resizes. A cold cache falls back to the onLoad handler below.
+    useLayoutEffect(() => {
+        setCoverAr(2 / 3)
+        const img = imgRef.current
+        if (img?.complete) readCoverAr(img)
+    }, [book.id])
+
     const T = originRect.width
     const H = originRect.height
 
     const fromCx = originRect.left + originRect.width / 2
     const fromCy = originRect.top + originRect.height / 2
     const { cx, cy } = targetCenter(isSplit)
-    const scale = targetScale(originRect, isSplit)
+    const scale = targetScale(originRect, isSplit, coverAr)
 
     // `.featured` is sized to the cube (T×H); translate its top-left so the
     // book's centre lands on the chosen point, then scale about that centre.
@@ -73,6 +102,7 @@ function BookFeatured({ book, originRect, isSplit, reducedMotion }: BookFeatured
         ['--spine-color' as string]: book.spineColor,
         ['--spine-text' as string]: spineTextColor(book.spineColor),
         ['--cover-bg' as string]: book.spineColor,
+        ['--cover-ar' as string]: coverAr,
     }
 
     return (
@@ -102,9 +132,11 @@ function BookFeatured({ book, originRect, isSplit, reducedMotion }: BookFeatured
                         <span className="cover__author">{book.author}</span>
                         {showImage && (
                             <img
+                                ref={imgRef}
                                 className="cover__img"
                                 src={book.coverUrl}
                                 alt=""
+                                onLoad={(e) => readCoverAr(e.currentTarget)}
                                 onError={() => setCoverFailed(true)}
                             />
                         )}

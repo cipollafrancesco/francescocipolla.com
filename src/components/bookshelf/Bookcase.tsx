@@ -127,13 +127,18 @@ function Bookcase({ books, openId, hiddenIds, onOpen, spineLabel }: BookcaseProp
     return (
         <div className="bookcase__scene" ref={sceneRef}>
             <div className="bookcase__frame" ref={frameRef}>
-                {/* The cabinet carcass: one continuous back panel and the two
-                    inner side panels. All three span the whole cabinet rather
-                    than sitting per-shelf, so every corner closes and the box
-                    stays sealed across the gaps between shelves. */}
+                {/* The cabinet carcass: one continuous back panel, the two
+                    inner side panels, and the top board's underside. All four
+                    span the whole cabinet rather than sitting per-shelf, so
+                    every corner closes and the box stays sealed across the
+                    gaps between shelves. `.bookcase__top` must stay before the
+                    shelves below it — the frame is flat, so 3D children each
+                    root their own paint order, and a tall top-shelf book's
+                    head needs to occlude the ceiling, not the reverse. */}
                 <div className="bookcase__back" aria-hidden="true" />
                 <div className="bookcase__side bookcase__side--left" aria-hidden="true" />
                 <div className="bookcase__side bookcase__side--right" aria-hidden="true" />
+                <div className="bookcase__top" aria-hidden="true" />
                 {shelves.map((shelfBooks, i) => (
                     <Shelf
                         key={i}

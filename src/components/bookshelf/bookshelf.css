@@ -58,6 +58,12 @@
     /* inner face of a cabinet side panel, at the front      */
     --shelf-side-dark: #ddd8cb;
     /* ...and where it meets the back wall                   */
+    --shelf-top: color-mix(in srgb, var(--shelf-side-dark) 86%, #1c1610);
+    --shelf-top-dark: color-mix(in srgb, var(--shelf-back-bottom) 76%, #1c1610);
+    /* the top board's underside: a downward normal has a negative dot product
+       with any light in the room, so it gets no direct key at all — only
+       bounce off the planks and the lit right wall — and sits darker than
+       every other surface in the case */
     --shelf-gap: 22px;
     /* breathing room between the row and the shelf above    */
 
@@ -121,6 +127,17 @@
     max-width: 1100px;
     margin: 0 auto;
     padding: var(--frame-pad);
+    /* Hovering a book tips its head up and toward the camera (see .book__body's
+       hover rule below). Every row but the top one has --shelf-gap of empty
+       flex space above it to rise into; the top row only has --frame-pad
+       before this element's own `overflow: hidden` crops the head off. Scaled
+       off --book-depth (rather than a flat px value) so it tracks the
+       responsive book-size tokens at every breakpoint. Bookcase.tsx's
+       ResizeObserver already reads this padding live and re-solves
+       --book-height to fit, so shelves simply get a hair shorter (or, once
+       --book-height is already at its MIN_BOOK_HEIGHT floor, the page grows a
+       little taller) rather than the cabinet overflowing its target height. */
+    padding-top: calc(var(--frame-pad) + var(--book-depth) * 0.28);
     background: var(--shelf-frame);
     position: relative;
     /* The vanishing point for the whole cabinet, and load-bearing in two ways.
@@ -137,21 +154,26 @@
        background paints flat, and the shelves inside it paint over it. */
     perspective: var(--scene-perspective);
     perspective-origin: 50% var(--scene-origin-y);
-    /* Clips the 3D scene to the frame's own rounded silhouette. Without it,
-       nothing stops the (deliberately oversized — see `.bookcase__back`) 3D
-       content from spilling past this rounded corner; with it, any overscan
-       past this rect is simply cropped away, the same way a real cabinet's
-       front frame crops the view into the box behind it. Safe here: this
-       element only declares `perspective`, never `transform-style: preserve-3d`,
-       so it stays a normal 2D box for clipping purposes. */
+    /* Clips the 3D scene to the frame's own silhouette. Without it, nothing
+       stops the (deliberately oversized — see `.bookcase__back`) 3D content
+       from spilling past this edge; with it, any overscan is simply cropped
+       away, the same way a real cabinet's front frame crops the view into the
+       box behind it. Safe here: this element only declares `perspective`,
+       never `transform-style: preserve-3d`, so it stays a normal 2D box for
+       clipping purposes. NOTE: no `border-radius` lives here (an earlier
+       rounded-corner cabinet was squared off) — if one is ever reintroduced,
+       `.bookcase__back` stays an axis-aligned rectangle and will no longer
+       cover the four rounded corners, reopening the notch this file's whole
+       carcass section exists to close. */
     overflow: hidden;
-    box-shadow:
-        0 1px 0 rgba(255, 255, 255, 0.8) inset,
-        /* cabinet side stiles */ inset 10px 0 14px -10px rgba(0, 0, 0, 0.18),
-        inset -10px 0 14px -10px rgba(0, 0, 0, 0.18),
-        /* ...and the top rail, so the cabinet head reads as a board too */ inset 0 12px 14px -12px
-            rgba(0, 0, 0, 0.14),
-        0 40px 70px -40px var(--shadow-color);
+    /* No inset shadows here any more. `.bookcase__back` is an opaque
+       positioned descendant that paints above an element's own background and
+       inset shadows (CSS2.1 Appendix E) and, measured live, covers the entire
+       frame rect with margin at every viewport this cabinet renders at — so
+       any inset shadow on this element is fully hidden and was dead weight.
+       The real cabinet edges (`.bookcase__side--*`, `.bookcase__top`) do that
+       shading now, as actual geometry rather than a flat fake. */
+    box-shadow: 0 40px 70px -40px var(--shadow-color);
 }
 
 /* The cabinet's back panel: ONE continuous board across the whole carcass.
@@ -162,13 +184,16 @@
 
    Overscanned well past the frame's own edges (rather than a plain `inset: 0`)
    because `translateZ` shrinks this panel toward the vanishing point, and
-   `--scene-origin-y: 32%` puts that point near the top — so the panel's
-   projected top edge lands ~14px short of the frame's true top, its bottom
-   edge ~30px short, at 1440px measured live. A flat rectangle can't reach a
-   frame it's being shrunk away from; oversizing it first, by an amount tied to
+   `--scene-origin-y: 32%` puts that point nearer the top than the bottom — so
+   the panel's projected top edge lands short of the frame's true top, its
+   bottom edge short by roughly twice as much (proportional to each edge's
+   distance from the 32% origin). A flat rectangle can't reach a frame it's
+   being shrunk away from; oversizing it first, by an amount tied to
    `--book-depth` (the value driving the shrink) rather than a fixed pixel
    guess, means it still fully covers the opening after perspective — and
-   `.bookcase__frame`'s new `overflow: hidden` crops away the excess. */
+   `.bookcase__frame`'s `overflow: hidden` crops away the excess. Coverage
+   holds for any frame width up to `--scene-perspective` and any height up to
+   roughly 1.5x that, so ordinary responsive resizing can't break it. */
 .bookcase__back {
     position: absolute;
     inset: calc(var(--book-depth) * -0.5);
@@ -186,8 +211,11 @@
    They are what closes the box: under a real vanishing point the back wall
    projects smaller than the opening, and without sides you look through the
    wedge at either edge straight out of the furniture. They also give the case
-   its only asymmetric light — the left wall faces the lamp, the right one is
-   turned away from it. */
+   its only asymmetric light. The key light is established elsewhere as
+   upper-left (`.book`'s `--bk-shade`/`--sheen-x`, the cover's 135deg gradient,
+   the foil emboss) — light entering an opening from the left strikes the
+   RIGHT interior wall, so the left wall's inner face is the one turned away
+   from it and sits a shade darker. */
 .bookcase__side {
     position: absolute;
     top: 0;
@@ -203,7 +231,11 @@
     /* Element-left is the FRONT of the panel once folded, so the near stop
        comes first and the wall falls off toward the back wall. The vertical
        streaks are the board's figure, running front-to-back the way a side
-       panel is cut — same technique as the plank's. */
+       panel is cut — same technique as the plank's. Darkened a shade against
+       the right wall below: baked into the gradient stops rather than a
+       `filter`, which would rasterize this rotated face offscreen first
+       (softening its edge) and would flatten it out of any `preserve-3d`
+       ancestor this element ever gains. */
     background-image:
         repeating-linear-gradient(
             90deg,
@@ -212,14 +244,19 @@
             rgba(0, 0, 0, 0.014) 3px 4px,
             rgba(0, 0, 0, 0) 4px 12px
         ),
-        linear-gradient(to right, var(--shelf-side) 0%, var(--shelf-side-dark) 100%);
+        linear-gradient(
+            to right,
+            color-mix(in srgb, var(--shelf-side) 93%, #000) 0%,
+            color-mix(in srgb, var(--shelf-side-dark) 93%, #000) 100%
+        );
 }
 
 .bookcase__side--right {
     right: 0;
     transform-origin: right center;
     transform: rotateY(-90deg);
-    /* Mirrored: element-right is this panel's front edge. */
+    /* Mirrored: element-right is this panel's front edge. The wall directly
+       lit by the room, so it keeps the token colours at full strength. */
     background-image:
         repeating-linear-gradient(
             90deg,
@@ -229,7 +266,71 @@
             rgba(0, 0, 0, 0) 4px 12px
         ),
         linear-gradient(to left, var(--shelf-side) 0%, var(--shelf-side-dark) 100%);
-    filter: brightness(0.93);
+}
+
+/* The top board's underside. The camera sits at `--scene-origin-y: 32%` — above
+   the case's vertical middle, but below its top edge — so a real box shows this
+   surface, receding from the opening (y:0, z:0) to the back wall (z:-book-depth).
+   Without it, each side wall's top edge (which correctly slants down-and-inward
+   as it recedes to the same corner) has nothing on its far side, and reads as a
+   broken edge instead of the mitre it actually is.
+   Hinged at the frame's own top edge, same convention as `.shelf__plank`: hinge
+   on the edge touching the front plane, `rotateX(-90deg)` because the body
+   extends down from it. Spans `left/right: 0` — flush with the frame like the
+   side walls span `top/bottom: 0` — so its back edge lands exactly on theirs
+   (both converge by the same factor) and the three edges close as one seam. No
+   overscan needed: the front edge sits at z:0, where perspective applies no
+   shrink at all, so it meets the frame's top edge exactly. */
+.bookcase__top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--book-depth);
+    transform-origin: center top;
+    transform: rotateX(-90deg);
+    pointer-events: none;
+    /* An underside faces away from every light source in the room, so it gets
+       no direct key at all — only bounce off the planks and the (now lit)
+       right wall — and sits darker than any other surface in the case. */
+    background-image:
+        /* a sliver of catchlight on the front arris, the one edge that
+           actually meets the room's light */
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.42) 0 1px, rgba(0, 0, 0, 0) 1px),
+        /* housed into the back panel — mirrors the plank's joint, but the
+           crevice sits at THIS element's far (bottom) edge once folded */
+        linear-gradient(
+                to top,
+                rgba(0, 0, 0, 0.26) 0 1.5px,
+                rgba(0, 0, 0, 0.1) 1.5px 5px,
+                rgba(0, 0, 0, 0) 5px
+            ),
+        /* bounce off the lit right wall — the only asymmetry an underside can
+           have, kept faint so it reads as reflected rather than a second key */
+        linear-gradient(
+                to right,
+                rgba(0, 0, 0, 0.045) 0%,
+                rgba(0, 0, 0, 0) 55%,
+                rgba(255, 255, 255, 0.03) 100%
+            ),
+        /* figure, front-to-back like the plank's, at half its amplitude — this
+           band is shallow and heavily foreshortened */
+        repeating-linear-gradient(
+                to right,
+                rgba(0, 0, 0, 0.02) 0 1px,
+                rgba(255, 255, 255, 0.02) 1px 3px,
+                rgba(0, 0, 0, 0.012) 3px 4px,
+                rgba(0, 0, 0, 0) 4px 11px
+            ),
+        /* aperture falloff: lit stop reaches full dark by ~62% rather than
+           100%, since perspective compresses the far half of this band —
+           `.shelf__plank`'s 58% mid stop sets the same precedent */
+        linear-gradient(
+                to bottom,
+                var(--shelf-top) 0%,
+                var(--shelf-top-dark) 62%,
+                var(--shelf-top-dark) 100%
+            );
 }
 
 /* Shelves share the cabinet height (flex), with books sized via --book-height to
@@ -248,10 +349,19 @@
 /* Not a wall any more — the wall is `.bookcase__back`, one continuous panel
    (see there for why). This element is now just the LIGHT on that wall: the
    shadow band the shelf board above throws down it, and the ambient pool where
-   it meets the plank. Translucent, so it can never punch a hole in the case. */
+   it meets the plank. Translucent, so it can never punch a hole in the case.
+   Reaching out by exactly `--frame-pad` (matching `.shelf__row`'s own inset)
+   is not enough on its own: this element sits at a near-constant depth (like
+   `.bookcase__back`, not like the rotated walls), so perspective shrinks the
+   WHOLE band uniformly toward the vanishing point, pulling its raw edges back
+   inward after projection. The extra `--book-depth`-scaled term is the same
+   overscan `.bookcase__back` needs for the same reason, so this band still
+   reaches the walls' true edges once shrunk. */
 .shelf__back {
     position: absolute;
     inset: 0;
+    left: calc(var(--frame-pad) * -1 - var(--book-depth) * 0.5);
+    right: calc(var(--frame-pad) * -1 - var(--book-depth) * 0.5);
     /* 1px proud of the wall so the two never z-fight. */
     transform: translateZ(calc(var(--book-depth) * -1 + 1px));
     background: linear-gradient(
@@ -296,9 +406,19 @@
     position: absolute;
     /* Housed into the side panels: the row is inset by the frame padding, so
        the board reaches past it to the panels at the frame's edges — a shelf
-       that stops short of its own walls is what furniture looks like broken. */
-    left: calc(var(--frame-pad) * -1);
-    right: calc(var(--frame-pad) * -1);
+       that stops short of its own walls is what furniture looks like broken.
+       The extra `--book-depth`-scaled term compensates for the fold itself:
+       `rotateX` leaves X untouched, so this plank's world-X is genuinely flush
+       with the walls at every depth, but perspective still shrinks the
+       PROJECTED x-offset toward the vanishing point as the far (hinged-away)
+       end recedes — the near end, at the hinge, needs none of this (its own
+       scale is 1), so overscanning is harmless there: it only pushes that end
+       past the frame's true edge, where `.bookcase__frame`'s `overflow: hidden`
+       already crops it away. Without the extra term the plank's far edge falls
+       short of the wall, leaving a wedge of the wall's own surface showing
+       through in the corner at every shelf boundary. */
+    left: calc(var(--frame-pad) * -1 - var(--book-depth) * 0.5);
+    right: calc(var(--frame-pad) * -1 - var(--book-depth) * 0.5);
     bottom: 0;
     height: var(--book-depth);
     transform-origin: center bottom;
@@ -907,6 +1027,11 @@
 .featured {
     --bk-thickness: calc(var(--book-thickness) * var(--bk-scale, 1));
     --bk-height: calc(var(--book-height) * var(--bk-height-scale, 1));
+    /* Off the shelf the book is no longer bound to the shared shelf depth, so its
+       cover face takes the true proportions of its own artwork — the whole cover is
+       visible and nothing is cropped. Shelved books keep the inherited --book-depth,
+       and their varied heights are untouched. */
+    --book-depth: calc(var(--bk-height) * var(--cover-ar, 0.667));
     position: absolute;
     top: 0;
     left: 0;
