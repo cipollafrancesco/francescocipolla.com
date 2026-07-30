@@ -12,14 +12,7 @@ const baseUrl =
         ? `https://${process.env.VERCEL_URL}`
         : 'https://francescocipolla.com')
 
-/** Contact channels shared across the JSON-LD, the footer, the contacts page,
- *  and the homepage contact section — one source instead of four copies that
- *  can silently drift apart. */
-export const siteLinks = {
-    email: 'info@francescocipolla.com',
-    linkedin: 'https://www.linkedin.com/in/francesco-cipolla-41768411b',
-    github: 'https://github.com/cipollafrancesco',
-} as const
+export { siteLinks } from './site-links'
 
 /** The site-wide default `<title>`. Locale-independent by design (it's a proper
  *  name plus a role that reads the same in both languages), and shared so the
@@ -45,266 +38,6 @@ export type LocalizedProject = {
     solution: string
     outcome: string
     showcaseOutcome?: string
-}
-
-export type SiteContent = {
-    common: {
-        skipToContent: string
-        nav: {
-            about: string
-            experiences: string
-            projects: string
-            services: string
-            books: string
-            contacts: string
-            bookCall: string
-            resume: string
-            openMenu: string
-            closeMenu: string
-            switchLanguage: string
-        }
-        footer: {
-            tagline: string
-            links: {
-                about: string
-                experiences: string
-                projects: string
-                blog: string
-                books: string
-                contacts: string
-                services: string
-            }
-            socials: {
-                linkedin: string
-                github: string
-                email: string
-            }
-            privacySettings: string
-            rights: string
-        }
-        cta: {
-            book: string
-            bookMicrocopy: string
-            tellProject: string
-            project: string
-            liveSite: string
-            caseStudy: string
-            backHome: string
-            backProjects: string
-            seePastWork: string
-            previousProject: string
-            nextProject: string
-        }
-    }
-    metadata: {
-        home: Metadata
-        services: Metadata
-        about: Metadata
-        projects: Metadata
-        contacts: Metadata
-        blog: Metadata
-        books: Metadata
-    }
-    books: {
-        title: string
-        lead: string
-        filterLabel: string
-        filterAll: string
-        close: string
-        published: string
-        read: string
-        notes: string
-        /** `{value}` is replaced with the book's rating. */
-        ratingLabel: string
-        /** Accessible name of a spine — `{title}` and `{author}` are substituted. */
-        spineLabel: string
-        /**
-         * Display labels for the categories in `books.json`, keyed by the raw
-         * (Italian) value stored there — the data keeps one key per category so
-         * filtering never depends on the locale.
-         */
-        categories: Record<string, string>
-    }
-    home: {
-        heroDisclaimer: string
-        descriptions: { text: string; color?: string }[][]
-        experiencesTitle: string
-        /**
-         * Qualifier anchored to a corner of the giant experiences heading, to
-         * distinguish employed work from the freelance section below.
-         * `placement` follows the language's adjective order: English puts the
-         * adjective before the noun (rendered top-left), Italian after it
-         * (bottom-right).
-         */
-        experiencesQualifier: {
-            label: string
-            placement: 'before' | 'after'
-        }
-        projectsTitle: string
-        contactsTitle: string
-        scheduleTitle: string
-        scrollDownAlt: string
-    }
-    experiences: {
-        company: string
-        logo: string
-        position: string
-        period: string
-        description: string
-    }[]
-    services: {
-        hero: {
-            eyebrow: string
-            title: string
-            lead: string
-            secondary: string
-        }
-        proof: {
-            eyebrow: string
-            names: string[]
-            stats: { value: string; label: string }[]
-        }
-        profile: {
-            eyebrow: string
-            title: string
-            description: string
-            imageAlt: string
-            imageCaption: string
-        }
-        serviceIntro: {
-            eyebrow: string
-            title: string
-            description: string
-            ctaLabel: string
-            ctaHelperTitle: string
-            ctaHelper: string
-        }
-        buckets: {
-            title: string
-            label: string
-            plainLabel: string
-            situation: string
-            description: string
-        }[]
-        capabilities: {
-            eyebrow: string
-            title: string
-            description: string
-            items: { key: string; name: string; description: string }[]
-        }
-        cases: {
-            eyebrow: string
-            title: string
-            description: string
-            seeAllCta: string
-        }
-        process: {
-            eyebrow: string
-            title: string
-            steps: { title: string; description: string }[]
-        }
-        faq: {
-            eyebrow: string
-            title: string
-            items: { question: string; answer: string }[]
-        }
-        booking: {
-            eyebrow: string
-            title: string
-            description: string
-            callDuration: string
-            callIntro: string
-            formLinkLabel: string
-        }
-    }
-    projectsPage: {
-        eyebrow: string
-        intro: string
-    }
-    projects: LocalizedProject[]
-    projectPage: {
-        overview: string
-        highlights: string
-        problem: string
-        solution: string
-        outcome: string
-        gallery: string
-        galleryView: string
-        galleryDesktop: string
-        galleryMobile: string
-        galleryPrevious: string
-        galleryNext: string
-        /** `{title}` and `{index}` are substituted. */
-        galleryImageAlt: string
-    }
-    blog: {
-        title: string
-        empty: string
-    }
-    notFound: {
-        title: string
-        label: string
-        description: string
-    }
-    error: {
-        title: string
-        description: string
-        retry: string
-    }
-    consent: {
-        title: string
-        description: string
-        accept: string
-        reject: string
-    }
-    contact: {
-        page: {
-            eyebrow: string
-            intro: string
-            /** Suffixed to a channel's `aria-label` when it opens in a new tab. */
-            opensInNewTab: string
-            booking: {
-                eyebrow: string
-                description: string
-            }
-        }
-        form: {
-            eyebrow: string
-            title: string
-            intro: string
-            fields: {
-                name: string
-                namePlaceholder: string
-                email: string
-                emailPlaceholder: string
-                company: string
-                companyPlaceholder: string
-                topic: string
-                message: string
-                messagePlaceholder: string
-                submit: string
-                submitting: string
-            }
-            topics: {
-                growth: string
-                operations: string
-                product: string
-                support: string
-                other: string
-            }
-            success: {
-                title: string
-                body: string
-            }
-            errors: {
-                required: string
-                emailInvalid: string
-                messageTooShort: string
-                messageTooLong: string
-                generic: string
-            }
-        }
-    }
 }
 
 const sharedProjects = {
@@ -366,14 +99,14 @@ const sharedProjects = {
     },
     // Slug is dot-free on purpose: `PUBLIC_FILE` in `src/middleware.ts` treats any
     // dotted path as a static file, so `/projects/dpulses2.0` would skip the
-    // locale redirect and 404. Assets still live in the `dpulses2.0/` folder.
+    // locale redirect and 404. The asset folder matches the slug.
     dpulses2: {
         id: 6,
         slug: 'dpulses-2-0',
         title: 'Dpulses 2.0',
         client: 'Dpulses',
-        image: '/projects/dpulses2.0/cover.webp',
-        mobileImage: '/projects/dpulses2.0/mobile.webp',
+        image: '/projects/dpulses-2-0/cover.webp',
+        mobileImage: '/projects/dpulses-2-0/mobile.webp',
         url: 'https://www.dpulses.com/',
         year: '2026',
         technologies: ['Next.js', 'Tailwind CSS', 'Vercel', 'Strapi'],
@@ -643,868 +376,894 @@ const enProjects: LocalizedProject[] = [
     },
 ]
 
-export const siteContent: Record<Locale, SiteContent> = {
-    it: {
-        common: {
-            skipToContent: 'Vai al contenuto',
-            nav: {
+const it = {
+    common: {
+        skipToContent: 'Vai al contenuto',
+        nav: {
+            about: 'Chi sono',
+            experiences: 'Esperienze',
+            projects: 'Progetti',
+            services: 'Servizi',
+            books: 'Libreria',
+            contacts: 'Contatti',
+            bookCall: 'Consulenza gratuita',
+            resume: 'CV',
+            openMenu: 'Apri menu',
+            closeMenu: 'Chiudi menu',
+            switchLanguage: 'Cambia lingua',
+        },
+        footer: {
+            tagline:
+                'Creo siti e prodotti digitali che aiutano le aziende a farsi scegliere, lavorare meglio e crescere.',
+            links: {
                 about: 'Chi sono',
                 experiences: 'Esperienze',
                 projects: 'Progetti',
-                services: 'Servizi',
+                blog: 'Blog',
                 books: 'Libreria',
                 contacts: 'Contatti',
-                bookCall: 'Consulenza gratuita',
-                resume: 'CV',
-                openMenu: 'Apri menu',
-                closeMenu: 'Chiudi menu',
-                switchLanguage: 'Cambia lingua',
+                services: 'Servizi',
             },
-            footer: {
-                tagline:
-                    'Creo siti e prodotti digitali che aiutano le aziende a farsi scegliere, lavorare meglio e crescere.',
-                links: {
-                    about: 'Chi sono',
-                    experiences: 'Esperienze',
-                    projects: 'Progetti',
-                    blog: 'Blog',
-                    books: 'Libreria',
-                    contacts: 'Contatti',
-                    services: 'Servizi',
-                },
-                socials: {
-                    linkedin: 'LinkedIn',
-                    github: 'GitHub',
-                    email: 'Email',
-                },
-                privacySettings: 'Impostazioni privacy',
-                rights: '',
+            socials: {
+                linkedin: 'LinkedIn',
+                github: 'GitHub',
+                email: 'Email',
             },
-            cta: {
-                book: 'Prenota una consulenza gratuita',
-                bookMicrocopy: '30 minuti · senza impegno · nessun preventivo a sorpresa',
-                tellProject: 'Raccontami il tuo progetto',
-                project: 'Vedi il progetto',
-                liveSite: 'Visita il sito',
-                caseStudy: 'Vedi il progetto',
-                backHome: 'Torna alla home',
-                backProjects: 'Torna ai progetti',
-                seePastWork: 'Guarda i lavori realizzati',
-                previousProject: 'Progetto precedente',
-                nextProject: 'Progetto successivo',
-            },
+            privacySettings: 'Impostazioni privacy',
+            rights: '',
         },
-        metadata: {
-            home: {
-                title: 'Francesco Cipolla - Digital Product Partner',
-                description:
-                    'Digital product partner e ingegnere informatico: esperienza in prodotti web, streaming, design e sistemi digitali.',
-            },
-            services: {
-                title: 'Siti web e digitalizzazione per aziende - Francesco Cipolla',
-                description:
-                    'Consulenza digitale, siti web per aziende, applicazioni web e automazioni per trasformare visite, processi e idee in risultati concreti.',
-            },
-            about: {
-                title: 'Chi sono - Francesco Cipolla',
-                description:
-                    'Digital product partner e ingegnere informatico: esperienza in prodotti web, streaming, design e sistemi digitali.',
-            },
-            projects: {
-                title: 'Progetti - Francesco Cipolla',
-                description:
-                    'Una selezione di progetti web, applicazioni e piattaforme digitali realizzate per aziende, studi e prodotti in produzione.',
-            },
-            contacts: {
-                title: 'Contatti - Francesco Cipolla',
-                description:
-                    'Contatta Francesco Cipolla o prenota una consulenza per parlare di siti, applicazioni, automazioni e progetti digitali.',
-            },
-            blog: {
-                title: 'Blog - Francesco Cipolla',
-                description: 'Appunti su prodotto digitale, sviluppo web, design e tecnologia.',
-            },
-            books: {
-                title: 'Libreria - Francesco Cipolla',
-                description:
-                    'Qualche libro che ho letto e che mi è piaciuto — business, design, crescita personale e narrativa. La mia libreria digitale, solo per divertimento.',
-            },
-        },
-        books: {
-            title: 'Libreria',
-            lead: 'Qualche libro che ho letto e che mi è piaciuto: la mia libreria digitale, solo per divertimento. Sfilane uno dallo scaffale.',
-            filterLabel: 'Filtra per categoria',
-            filterAll: 'Tutti',
-            close: 'Chiudi dettagli',
-            published: 'Pubblicato',
-            read: 'Letto',
-            notes: 'Note',
-            ratingLabel: 'Valutazione: {value} su 5',
-            spineLabel: '{title} di {author}. Apri i dettagli.',
-            categories: {
-                Business: 'Business',
-                'Cibo & vino': 'Cibo & vino',
-                Creatività: 'Creatività',
-                'Crescita personale': 'Crescita personale',
-                Design: 'Design',
-                Economia: 'Economia',
-                Marketing: 'Marketing',
-                Narrativa: 'Narrativa',
-                Scienza: 'Scienza',
-                Sport: 'Sport',
-                Viaggi: 'Viaggi',
-            },
-        },
-        home: {
-            heroDisclaimer:
-                'Costruisco prodotti digitali, siti e sistemi web con Next.js, React e attenzione al risultato di business.',
-            descriptions: [
-                [{ text: 'digital product partner' }],
-                [{ text: 'ingegnere informatico' }],
-                [{ text: 'appassionato di design' }],
-                [{ text: 'cestista della domenica' }],
-                [{ text: 'kitesurfer principiante' }],
-            ],
-            experiencesTitle: 'esperienze',
-            experiencesQualifier: { label: 'in azienda', placement: 'after' },
-            projectsTitle: 'progetti freelance',
-            contactsTitle: 'contatti',
-            scheduleTitle: 'Prenota una consulenza',
-            scrollDownAlt: 'Scorri verso il basso',
-        },
-        experiences: [
-            {
-                company: 'FIFA+',
-                logo: '/companies/fifa.webp',
-                position: 'Senior Front-end Engineer (Contractor)',
-                period: 'Giu 2023 - Presente',
-                description:
-                    'Sviluppo e manutenzione di una SPA React per lo streaming sportivo, incluse funzionalità core come il player.',
-            },
-            {
-                company: 'Globant',
-                logo: '/companies/globant.webp',
-                position: 'Senior Web UI Developer',
-                period: 'Ago 2023 - Presente',
-                description:
-                    "Dopo l'acquisizione della divisione CHILI Tech da parte di Globant, continuo a contribuire agli stessi prodotti streaming.",
-            },
-            {
-                company: 'CHILI',
-                logo: '/companies/chili.webp',
-                position: 'Senior Front-end Engineer',
-                period: 'Nov 2021 - Dic 2024',
-                description:
-                    'Sviluppo e manutenzione del sito web e della Smart TV app su dispositivi Samsung, LG, Sony e altri.',
-            },
-            {
-                company: 'Softlab S.p.A.',
-                logo: '/companies/softlab.webp',
-                position: 'Front-end Engineer',
-                period: 'Nov 2017 - Nov 2021',
-                description:
-                    'Sviluppo di applicazioni enterprise per un grande gruppo assicurativo e ruolo di vice team leader frontend.',
-            },
-        ],
-        services: {
-            hero: {
-                eyebrow: 'Siti, web app e automazioni AI',
-                title: 'Non ti serve un sito più bello. Ti serve un sito che porti clienti.',
-                lead: 'Se ti trovano online ma non capiscono subito perché scegliere te, ogni visita è un’occasione persa.',
-                secondary:
-                    'Aiuto aziende e professionisti a trasformare le visite in contatti, i processi manuali in ore risparmiate e le idee in prodotti.',
-            },
-            proof: {
-                eyebrow: 'Esperienza su prodotti e aziende reali',
-                names: [
-                    'FIFA+',
-                    'CHILI',
-                    'Talent Garden',
-                    'Lombardini22',
-                    'Groupama',
-                    'Reclami Gas e Luce',
-                    'Dpulses',
-                    'DataHause',
-                ],
-                stats: [
-                    { value: '8+', label: 'anni su prodotti web in produzione' },
-                    { value: '20+', label: 'progetti web consegnati' },
-                    { value: 'IT/EN', label: 'lavoro con clienti italiani e internazionali' },
-                ],
-            },
-            profile: {
-                eyebrow: 'Chi sono',
-                title: 'Lavori con una persona sola, dall’idea alla messa online.',
-                description:
-                    'Da oltre 8 anni costruisco prodotti web che vanno in produzione: piattaforme di streaming, siti aziendali e applicazioni su misura. Unisco visione di prodotto, cura dell’interfaccia e basi tecniche solide, così non devi coordinare più figure diverse.',
-                imageAlt: 'Francesco Cipolla, ingegnere informatico e digital product partner',
-                imageCaption: 'Francesco Cipolla / prodotto, design, sviluppo',
-            },
-            serviceIntro: {
-                eyebrow: 'Soluzioni',
-                title: 'Parto dal problema che riconosci, non dalla soluzione tecnica.',
-                description:
-                    'Scegliamo insieme il pezzo digitale più piccolo e concreto che porta un risultato, senza costruire più del necessario.',
-                ctaLabel: 'Parliamo del tuo caso',
-                ctaHelperTitle: 'Non devi scegliere nulla.',
-                ctaHelper: 'In call capiamo insieme da dove partire.',
-            },
-            buckets: [
-                {
-                    title: 'Growth',
-                    label: 'Convertire meglio online',
-                    plainLabel: 'Farti contattare meglio',
-                    situation:
-                        "La tua presenza online c'è, ma non dice abbastanza in fretta cosa fai e perché scegliere te. Chi arriva, se ne va.",
-                    description:
-                        'Siti web, landing page e percorsi digitali che spiegano il valore, aumentano la fiducia e rendono più facile contattarti.',
-                },
-                {
-                    title: 'Operations',
-                    label: 'Ridurre lavoro manuale',
-                    plainLabel: 'Risparmiare tempo operativo',
-                    situation:
-                        'Preventivi, richieste e dati rimbalzano tra email, fogli e chat invece di stare in un unico posto. Il team perde ore in copia-incolla.',
-                    description:
-                        'Applicazioni interne, dashboard, integrazioni e automazioni per collegare strumenti e rendere i processi più fluidi.',
-                },
-                {
-                    title: 'Product',
-                    label: 'Lanciare idee digitali',
-                    plainLabel: "Lanciare un'idea digitale",
-                    situation:
-                        'Hai in testa un portale, una dashboard o un nuovo strumento digitale, ma manca chi lo trasformi da idea a prodotto che la gente usa davvero.',
-                    description:
-                        'MVP, portali clienti e web app costruiti con attenzione a UX, solidità tecnica e possibilità di evolvere nel tempo.',
-                },
-                {
-                    title: 'Support',
-                    label: 'Migliorare quello che hai',
-                    plainLabel: 'Migliorare quello che hai già',
-                    situation:
-                        "Hai già un sito, un'app o un flusso di lavoro, ma è lento, fragile o non fa più quello che ti serve.",
-                    description:
-                        'Interventi su prodotti esistenti: correzioni, miglioramenti e nuove funzionalità senza ripartire da zero.',
-                },
-            ],
-            capabilities: {
-                eyebrow: 'Cosa costruisco',
-                title: "Dalla prima landing page all'app che usano i tuoi clienti.",
-                description:
-                    'La soluzione tecnica la scegliamo sul tuo problema — questi sono i mattoni con cui la costruisco.',
-                items: [
-                    {
-                        key: 'websites',
-                        name: 'Siti web & Landing page',
-                        description:
-                            'Pagine veloci e chiare, pensate per trasformare i visitatori in contatti.',
-                    },
-                    {
-                        key: 'webApps',
-                        name: 'Web app & Portali',
-                        description:
-                            'MVP, portali clienti e aree riservate su misura, pronti a crescere.',
-                    },
-                    {
-                        key: 'mobile',
-                        name: 'App mobile cross-platform',
-                        description:
-                            "Un'unica app per iOS e Android: un solo sviluppo, meno costi.",
-                    },
-                    {
-                        key: 'ai',
-                        name: 'Automazioni AI',
-                        description:
-                            "Attività ripetitive automatizzate dove l'AI fa davvero risparmiare tempo.",
-                    },
-                ],
-            },
-            cases: {
-                eyebrow: 'Casi selezionati',
-                title: 'Progetti reali che puoi visitare online.',
-                description:
-                    'Ogni progetto parte da un bisogno diverso: acquisire contatti, raccontare un brand, pubblicare contenuti o rendere chiara una proposta tecnica.',
-                seeAllCta: 'Vedi tutti i progetti',
-            },
-            process: {
-                eyebrow: 'Metodo',
-                title: 'Un percorso semplice, dall’idea alla produzione.',
-                steps: [
-                    {
-                        title: 'Consulenza iniziale',
-                        description:
-                            'Capisco obiettivi, vincoli, pubblico e qual è il problema vero da risolvere.',
-                    },
-                    {
-                        title: 'Mappa della soluzione',
-                        description:
-                            'Definiamo priorità, contenuti, funzionalità e primo rilascio utile.',
-                    },
-                    {
-                        title: 'Sviluppo iterativo',
-                        description:
-                            'Progetto e sviluppo con review frequenti, preview online e scelte tecniche spiegate in modo chiaro.',
-                    },
-                    {
-                        title: 'Lancio e miglioramento',
-                        description:
-                            'Portiamo online, misuriamo le azioni importanti e decidiamo cosa ottimizzare dopo.',
-                    },
-                ],
-            },
-            faq: {
-                eyebrow: 'Domande frequenti',
-                title: 'Prima della consulenza.',
-                items: [
-                    {
-                        question: 'Lavori solo su siti web?',
-                        answer: 'No. Il sito è spesso il punto di partenza, ma posso lavorare anche su applicazioni web, dashboard, aree riservate, integrazioni e automazioni.',
-                    },
-                    {
-                        question: 'Puoi seguire anche UX e struttura dei contenuti?',
-                        answer: 'Sì. Posso aiutarti a chiarire flussi, gerarchia dei contenuti e interfacce. Se serve una direzione visual specialistica, la definiamo nel progetto.',
-                    },
-                    {
-                        question: 'Come funziona la consulenza iniziale?',
-                        answer: 'Parliamo del problema, dello stato attuale, degli obiettivi e del primo risultato utile. Da lì preparo una proposta coerente con scope e priorità.',
-                    },
-                    {
-                        question: 'Parliamo di budget nella call?',
-                        answer: 'Sì, ma senza pacchetti preconfezionati. Prima capiamo il perimetro, poi ti propongo la strada più breve per ottenere un risultato.',
-                    },
-                    {
-                        question: 'Puoi lavorare con team o agenzie già esistenti?',
-                        answer: 'Sì. Posso integrarmi in processi esistenti oppure gestire direttamente le parti digitali concordate.',
-                    },
-                ],
-            },
-            booking: {
-                eyebrow: 'Prossimo passo',
-                title: 'Parliamone: porta il tuo problema, esci con una direzione.',
-                description:
-                    "Senza impegno e senza preventivi a sorpresa. Sito, processo o idea: dimmi dov'è il blocco.",
-                callDuration: '30 minuti',
-                callIntro:
-                    'Una chiacchierata, non una presentazione di vendita. Se non sono la persona giusta, te lo dico subito.',
-                formLinkLabel: 'Preferisci scrivere? Vai al form →',
-            },
-        },
-        projectsPage: {
-            eyebrow: 'Portfolio selezionato',
-            intro: 'Una selezione di progetti pubblici: siti, piattaforme, MVP e sistemi digitali costruiti con attenzione a prodotto, interfaccia e sviluppo.',
-        },
-        projects: itProjects,
-        projectPage: {
-            overview: 'Panoramica',
-            highlights: 'Punti chiave',
-            problem: 'Problema',
-            solution: 'Soluzione',
-            outcome: 'Risultato',
-            gallery: 'Galleria',
-            galleryView: 'Formato',
-            galleryDesktop: 'Desktop',
-            galleryMobile: 'Mobile',
-            galleryPrevious: 'Media precedente',
-            galleryNext: 'Media successivo',
-            galleryImageAlt: 'Galleria di {title}, immagine {index}',
-        },
-        blog: {
-            title: 'Blog',
-            empty: 'Nessun articolo pubblicato.',
-        },
-        notFound: {
-            title: 'perso?',
-            label: '404',
-            description: 'La pagina che cercavi non esiste o è stata spostata altrove.',
-        },
-        error: errorCopy.it,
-        consent: {
-            title: 'Privacy e analytics',
-            description:
-                'Uso Google Analytics solo se accetti, per capire quali pagine e azioni aiutano davvero i visitatori. Puoi rifiutare e usare il sito normalmente.',
-            accept: 'Accetta analytics',
-            reject: 'Rifiuta',
-        },
-        contact: {
-            page: {
-                eyebrow: 'Scegli il canale',
-                intro: 'Email, LinkedIn o GitHub per un contatto diretto. Qui sotto trovi il form e il calendario, se preferisci partire da lì.',
-                opensInNewTab: 'si apre in una nuova scheda',
-                booking: {
-                    eyebrow: '30 minuti',
-                    description:
-                        "Scegli uno slot e portami il problema così com'è: niente da preparare, nessun preventivo a sorpresa. In mezz'ora capiamo se e come posso aiutarti.",
-                },
-            },
-            form: {
-                eyebrow: 'Scrivimi',
-                title: 'Dimmi come posso aiutarti.',
-                intro: 'Più contesto mi dai, più la risposta sarà utile: bastano due righe sul problema e sul risultato che vuoi ottenere. Rispondo entro 24 ore, sempre io.',
-                fields: {
-                    name: 'Nome',
-                    namePlaceholder: 'Mario Rossi',
-                    email: 'Email',
-                    emailPlaceholder: 'mario@azienda.it',
-                    company: 'Azienda (opzionale)',
-                    companyPlaceholder: 'Nome azienda',
-                    topic: 'Di cosa hai bisogno?',
-                    message: 'Messaggio',
-                    messagePlaceholder: 'Descrivi brevemente il tuo progetto o problema...',
-                    submit: 'Invia il messaggio',
-                    submitting: 'Invio in corso...',
-                },
-                topics: {
-                    growth: 'Farmi trovare e contattare meglio online',
-                    operations: 'Ridurre il lavoro manuale nei processi',
-                    product: 'Costruire un prodotto o app web',
-                    support: 'Supporto tecnico su un progetto esistente',
-                    other: 'Altro',
-                },
-                success: {
-                    title: 'Messaggio ricevuto.',
-                    body: 'Ti rispondo entro 24 ore. Se il progetto è urgente, usa il calendario qui sotto per fissare subito una call.',
-                },
-                errors: {
-                    required: 'Campo obbligatorio',
-                    emailInvalid: 'Inserisci un indirizzo email valido',
-                    messageTooShort: 'Il messaggio è troppo corto (minimo 10 caratteri)',
-                    messageTooLong: 'Il messaggio è troppo lungo (massimo 5000 caratteri)',
-                    generic:
-                        'Si è verificato un errore. Riprova o scrivimi direttamente a info@francescocipolla.com.',
-                },
-            },
+        cta: {
+            book: 'Prenota una consulenza gratuita',
+            bookMicrocopy: '30 minuti · senza impegno · nessun preventivo a sorpresa',
+            tellProject: 'Raccontami il tuo progetto',
+            project: 'Vedi il progetto',
+            liveSite: 'Visita il sito',
+            caseStudy: 'Vedi il progetto',
+            backHome: 'Torna alla home',
+            backProjects: 'Torna ai progetti',
+            seePastWork: 'Guarda i lavori realizzati',
+            previousProject: 'Progetto precedente',
+            nextProject: 'Progetto successivo',
         },
     },
-    en: {
-        common: {
-            skipToContent: 'Skip to content',
-            nav: {
-                about: 'About',
-                experiences: 'Experience',
-                projects: 'Projects',
-                services: 'Services',
-                books: 'Bookshelf',
-                contacts: 'Contacts',
-                bookCall: 'Free call',
-                resume: 'Resume',
-                openMenu: 'Open menu',
-                closeMenu: 'Close menu',
-                switchLanguage: 'Switch language',
-            },
-            footer: {
-                tagline:
-                    'I build websites and digital products that help businesses get chosen, work better, and grow.',
-                links: {
-                    about: 'About',
-                    experiences: 'Experience',
-                    projects: 'Projects',
-                    blog: 'Blog',
-                    books: 'Bookshelf',
-                    contacts: 'Contacts',
-                    services: 'Services',
-                },
-                socials: {
-                    linkedin: 'LinkedIn',
-                    github: 'GitHub',
-                    email: 'Email',
-                },
-                privacySettings: 'Privacy settings',
-                rights: '',
-            },
-            cta: {
-                book: 'Book a free call',
-                bookMicrocopy: '30 minutes · no commitment · no surprise quotes',
-                tellProject: 'Tell me about your project',
-                project: 'View project',
-                liveSite: 'Visit live site',
-                caseStudy: 'See the project',
-                backHome: 'Back to home',
-                backProjects: 'Back to projects',
-                seePastWork: 'See past work',
-                previousProject: 'Previous project',
-                nextProject: 'Next project',
-            },
-        },
-        metadata: {
-            home: {
-                title: 'Francesco Cipolla - Digital Product Partner',
-                description:
-                    'Digital product partner and senior engineer with experience across web products, streaming platforms, design, and business systems.',
-            },
-            services: {
-                title: 'Websites and digitalization for businesses - Francesco Cipolla',
-                description:
-                    'Digital consulting, business websites, web applications, and automation for turning visits, workflows, and ideas into measurable outcomes.',
-            },
-            about: {
-                title: 'About - Francesco Cipolla',
-                description:
-                    'Digital product partner and senior engineer with experience across web products, streaming platforms, design, and business systems.',
-            },
-            projects: {
-                title: 'Projects - Francesco Cipolla',
-                description:
-                    'A selection of websites, applications, and digital platforms built for companies, studios, and production products.',
-            },
-            contacts: {
-                title: 'Contacts - Francesco Cipolla',
-                description:
-                    'Contact Francesco Cipolla or book a project discovery call for websites, applications, automation, and digital product work.',
-            },
-            blog: {
-                title: 'Blog - Francesco Cipolla',
-                description:
-                    'Notes on digital product, frontend engineering, design, and technology.',
-            },
-            books: {
-                title: 'Bookshelf - Francesco Cipolla',
-                description:
-                    "A few books I've read and enjoyed — business, design, personal growth, and fiction. My digital library, just for fun.",
-            },
-        },
-        books: {
-            title: 'Bookshelf',
-            lead: "A few books I've read and enjoyed: my digital library, just for fun. Pull one off the shelf.",
-            filterLabel: 'Filter by category',
-            filterAll: 'All',
-            close: 'Close details',
-            published: 'Published',
-            read: 'Read',
-            notes: 'Notes',
-            ratingLabel: 'Rating: {value} out of 5',
-            spineLabel: '{title} by {author}. Open details.',
-            categories: {
-                Business: 'Business',
-                'Cibo & vino': 'Food & wine',
-                Creatività: 'Creativity',
-                'Crescita personale': 'Personal growth',
-                Design: 'Design',
-                Economia: 'Economics',
-                Marketing: 'Marketing',
-                Narrativa: 'Fiction',
-                Scienza: 'Science',
-                Sport: 'Sport',
-                Viaggi: 'Travel',
-            },
-        },
+    metadata: {
         home: {
-            heroDisclaimer:
-                'I build digital products, websites, and business systems with Next.js, React, and a practical focus on outcomes.',
-            descriptions: [
-                [{ text: 'digital product partner' }],
-                [{ text: 'senior software engineer' }],
-                [{ text: 'design enthusiast' }],
-                [{ text: 'weekend baller' }],
-                [{ text: 'beginner kitesurfer' }],
-            ],
-            experiencesTitle: 'experiences',
-            experiencesQualifier: { label: 'corporate', placement: 'before' },
-            projectsTitle: 'freelance projects',
-            contactsTitle: 'contacts',
-            scheduleTitle: 'Book a project discovery call',
-            scrollDownAlt: 'Scroll down',
+            title: 'Francesco Cipolla - Digital Product Partner',
+            description:
+                'Digital product partner e ingegnere informatico: esperienza in prodotti web, streaming, design e sistemi digitali.',
         },
-        experiences: [
-            {
-                company: 'FIFA+',
-                logo: '/companies/fifa.webp',
-                position: 'Senior Front-end Engineer (Contractor)',
-                period: 'Jun 2023 - Present',
-                description:
-                    'Development and maintenance of a React SPA for sports streaming, including core features such as the player.',
-            },
-            {
-                company: 'Globant',
-                logo: '/companies/globant.webp',
-                position: 'Senior Web UI Developer',
-                period: 'Aug 2023 - Present',
-                description:
-                    "After Globant acquired CHILI Tech's business division, I continue contributing to the same streaming products.",
-            },
-            {
-                company: 'CHILI',
-                logo: '/companies/chili.webp',
-                position: 'Senior Front-end Engineer',
-                period: 'Nov 2021 - Dec 2024',
-                description:
-                    "Developed and maintained the company's website and Smart TV app across Samsung, LG, Sony, and other devices.",
-            },
-            {
-                company: 'Softlab S.p.A.',
-                logo: '/companies/softlab.webp',
-                position: 'Front-end Engineer',
-                period: 'Nov 2017 - Nov 2021',
-                description:
-                    'Built enterprise applications for a major insurance group and served as frontend vice-team leader.',
-            },
-        ],
         services: {
-            hero: {
-                eyebrow: 'Websites that bring clients',
-                title: 'You do not need a prettier website. You need one that brings clients.',
-                lead: 'If people find you online but do not quickly understand why they should choose you, every visit is a missed opportunity.',
-                secondary:
-                    'I design and build Websites, Apps, and AI Automations to help businesses get chosen, work better, and grow.',
-            },
-            proof: {
-                eyebrow: 'On real products and clients',
-                names: [
-                    'FIFA+',
-                    'CHILI',
-                    'Talent Garden',
-                    'Lombardini22',
-                    'Groupama',
-                    'Reclami Gas e Luce',
-                    'Dpulses',
-                    'DataHause',
-                ],
-                stats: [
-                    { value: '8+', label: 'years on production web products' },
-                    { value: '20+', label: 'web projects delivered' },
-                    { value: 'IT/EN', label: 'work with Italian and international clients' },
-                ],
-            },
-            profile: {
-                eyebrow: 'About me',
-                title: 'Digital partner for businesses that want to grow online.',
-                description:
-                    'I have spent 8+ years working on production web products, streaming platforms, business websites, and digital applications. I combine product thinking, interface care, and solid engineering to help companies turn ideas, workflows, and online presence into useful systems.',
-                imageAlt: 'Francesco Cipolla, senior engineer and digital product partner',
-                imageCaption: 'Francesco Cipolla / product, design, engineering',
-            },
-            serviceIntro: {
-                eyebrow: 'Solutions',
-                title: 'I start from the problem you recognise, not the technical solution.',
-                description:
-                    'I start from the business problem you can recognize immediately. Then we choose together the simplest digital piece to build value.',
-                ctaLabel: 'Talk through your case',
-                ctaHelperTitle: 'You don’t need to figure it out first.',
-                ctaHelper: 'We’ll work out where to start together on a call.',
-            },
-            buckets: [
-                {
-                    title: 'Growth',
-                    label: 'Convert better online',
-                    plainLabel: 'Get contacted more easily',
-                    situation:
-                        'Your online presence exists, but it does not clearly explain what you do, who it is for, and why people should contact you — every visit becomes a missed opportunity.',
-                    description:
-                        'Websites, landing pages, and digital journeys that explain the value, build trust, and make it easier to contact you.',
-                },
-                {
-                    title: 'Operations',
-                    label: 'Reduce manual work',
-                    plainLabel: 'Save operational time',
-                    situation:
-                        'Quotes, requests, data, and updates move through emails, spreadsheets, and messages instead of one reliable system — your team loses hours on work that could be automated.',
-                    description:
-                        'Internal apps, dashboards, integrations, and automation that connect tools and make processes easier to manage.',
-                },
-                {
-                    title: 'Product',
-                    label: 'Launch digital ideas',
-                    plainLabel: 'Launch a digital idea',
-                    situation:
-                        'You know a portal, dashboard, or digital experience would help the business, but you need someone to turn it into a real product people can actually use.',
-                    description:
-                        'MVPs, customer portals, and web apps built with clear UX, solid engineering, and room to evolve.',
-                },
-                {
-                    title: 'Support',
-                    label: 'Improve what you already have',
-                    plainLabel: 'Improve what you already have',
-                    situation:
-                        'You already have a site, an app, or a workflow, but it is slow, fragile, or no longer does what you need.',
-                    description:
-                        'Work on existing products: fixes, improvements, and new features without starting from scratch.',
-                },
-            ],
-            capabilities: {
-                eyebrow: 'What I build',
-                title: 'From your first landing page to the app your customers use.',
-                description:
-                    'We pick the technical solution around your problem — these are the building blocks I work with.',
-                items: [
-                    {
-                        key: 'websites',
-                        name: 'Websites & Landing pages',
-                        description: 'Fast, clear pages designed to turn visitors into contacts.',
-                    },
-                    {
-                        key: 'webApps',
-                        name: 'Web apps & Portals',
-                        description:
-                            'MVPs, customer portals, and private areas built to grow with you.',
-                    },
-                    {
-                        key: 'mobile',
-                        name: 'Cross-platform mobile apps',
-                        description: 'One app for iOS and Android: one codebase, lower cost.',
-                    },
-                    {
-                        key: 'ai',
-                        name: 'AI automations',
-                        description: 'Repetitive tasks automated where AI genuinely saves time.',
-                    },
-                ],
-            },
-            cases: {
-                eyebrow: 'Selected cases',
-                title: 'Public projects that show the method.',
-                description:
-                    'Each project starts from a different need: capturing leads, presenting a brand, publishing content, or making a technical offer clear.',
-                seeAllCta: 'See all projects',
-            },
-            process: {
-                eyebrow: 'Process',
-                title: 'A simple path from idea to production.',
-                steps: [
-                    {
-                        title: 'Discovery call',
-                        description:
-                            'I understand goals, constraints, audience, and the real problem before talking about a solution.',
-                    },
-                    {
-                        title: 'Solution map',
-                        description:
-                            'We define priorities, content, features, and the first useful release.',
-                    },
-                    {
-                        title: 'Iterative build',
-                        description:
-                            'I design and develop with frequent reviews, online previews, and clear technical decisions.',
-                    },
-                    {
-                        title: 'Launch and improve',
-                        description:
-                            'We go live, measure the important actions, and decide what to optimize next.',
-                    },
-                ],
-            },
-            faq: {
-                eyebrow: 'FAQ',
-                title: 'Before the discovery call.',
-                items: [
-                    {
-                        question: 'Do you only work on websites?',
-                        answer: 'No. A website is often the starting point, but I can also work on web apps, dashboards, private areas, integrations, and automation.',
-                    },
-                    {
-                        question: 'Can you help with UX and content structure?',
-                        answer: 'Yes. I can help clarify flows, content hierarchy, and interfaces. If specialist visual direction is needed, we define that inside the project.',
-                    },
-                    {
-                        question: 'How does the first call work?',
-                        answer: 'We discuss the problem, current situation, goals, and first useful outcome. From there I prepare a proposal aligned with scope and priorities.',
-                    },
-                    {
-                        question: 'Do we discuss budget on the call?',
-                        answer: 'Yes, but without forcing predefined solutions. The goal is to understand the scope and propose the leanest path to value.',
-                    },
-                    {
-                        question: 'Can you work with existing teams or agencies?',
-                        answer: 'Yes. I can integrate into existing processes or directly handle the agreed digital parts.',
-                    },
-                ],
-            },
-            booking: {
-                eyebrow: 'Next step',
-                title: 'Book a project discovery call and let’s see what digital can unlock for your business.',
-                description:
-                    '30 minutes, no commitment. Bring the problem: website, workflow, idea, or project in progress.',
-                callDuration: '30 minutes',
-                callIntro:
-                    'Every project starts with a conversation. Tell me where you are stuck: in 30 minutes we work out if and how I can help.',
-                formLinkLabel: 'Prefer to write? Go to the form →',
-            },
+            title: 'Siti web e digitalizzazione per aziende - Francesco Cipolla',
+            description:
+                'Consulenza digitale, siti web per aziende, applicazioni web e automazioni per trasformare visite, processi e idee in risultati concreti.',
         },
-        projectsPage: {
-            eyebrow: 'Selected portfolio',
-            intro: 'A selection of public projects: websites, platforms, MVPs, and digital systems built with attention to product, interface, and engineering.',
+        about: {
+            title: 'Chi sono - Francesco Cipolla',
+            description:
+                'Digital product partner e ingegnere informatico: esperienza in prodotti web, streaming, design e sistemi digitali.',
         },
-        projects: enProjects,
-        projectPage: {
-            overview: 'Overview',
-            highlights: 'Highlights',
-            problem: 'Problem',
-            solution: 'Solution',
-            outcome: 'Outcome',
-            gallery: 'Gallery',
-            galleryView: 'Format',
-            galleryDesktop: 'Desktop',
-            galleryMobile: 'Mobile',
-            galleryPrevious: 'Previous media',
-            galleryNext: 'Next media',
-            galleryImageAlt: '{title} gallery, image {index}',
+        projects: {
+            title: 'Progetti - Francesco Cipolla',
+            description:
+                'Una selezione di progetti web, applicazioni e piattaforme digitali realizzate per aziende, studi e prodotti in produzione.',
+        },
+        contacts: {
+            title: 'Contatti - Francesco Cipolla',
+            description:
+                'Contatta Francesco Cipolla o prenota una consulenza per parlare di siti, applicazioni, automazioni e progetti digitali.',
         },
         blog: {
-            title: 'Blog',
-            empty: 'No posts published yet.',
+            title: 'Blog - Francesco Cipolla',
+            description: 'Appunti su prodotto digitale, sviluppo web, design e tecnologia.',
         },
-        notFound: {
-            title: 'lost?',
-            label: '404',
-            description: "The page you were looking for doesn't exist, or it moved somewhere else.",
-        },
-        error: errorCopy.en,
-        consent: {
-            title: 'Privacy and analytics',
+        books: {
+            title: 'Libreria - Francesco Cipolla',
             description:
-                'I use Google Analytics only if you accept it, to understand which pages and actions are actually useful to visitors. You can reject it and use the site normally.',
-            accept: 'Accept analytics',
-            reject: 'Reject',
+                'Qualche libro che ho letto e che mi è piaciuto — business, design, crescita personale e narrativa. La mia libreria digitale, solo per divertimento.',
         },
-        contact: {
-            page: {
-                eyebrow: 'Pick your channel',
-                intro: "Email, LinkedIn, or GitHub for a direct line. Below you'll find the form and the calendar, if you'd rather start there.",
-                opensInNewTab: 'opens in a new tab',
-                booking: {
-                    eyebrow: '30 minutes',
-                    description:
-                        'Pick a slot and bring the problem as it is: nothing to prepare, no surprise quotes. In half an hour we work out if and how I can help.',
-                },
+    },
+    books: {
+        title: 'Libreria',
+        lead: 'Qualche libro che ho letto e che mi è piaciuto: la mia libreria digitale, solo per divertimento. Sfilane uno dallo scaffale.',
+        filterLabel: 'Filtra per categoria',
+        filterAll: 'Tutti',
+        close: 'Chiudi dettagli',
+        spineLabel: '{title} di {author}. Apri i dettagli.',
+        categories: {
+            Business: 'Business',
+            'Cibo & vino': 'Cibo & vino',
+            Creatività: 'Creatività',
+            'Crescita personale': 'Crescita personale',
+            Design: 'Design',
+            Economia: 'Economia',
+            Marketing: 'Marketing',
+            Narrativa: 'Narrativa',
+            Scienza: 'Scienza',
+            Sport: 'Sport',
+            Viaggi: 'Viaggi',
+        },
+    },
+    home: {
+        heroDisclaimer:
+            'Costruisco prodotti digitali, siti e sistemi web con Next.js, React e attenzione al risultato di business.',
+        descriptions: [
+            [{ text: 'digital product partner' }],
+            [{ text: 'ingegnere informatico' }],
+            [{ text: 'appassionato di design' }],
+            [{ text: 'cestista della domenica' }],
+            [{ text: 'kitesurfer principiante' }],
+        ],
+        experiencesTitle: 'esperienze',
+        experiencesQualifier: { label: 'in azienda', placement: 'after' as const },
+        projectsTitle: 'progetti freelance',
+        contactsTitle: 'contatti',
+        scheduleTitle: 'Prenota una consulenza',
+        scrollDownAlt: 'Scorri verso il basso',
+    },
+    experiences: [
+        {
+            company: 'FIFA+',
+            logo: '/companies/fifa.webp',
+            position: 'Senior Front-end Engineer (Contractor)',
+            period: 'Giu 2023 - Presente',
+            description:
+                'Sviluppo e manutenzione di una SPA React per lo streaming sportivo, incluse funzionalità core come il player.',
+        },
+        {
+            company: 'Globant',
+            logo: '/companies/globant.webp',
+            position: 'Senior Web UI Developer',
+            period: 'Ago 2023 - Presente',
+            description:
+                "Dopo l'acquisizione della divisione CHILI Tech da parte di Globant, continuo a contribuire agli stessi prodotti streaming.",
+        },
+        {
+            company: 'CHILI',
+            logo: '/companies/chili.webp',
+            position: 'Senior Front-end Engineer',
+            period: 'Nov 2021 - Dic 2024',
+            description:
+                'Sviluppo e manutenzione del sito web e della Smart TV app su dispositivi Samsung, LG, Sony e altri.',
+        },
+        {
+            company: 'Softlab S.p.A.',
+            logo: '/companies/softlab.webp',
+            position: 'Front-end Engineer',
+            period: 'Nov 2017 - Nov 2021',
+            description:
+                'Sviluppo di applicazioni enterprise per un grande gruppo assicurativo e ruolo di vice team leader frontend.',
+        },
+    ],
+    services: {
+        hero: {
+            eyebrow: 'Siti, web app e automazioni AI',
+            title: 'Non ti serve un sito più bello. Ti serve un sito che porti clienti.',
+            lead: 'Se ti trovano online ma non capiscono subito perché scegliere te, ogni visita è un’occasione persa.',
+            secondary:
+                'Aiuto aziende e professionisti a trasformare le visite in contatti, i processi manuali in ore risparmiate e le idee in prodotti.',
+        },
+        proof: {
+            eyebrow: 'Esperienza su prodotti e aziende reali',
+            names: [
+                'FIFA+',
+                'CHILI',
+                'Talent Garden',
+                'Lombardini22',
+                'Groupama',
+                'Reclami Gas e Luce',
+                'Dpulses',
+                'DataHause',
+            ],
+            stats: [
+                { value: '8+', label: 'anni su prodotti web in produzione' },
+                { value: '20+', label: 'progetti web consegnati' },
+                { value: 'IT/EN', label: 'lavoro con clienti italiani e internazionali' },
+            ],
+        },
+        profile: {
+            eyebrow: 'Chi sono',
+            title: 'Lavori con una persona sola, dall’idea alla messa online.',
+            description:
+                'Da oltre 8 anni costruisco prodotti web che vanno in produzione: piattaforme di streaming, siti aziendali e applicazioni su misura. Unisco visione di prodotto, cura dell’interfaccia e basi tecniche solide, così non devi coordinare più figure diverse.',
+            imageAlt: 'Francesco Cipolla, ingegnere informatico e digital product partner',
+            imageCaption: 'Francesco Cipolla / prodotto, design, sviluppo',
+        },
+        serviceIntro: {
+            eyebrow: 'Soluzioni',
+            title: 'Parto dal problema che riconosci, non dalla soluzione tecnica.',
+            description:
+                'Scegliamo insieme il pezzo digitale più piccolo e concreto che porta un risultato, senza costruire più del necessario.',
+            ctaLabel: 'Parliamo del tuo caso',
+            ctaHelperTitle: 'Non devi scegliere nulla.',
+            ctaHelper: 'In call capiamo insieme da dove partire.',
+        },
+        buckets: [
+            {
+                title: 'Growth',
+                label: 'Convertire meglio online',
+                plainLabel: 'Farti contattare meglio',
+                situation:
+                    "La tua presenza online c'è, ma non dice abbastanza in fretta cosa fai e perché scegliere te. Chi arriva, se ne va.",
+                description:
+                    'Siti web, landing page e percorsi digitali che spiegano il valore, aumentano la fiducia e rendono più facile contattarti.',
             },
-            form: {
-                eyebrow: 'Write to me',
-                title: 'Tell me how I can help.',
-                intro: 'The more context you give me, the more useful my reply: a couple of lines on the problem and the outcome you want is enough. I reply within 24 hours, always personally.',
-                fields: {
-                    name: 'Name',
-                    namePlaceholder: 'John Smith',
-                    email: 'Email',
-                    emailPlaceholder: 'john@company.com',
-                    company: 'Company (optional)',
-                    companyPlaceholder: 'Company name',
-                    topic: 'What do you need?',
-                    message: 'Message',
-                    messagePlaceholder: 'Briefly describe your project or challenge...',
-                    submit: 'Send message',
-                    submitting: 'Sending...',
+            {
+                title: 'Operations',
+                label: 'Ridurre lavoro manuale',
+                plainLabel: 'Risparmiare tempo operativo',
+                situation:
+                    'Preventivi, richieste e dati rimbalzano tra email, fogli e chat invece di stare in un unico posto. Il team perde ore in copia-incolla.',
+                description:
+                    'Applicazioni interne, dashboard, integrazioni e automazioni per collegare strumenti e rendere i processi più fluidi.',
+            },
+            {
+                title: 'Product',
+                label: 'Lanciare idee digitali',
+                plainLabel: "Lanciare un'idea digitale",
+                situation:
+                    'Hai in testa un portale, una dashboard o un nuovo strumento digitale, ma manca chi lo trasformi da idea a prodotto che la gente usa davvero.',
+                description:
+                    'MVP, portali clienti e web app costruiti con attenzione a UX, solidità tecnica e possibilità di evolvere nel tempo.',
+            },
+            {
+                title: 'Support',
+                label: 'Migliorare quello che hai',
+                plainLabel: 'Migliorare quello che hai già',
+                situation:
+                    "Hai già un sito, un'app o un flusso di lavoro, ma è lento, fragile o non fa più quello che ti serve.",
+                description:
+                    'Interventi su prodotti esistenti: correzioni, miglioramenti e nuove funzionalità senza ripartire da zero.',
+            },
+        ],
+        capabilities: {
+            eyebrow: 'Cosa costruisco',
+            title: "Dalla prima landing page all'app che usano i tuoi clienti.",
+            description:
+                'La soluzione tecnica la scegliamo sul tuo problema — questi sono i mattoni con cui la costruisco.',
+            items: [
+                {
+                    key: 'websites',
+                    name: 'Siti web & Landing page',
+                    description:
+                        'Pagine veloci e chiare, pensate per trasformare i visitatori in contatti.',
                 },
-                topics: {
-                    growth: 'Get found and contacted more online',
-                    operations: 'Reduce manual work in processes',
-                    product: 'Build a product or web app',
-                    support: 'Technical support on an existing project',
-                    other: 'Something else',
+                {
+                    key: 'webApps',
+                    name: 'Web app & Portali',
+                    description:
+                        'MVP, portali clienti e aree riservate su misura, pronti a crescere.',
                 },
-                success: {
-                    title: 'Message received.',
-                    body: "I'll get back to you within 24 hours. If it's urgent, use the calendar below to book a call straight away.",
+                {
+                    key: 'mobile',
+                    name: 'App mobile cross-platform',
+                    description: "Un'unica app per iOS e Android: un solo sviluppo, meno costi.",
                 },
-                errors: {
-                    required: 'This field is required',
-                    emailInvalid: 'Please enter a valid email address',
-                    messageTooShort: 'Message is too short (minimum 10 characters)',
-                    messageTooLong: 'Message is too long (maximum 5000 characters)',
-                    generic:
-                        'Something went wrong. Please try again or email me directly at info@francescocipolla.com.',
+                {
+                    key: 'ai',
+                    name: 'Automazioni AI',
+                    description:
+                        "Attività ripetitive automatizzate dove l'AI fa davvero risparmiare tempo.",
                 },
+            ],
+        },
+        cases: {
+            eyebrow: 'Casi selezionati',
+            title: 'Progetti reali che puoi visitare online.',
+            description:
+                'Ogni progetto parte da un bisogno diverso: acquisire contatti, raccontare un brand, pubblicare contenuti o rendere chiara una proposta tecnica.',
+            seeAllCta: 'Vedi tutti i progetti',
+        },
+        process: {
+            eyebrow: 'Metodo',
+            title: 'Un percorso semplice, dall’idea alla produzione.',
+            steps: [
+                {
+                    title: 'Consulenza iniziale',
+                    description:
+                        'Capisco obiettivi, vincoli, pubblico e qual è il problema vero da risolvere.',
+                },
+                {
+                    title: 'Mappa della soluzione',
+                    description:
+                        'Definiamo priorità, contenuti, funzionalità e primo rilascio utile.',
+                },
+                {
+                    title: 'Sviluppo iterativo',
+                    description:
+                        'Progetto e sviluppo con review frequenti, preview online e scelte tecniche spiegate in modo chiaro.',
+                },
+                {
+                    title: 'Lancio e miglioramento',
+                    description:
+                        'Portiamo online, misuriamo le azioni importanti e decidiamo cosa ottimizzare dopo.',
+                },
+            ],
+        },
+        faq: {
+            eyebrow: 'Domande frequenti',
+            title: 'Prima della consulenza.',
+            items: [
+                {
+                    question: 'Lavori solo su siti web?',
+                    answer: 'No. Il sito è spesso il punto di partenza, ma posso lavorare anche su applicazioni web, dashboard, aree riservate, integrazioni e automazioni.',
+                },
+                {
+                    question: 'Puoi seguire anche UX e struttura dei contenuti?',
+                    answer: 'Sì. Posso aiutarti a chiarire flussi, gerarchia dei contenuti e interfacce. Se serve una direzione visual specialistica, la definiamo nel progetto.',
+                },
+                {
+                    question: 'Come funziona la consulenza iniziale?',
+                    answer: 'Parliamo del problema, dello stato attuale, degli obiettivi e del primo risultato utile. Da lì preparo una proposta coerente con scope e priorità.',
+                },
+                {
+                    question: 'Parliamo di budget nella call?',
+                    answer: 'Sì, ma senza pacchetti preconfezionati. Prima capiamo il perimetro, poi ti propongo la strada più breve per ottenere un risultato.',
+                },
+                {
+                    question: 'Puoi lavorare con team o agenzie già esistenti?',
+                    answer: 'Sì. Posso integrarmi in processi esistenti oppure gestire direttamente le parti digitali concordate.',
+                },
+            ],
+        },
+        booking: {
+            eyebrow: 'Prossimo passo',
+            title: 'Parliamone: porta il tuo problema, esci con una direzione.',
+            description:
+                "Senza impegno e senza preventivi a sorpresa. Sito, processo o idea: dimmi dov'è il blocco.",
+            callDuration: '30 minuti',
+            callIntro:
+                'Una chiacchierata, non una presentazione di vendita. Se non sono la persona giusta, te lo dico subito.',
+            formLinkLabel: 'Preferisci scrivere? Vai al form →',
+        },
+    },
+    projectsPage: {
+        eyebrow: 'Portfolio selezionato',
+        intro: 'Una selezione di progetti pubblici: siti, piattaforme, MVP e sistemi digitali costruiti con attenzione a prodotto, interfaccia e sviluppo.',
+    },
+    projects: itProjects,
+    projectPage: {
+        overview: 'Panoramica',
+        highlights: 'Punti chiave',
+        problem: 'Problema',
+        solution: 'Soluzione',
+        outcome: 'Risultato',
+        gallery: 'Galleria',
+        galleryView: 'Formato',
+        galleryDesktop: 'Desktop',
+        galleryMobile: 'Mobile',
+        galleryPrevious: 'Media precedente',
+        galleryNext: 'Media successivo',
+        galleryImageAlt: 'Galleria di {title}, immagine {index}',
+    },
+    blog: {
+        title: 'Blog',
+        empty: 'Nessun articolo pubblicato.',
+    },
+    notFound: {
+        title: 'perso?',
+        label: '404',
+        description: 'La pagina che cercavi non esiste o è stata spostata altrove.',
+    },
+    error: errorCopy.it,
+    consent: {
+        title: 'Privacy e analytics',
+        description:
+            'Uso Google Analytics solo se accetti, per capire quali pagine e azioni aiutano davvero i visitatori. Puoi rifiutare e usare il sito normalmente.',
+        accept: 'Accetta analytics',
+        reject: 'Rifiuta',
+    },
+    contact: {
+        page: {
+            eyebrow: 'Scegli il canale',
+            intro: 'Email, LinkedIn o GitHub per un contatto diretto. Qui sotto trovi il form e il calendario, se preferisci partire da lì.',
+            opensInNewTab: 'si apre in una nuova scheda',
+            booking: {
+                eyebrow: '30 minuti',
+                description:
+                    "Scegli uno slot e portami il problema così com'è: niente da preparare, nessun preventivo a sorpresa. In mezz'ora capiamo se e come posso aiutarti.",
+            },
+        },
+        form: {
+            eyebrow: 'Scrivimi',
+            title: 'Dimmi come posso aiutarti.',
+            intro: 'Più contesto mi dai, più la risposta sarà utile: bastano due righe sul problema e sul risultato che vuoi ottenere. Rispondo entro 24 ore, sempre io.',
+            fields: {
+                name: 'Nome',
+                namePlaceholder: 'Mario Rossi',
+                email: 'Email',
+                emailPlaceholder: 'mario@azienda.it',
+                company: 'Azienda (opzionale)',
+                companyPlaceholder: 'Nome azienda',
+                topic: 'Di cosa hai bisogno?',
+                message: 'Messaggio',
+                messagePlaceholder: 'Descrivi brevemente il tuo progetto o problema...',
+                submit: 'Invia il messaggio',
+                submitting: 'Invio in corso...',
+            },
+            topics: {
+                growth: 'Farmi trovare e contattare meglio online',
+                operations: 'Ridurre il lavoro manuale nei processi',
+                product: 'Costruire un prodotto o app web',
+                support: 'Supporto tecnico su un progetto esistente',
+                other: 'Altro',
+            },
+            success: {
+                title: 'Messaggio ricevuto.',
+                body: 'Ti rispondo entro 24 ore. Se il progetto è urgente, usa il calendario qui sotto per fissare subito una call.',
+            },
+            errors: {
+                required: 'Campo obbligatorio',
+                emailInvalid: 'Inserisci un indirizzo email valido',
+                messageTooShort: 'Il messaggio è troppo corto (minimo 10 caratteri)',
+                messageTooLong: 'Il messaggio è troppo lungo (massimo 5000 caratteri)',
+                generic:
+                    'Si è verificato un errore. Riprova o scrivimi direttamente a info@francescocipolla.com.',
             },
         },
     },
 }
+
+/**
+ * The content contract, derived from the Italian literal rather than hand-written.
+ *
+ * `it` is the schema: adding a string there makes `en` fail to compile until it
+ * is translated, which a separately-maintained type could never enforce. Only
+ * the handful of fields whose inferred type is too narrow (or too wide) are
+ * restated below — everything else follows the literal.
+ */
+type DerivedContent = typeof it
+
+export type SiteContent = Omit<DerivedContent, 'metadata' | 'books' | 'home'> & {
+    /** Inference would collapse these to their literal shape and lose `Metadata`. */
+    metadata: Record<keyof DerivedContent['metadata'], Metadata>
+    books: Omit<DerivedContent['books'], 'categories'> & {
+        /**
+         * Display labels for the categories in `books.json`, keyed by the raw
+         * (Italian) value stored there — the data keeps one key per category so
+         * filtering never depends on the locale.
+         */
+        categories: Record<string, string>
+    }
+    home: Omit<DerivedContent['home'], 'descriptions' | 'experiencesQualifier'> & {
+        /** Segments are a mixed array — only some carry a `color`. */
+        descriptions: { text: string; color?: string }[][]
+        /**
+         * Qualifier anchored to a corner of the giant experiences heading, to
+         * distinguish employed work from the freelance section below.
+         * `placement` follows the language's adjective order: English puts the
+         * adjective before the noun (rendered top-left), Italian after it
+         * (bottom-right).
+         */
+        experiencesQualifier: { label: string; placement: 'before' | 'after' }
+    }
+}
+
+const en: SiteContent = {
+    common: {
+        skipToContent: 'Skip to content',
+        nav: {
+            about: 'About',
+            experiences: 'Experience',
+            projects: 'Projects',
+            services: 'Services',
+            books: 'Bookshelf',
+            contacts: 'Contacts',
+            bookCall: 'Free call',
+            resume: 'Resume',
+            openMenu: 'Open menu',
+            closeMenu: 'Close menu',
+            switchLanguage: 'Switch language',
+        },
+        footer: {
+            tagline:
+                'I build websites and digital products that help businesses get chosen, work better, and grow.',
+            links: {
+                about: 'About',
+                experiences: 'Experience',
+                projects: 'Projects',
+                blog: 'Blog',
+                books: 'Bookshelf',
+                contacts: 'Contacts',
+                services: 'Services',
+            },
+            socials: {
+                linkedin: 'LinkedIn',
+                github: 'GitHub',
+                email: 'Email',
+            },
+            privacySettings: 'Privacy settings',
+            rights: '',
+        },
+        cta: {
+            book: 'Book a free call',
+            bookMicrocopy: '30 minutes · no commitment · no surprise quotes',
+            tellProject: 'Tell me about your project',
+            project: 'View project',
+            liveSite: 'Visit live site',
+            caseStudy: 'See the project',
+            backHome: 'Back to home',
+            backProjects: 'Back to projects',
+            seePastWork: 'See past work',
+            previousProject: 'Previous project',
+            nextProject: 'Next project',
+        },
+    },
+    metadata: {
+        home: {
+            title: 'Francesco Cipolla - Digital Product Partner',
+            description:
+                'Digital product partner and senior engineer with experience across web products, streaming platforms, design, and business systems.',
+        },
+        services: {
+            title: 'Websites and digitalization for businesses - Francesco Cipolla',
+            description:
+                'Digital consulting, business websites, web applications, and automation for turning visits, workflows, and ideas into measurable outcomes.',
+        },
+        about: {
+            title: 'About - Francesco Cipolla',
+            description:
+                'Digital product partner and senior engineer with experience across web products, streaming platforms, design, and business systems.',
+        },
+        projects: {
+            title: 'Projects - Francesco Cipolla',
+            description:
+                'A selection of websites, applications, and digital platforms built for companies, studios, and production products.',
+        },
+        contacts: {
+            title: 'Contacts - Francesco Cipolla',
+            description:
+                'Contact Francesco Cipolla or book a project discovery call for websites, applications, automation, and digital product work.',
+        },
+        blog: {
+            title: 'Blog - Francesco Cipolla',
+            description: 'Notes on digital product, frontend engineering, design, and technology.',
+        },
+        books: {
+            title: 'Bookshelf - Francesco Cipolla',
+            description:
+                "A few books I've read and enjoyed — business, design, personal growth, and fiction. My digital library, just for fun.",
+        },
+    },
+    books: {
+        title: 'Bookshelf',
+        lead: "A few books I've read and enjoyed: my digital library, just for fun. Pull one off the shelf.",
+        filterLabel: 'Filter by category',
+        filterAll: 'All',
+        close: 'Close details',
+        spineLabel: '{title} by {author}. Open details.',
+        categories: {
+            Business: 'Business',
+            'Cibo & vino': 'Food & wine',
+            Creatività: 'Creativity',
+            'Crescita personale': 'Personal growth',
+            Design: 'Design',
+            Economia: 'Economics',
+            Marketing: 'Marketing',
+            Narrativa: 'Fiction',
+            Scienza: 'Science',
+            Sport: 'Sport',
+            Viaggi: 'Travel',
+        },
+    },
+    home: {
+        heroDisclaimer:
+            'I build digital products, websites, and business systems with Next.js, React, and a practical focus on outcomes.',
+        descriptions: [
+            [{ text: 'digital product partner' }],
+            [{ text: 'senior software engineer' }],
+            [{ text: 'design enthusiast' }],
+            [{ text: 'weekend baller' }],
+            [{ text: 'beginner kitesurfer' }],
+        ],
+        experiencesTitle: 'experiences',
+        experiencesQualifier: { label: 'corporate', placement: 'before' },
+        projectsTitle: 'freelance projects',
+        contactsTitle: 'contacts',
+        scheduleTitle: 'Book a project discovery call',
+        scrollDownAlt: 'Scroll down',
+    },
+    experiences: [
+        {
+            company: 'FIFA+',
+            logo: '/companies/fifa.webp',
+            position: 'Senior Front-end Engineer (Contractor)',
+            period: 'Jun 2023 - Present',
+            description:
+                'Development and maintenance of a React SPA for sports streaming, including core features such as the player.',
+        },
+        {
+            company: 'Globant',
+            logo: '/companies/globant.webp',
+            position: 'Senior Web UI Developer',
+            period: 'Aug 2023 - Present',
+            description:
+                "After Globant acquired CHILI Tech's business division, I continue contributing to the same streaming products.",
+        },
+        {
+            company: 'CHILI',
+            logo: '/companies/chili.webp',
+            position: 'Senior Front-end Engineer',
+            period: 'Nov 2021 - Dec 2024',
+            description:
+                "Developed and maintained the company's website and Smart TV app across Samsung, LG, Sony, and other devices.",
+        },
+        {
+            company: 'Softlab S.p.A.',
+            logo: '/companies/softlab.webp',
+            position: 'Front-end Engineer',
+            period: 'Nov 2017 - Nov 2021',
+            description:
+                'Built enterprise applications for a major insurance group and served as frontend vice-team leader.',
+        },
+    ],
+    services: {
+        hero: {
+            eyebrow: 'Websites that bring clients',
+            title: 'You do not need a prettier website. You need one that brings clients.',
+            lead: 'If people find you online but do not quickly understand why they should choose you, every visit is a missed opportunity.',
+            secondary:
+                'I design and build Websites, Apps, and AI Automations to help businesses get chosen, work better, and grow.',
+        },
+        proof: {
+            eyebrow: 'On real products and clients',
+            names: [
+                'FIFA+',
+                'CHILI',
+                'Talent Garden',
+                'Lombardini22',
+                'Groupama',
+                'Reclami Gas e Luce',
+                'Dpulses',
+                'DataHause',
+            ],
+            stats: [
+                { value: '8+', label: 'years on production web products' },
+                { value: '20+', label: 'web projects delivered' },
+                { value: 'IT/EN', label: 'work with Italian and international clients' },
+            ],
+        },
+        profile: {
+            eyebrow: 'About me',
+            title: 'Digital partner for businesses that want to grow online.',
+            description:
+                'I have spent 8+ years working on production web products, streaming platforms, business websites, and digital applications. I combine product thinking, interface care, and solid engineering to help companies turn ideas, workflows, and online presence into useful systems.',
+            imageAlt: 'Francesco Cipolla, senior engineer and digital product partner',
+            imageCaption: 'Francesco Cipolla / product, design, engineering',
+        },
+        serviceIntro: {
+            eyebrow: 'Solutions',
+            title: 'I start from the problem you recognise, not the technical solution.',
+            description:
+                'I start from the business problem you can recognize immediately. Then we choose together the simplest digital piece to build value.',
+            ctaLabel: 'Talk through your case',
+            ctaHelperTitle: 'You don’t need to figure it out first.',
+            ctaHelper: 'We’ll work out where to start together on a call.',
+        },
+        buckets: [
+            {
+                title: 'Growth',
+                label: 'Convert better online',
+                plainLabel: 'Get contacted more easily',
+                situation:
+                    'Your online presence exists, but it does not clearly explain what you do, who it is for, and why people should contact you — every visit becomes a missed opportunity.',
+                description:
+                    'Websites, landing pages, and digital journeys that explain the value, build trust, and make it easier to contact you.',
+            },
+            {
+                title: 'Operations',
+                label: 'Reduce manual work',
+                plainLabel: 'Save operational time',
+                situation:
+                    'Quotes, requests, data, and updates move through emails, spreadsheets, and messages instead of one reliable system — your team loses hours on work that could be automated.',
+                description:
+                    'Internal apps, dashboards, integrations, and automation that connect tools and make processes easier to manage.',
+            },
+            {
+                title: 'Product',
+                label: 'Launch digital ideas',
+                plainLabel: 'Launch a digital idea',
+                situation:
+                    'You know a portal, dashboard, or digital experience would help the business, but you need someone to turn it into a real product people can actually use.',
+                description:
+                    'MVPs, customer portals, and web apps built with clear UX, solid engineering, and room to evolve.',
+            },
+            {
+                title: 'Support',
+                label: 'Improve what you already have',
+                plainLabel: 'Improve what you already have',
+                situation:
+                    'You already have a site, an app, or a workflow, but it is slow, fragile, or no longer does what you need.',
+                description:
+                    'Work on existing products: fixes, improvements, and new features without starting from scratch.',
+            },
+        ],
+        capabilities: {
+            eyebrow: 'What I build',
+            title: 'From your first landing page to the app your customers use.',
+            description:
+                'We pick the technical solution around your problem — these are the building blocks I work with.',
+            items: [
+                {
+                    key: 'websites',
+                    name: 'Websites & Landing pages',
+                    description: 'Fast, clear pages designed to turn visitors into contacts.',
+                },
+                {
+                    key: 'webApps',
+                    name: 'Web apps & Portals',
+                    description:
+                        'MVPs, customer portals, and private areas built to grow with you.',
+                },
+                {
+                    key: 'mobile',
+                    name: 'Cross-platform mobile apps',
+                    description: 'One app for iOS and Android: one codebase, lower cost.',
+                },
+                {
+                    key: 'ai',
+                    name: 'AI automations',
+                    description: 'Repetitive tasks automated where AI genuinely saves time.',
+                },
+            ],
+        },
+        cases: {
+            eyebrow: 'Selected cases',
+            title: 'Public projects that show the method.',
+            description:
+                'Each project starts from a different need: capturing leads, presenting a brand, publishing content, or making a technical offer clear.',
+            seeAllCta: 'See all projects',
+        },
+        process: {
+            eyebrow: 'Process',
+            title: 'A simple path from idea to production.',
+            steps: [
+                {
+                    title: 'Discovery call',
+                    description:
+                        'I understand goals, constraints, audience, and the real problem before talking about a solution.',
+                },
+                {
+                    title: 'Solution map',
+                    description:
+                        'We define priorities, content, features, and the first useful release.',
+                },
+                {
+                    title: 'Iterative build',
+                    description:
+                        'I design and develop with frequent reviews, online previews, and clear technical decisions.',
+                },
+                {
+                    title: 'Launch and improve',
+                    description:
+                        'We go live, measure the important actions, and decide what to optimize next.',
+                },
+            ],
+        },
+        faq: {
+            eyebrow: 'FAQ',
+            title: 'Before the discovery call.',
+            items: [
+                {
+                    question: 'Do you only work on websites?',
+                    answer: 'No. A website is often the starting point, but I can also work on web apps, dashboards, private areas, integrations, and automation.',
+                },
+                {
+                    question: 'Can you help with UX and content structure?',
+                    answer: 'Yes. I can help clarify flows, content hierarchy, and interfaces. If specialist visual direction is needed, we define that inside the project.',
+                },
+                {
+                    question: 'How does the first call work?',
+                    answer: 'We discuss the problem, current situation, goals, and first useful outcome. From there I prepare a proposal aligned with scope and priorities.',
+                },
+                {
+                    question: 'Do we discuss budget on the call?',
+                    answer: 'Yes, but without forcing predefined solutions. The goal is to understand the scope and propose the leanest path to value.',
+                },
+                {
+                    question: 'Can you work with existing teams or agencies?',
+                    answer: 'Yes. I can integrate into existing processes or directly handle the agreed digital parts.',
+                },
+            ],
+        },
+        booking: {
+            eyebrow: 'Next step',
+            title: 'Book a project discovery call and let’s see what digital can unlock for your business.',
+            description:
+                '30 minutes, no commitment. Bring the problem: website, workflow, idea, or project in progress.',
+            callDuration: '30 minutes',
+            callIntro:
+                'Every project starts with a conversation. Tell me where you are stuck: in 30 minutes we work out if and how I can help.',
+            formLinkLabel: 'Prefer to write? Go to the form →',
+        },
+    },
+    projectsPage: {
+        eyebrow: 'Selected portfolio',
+        intro: 'A selection of public projects: websites, platforms, MVPs, and digital systems built with attention to product, interface, and engineering.',
+    },
+    projects: enProjects,
+    projectPage: {
+        overview: 'Overview',
+        highlights: 'Highlights',
+        problem: 'Problem',
+        solution: 'Solution',
+        outcome: 'Outcome',
+        gallery: 'Gallery',
+        galleryView: 'Format',
+        galleryDesktop: 'Desktop',
+        galleryMobile: 'Mobile',
+        galleryPrevious: 'Previous media',
+        galleryNext: 'Next media',
+        galleryImageAlt: '{title} gallery, image {index}',
+    },
+    blog: {
+        title: 'Blog',
+        empty: 'No posts published yet.',
+    },
+    notFound: {
+        title: 'lost?',
+        label: '404',
+        description: "The page you were looking for doesn't exist, or it moved somewhere else.",
+    },
+    error: errorCopy.en,
+    consent: {
+        title: 'Privacy and analytics',
+        description:
+            'I use Google Analytics only if you accept it, to understand which pages and actions are actually useful to visitors. You can reject it and use the site normally.',
+        accept: 'Accept analytics',
+        reject: 'Reject',
+    },
+    contact: {
+        page: {
+            eyebrow: 'Pick your channel',
+            intro: "Email, LinkedIn, or GitHub for a direct line. Below you'll find the form and the calendar, if you'd rather start there.",
+            opensInNewTab: 'opens in a new tab',
+            booking: {
+                eyebrow: '30 minutes',
+                description:
+                    'Pick a slot and bring the problem as it is: nothing to prepare, no surprise quotes. In half an hour we work out if and how I can help.',
+            },
+        },
+        form: {
+            eyebrow: 'Write to me',
+            title: 'Tell me how I can help.',
+            intro: 'The more context you give me, the more useful my reply: a couple of lines on the problem and the outcome you want is enough. I reply within 24 hours, always personally.',
+            fields: {
+                name: 'Name',
+                namePlaceholder: 'John Smith',
+                email: 'Email',
+                emailPlaceholder: 'john@company.com',
+                company: 'Company (optional)',
+                companyPlaceholder: 'Company name',
+                topic: 'What do you need?',
+                message: 'Message',
+                messagePlaceholder: 'Briefly describe your project or challenge...',
+                submit: 'Send message',
+                submitting: 'Sending...',
+            },
+            topics: {
+                growth: 'Get found and contacted more online',
+                operations: 'Reduce manual work in processes',
+                product: 'Build a product or web app',
+                support: 'Technical support on an existing project',
+                other: 'Something else',
+            },
+            success: {
+                title: 'Message received.',
+                body: "I'll get back to you within 24 hours. If it's urgent, use the calendar below to book a call straight away.",
+            },
+            errors: {
+                required: 'This field is required',
+                emailInvalid: 'Please enter a valid email address',
+                messageTooShort: 'Message is too short (minimum 10 characters)',
+                messageTooLong: 'Message is too long (maximum 5000 characters)',
+                generic:
+                    'Something went wrong. Please try again or email me directly at info@francescocipolla.com.',
+            },
+        },
+    },
+}
+
+export const siteContent: Record<Locale, SiteContent> = { it, en }
 
 export function getLocalizedProjects(locale: Locale) {
     return siteContent[locale].projects

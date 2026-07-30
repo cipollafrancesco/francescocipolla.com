@@ -7,6 +7,8 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 
 import type { LocalizedProject } from '@/content/site'
 import type { Locale } from '@/i18n/config'
+import { Button } from '@/components/ui/Button'
+import { cn } from '@/lib/utils'
 import { ArrowLeft, ArrowRight, ArrowUpRight } from 'lucide-react'
 import Link from 'next/link'
 import 'swiper/css'
@@ -23,7 +25,6 @@ export default function StackedProjects({
     lang: Locale
     labels: {
         caseStudy: string
-        liveSite: string
         previous: string
         next: string
     }
@@ -42,7 +43,9 @@ export default function StackedProjects({
     }
 
     return (
-        <div className={`flex flex-col items-center justify-center gap-5 lg:h-[80vh] ${className}`}>
+        <div
+            className={cn('flex flex-col items-center justify-center gap-5 lg:h-[80vh]', className)}
+        >
             <Swiper
                 onSwiper={(swiper) => {
                     swiperRef.current = swiper
@@ -106,26 +109,26 @@ export default function StackedProjects({
                 ))}
             </Swiper>
             <div className="flex items-center gap-4">
-                <button
-                    type="button"
+                <Button
+                    variant="secondary"
+                    shape="iconRound"
                     onClick={goPrevious}
-                    className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-black bg-white text-black transition-[color,background-color,border-color,transform] hover:bg-black hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black active:scale-[0.96]"
                     aria-label={labels.previous}
                 >
                     <ArrowLeft className="h-4 w-4" />
-                </button>
+                </Button>
                 <p className="min-w-16 text-center text-xs font-semibold uppercase tabular-nums tracking-[0.22em] text-gray-500">
                     {String(activeIndex + 1).padStart(2, '0')} /{' '}
                     {String(totalProjects).padStart(2, '0')}
                 </p>
-                <button
-                    type="button"
+                <Button
+                    variant="secondary"
+                    shape="iconRound"
                     onClick={goNext}
-                    className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-black bg-white text-black transition-[color,background-color,border-color,transform] hover:bg-black hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black active:scale-[0.96]"
                     aria-label={labels.next}
                 >
                     <ArrowRight className="h-4 w-4" />
-                </button>
+                </Button>
             </div>
         </div>
     )

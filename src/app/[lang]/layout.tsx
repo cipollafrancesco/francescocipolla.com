@@ -5,13 +5,33 @@ import { ConsentBanner } from '@/components/ConsentBanner'
 import { ConsentSettingsButton } from '@/components/ConsentSettingsButton'
 import { CurrentYear } from '@/components/CurrentYear'
 import { HtmlLangSync } from '@/components/HtmlLangSync'
-import { siteLinks } from '@/content/site'
+import { localizedPath, siteLinks } from '@/content/site'
 import { getI18nContent } from '@/i18n/server'
 import { isLocale, locales, type Locale } from '@/i18n/config'
 
 export function generateStaticParams() {
     return locales.map((lang) => ({ lang }))
 }
+
+const footerLinkClass = 'underline-offset-2 hover:underline'
+
+/** `label` keys into `copy.footer.links`, so a new entry needs the copy in both
+ *  locales before it will typecheck. */
+const footerLinks = [
+    { path: '/#about-me', label: 'about' },
+    { path: '/#experiences', label: 'experiences' },
+    { path: '/projects', label: 'projects' },
+    { path: '/books', label: 'books' },
+    { path: '/services', label: 'services' },
+    { path: '/blog', label: 'blog' },
+    { path: '/contacts', label: 'contacts' },
+] as const
+
+const footerSocials = [
+    { key: 'linkedin', href: (l: typeof siteLinks) => l.linkedin, external: true },
+    { key: 'github', href: (l: typeof siteLinks) => l.github, external: true },
+    { key: 'email', href: (l: typeof siteLinks) => `mailto:${l.email}`, external: false },
+] as const
 
 export default async function LocaleLayout({
     children,
@@ -60,7 +80,7 @@ function Footer({
             <div className="mx-auto max-w-screen-2xl px-8">
                 <div className="flex flex-col items-start justify-between gap-8 md:flex-row md:items-center">
                     <div>
-                        <Link href={`/${lang}`} className="text-2xl font-extrabold">
+                        <Link href={localizedPath(lang)} className="text-2xl font-extrabold">
                             cipo.
                         </Link>
                         <p className="mt-2 max-w-sm text-sm leading-6 text-gray-500">
@@ -68,72 +88,30 @@ function Footer({
                         </p>
                     </div>
                     <nav className="flex flex-wrap gap-x-8 gap-y-2 text-sm lowercase">
-                        <Link
-                            href={`/${lang}/#about-me`}
-                            className="underline-offset-2 hover:underline"
-                        >
-                            {copy.footer.links.about}
-                        </Link>
-                        <Link
-                            href={`/${lang}/#experiences`}
-                            className="underline-offset-2 hover:underline"
-                        >
-                            {copy.footer.links.experiences}
-                        </Link>
-                        <Link
-                            href={`/${lang}/projects`}
-                            className="underline-offset-2 hover:underline"
-                        >
-                            {copy.footer.links.projects}
-                        </Link>
-                        <Link
-                            href={`/${lang}/books`}
-                            className="underline-offset-2 hover:underline"
-                        >
-                            {copy.footer.links.books}
-                        </Link>
-                        <Link
-                            href={`/${lang}/services`}
-                            className="underline-offset-2 hover:underline"
-                        >
-                            {copy.footer.links.services}
-                        </Link>
-                        <Link href={`/${lang}/blog`} className="underline-offset-2 hover:underline">
-                            {copy.footer.links.blog}
-                        </Link>
-                        <Link
-                            href={`/${lang}/contacts`}
-                            className="underline-offset-2 hover:underline"
-                        >
-                            {copy.footer.links.contacts}
-                        </Link>
+                        {footerLinks.map(({ path, label }) => (
+                            <Link
+                                key={path}
+                                href={localizedPath(lang, path)}
+                                className={footerLinkClass}
+                            >
+                                {copy.footer.links[label]}
+                            </Link>
+                        ))}
                     </nav>
                     <div className="flex flex-wrap gap-6 text-sm">
-                        <a
-                            href={siteLinks.linkedin}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="underline-offset-2 hover:underline"
-                            aria-label={copy.footer.socials.linkedin}
-                        >
-                            {copy.footer.socials.linkedin}
-                        </a>
-                        <a
-                            href={siteLinks.github}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="underline-offset-2 hover:underline"
-                            aria-label={copy.footer.socials.github}
-                        >
-                            {copy.footer.socials.github}
-                        </a>
-                        <a
-                            href={`mailto:${siteLinks.email}`}
-                            className="underline-offset-2 hover:underline"
-                            aria-label={copy.footer.socials.email}
-                        >
-                            {copy.footer.socials.email}
-                        </a>
+                        {footerSocials.map(({ href, key, external }) => (
+                            <a
+                                key={key}
+                                href={href(siteLinks)}
+                                {...(external
+                                    ? { target: '_blank', rel: 'noopener noreferrer' }
+                                    : {})}
+                                className={footerLinkClass}
+                                aria-label={copy.footer.socials[key]}
+                            >
+                                {copy.footer.socials[key]}
+                            </a>
+                        ))}
                         <ConsentSettingsButton label={copy.footer.privacySettings} />
                     </div>
                 </div>

@@ -13,13 +13,7 @@ import type { SiteContent } from '@/content/site'
 import { motionPresets } from '@/lib/motion'
 
 export default function HomeClient({ lang, content }: { lang: Locale; content: SiteContent }) {
-    const mainContainerRef = useRef<HTMLDivElement>(null)
     const heroSectionRef = useRef<HTMLElement>(null)
-    const descriptionsSectionRef = useRef<HTMLElement>(null)
-    const descriptionsRef = useRef<(HTMLParagraphElement | null)[]>([])
-    const experienceRef = useRef<HTMLDivElement>(null)
-    const freelanceProjectsRef = useRef<HTMLDivElement>(null)
-    const contactsRef = useRef<HTMLDivElement>(null)
 
     const prefersReducedMotion = useReducedMotion()
 
@@ -38,7 +32,7 @@ export default function HomeClient({ lang, content }: { lang: Locale; content: S
     const { initFade, initFadeUp, dur } = motionPresets(prefersReducedMotion)
 
     return (
-        <div ref={mainContainerRef} id="main-content" className="min-h-[300vh] bg-white text-black">
+        <div id="main-content" className="min-h-[300vh] bg-white text-black">
             <main className="relative mb-16 lg:mb-32">
                 <motion.div
                     style={{ opacity: scrollIndicatorOpacity }}
@@ -73,7 +67,6 @@ export default function HomeClient({ lang, content }: { lang: Locale; content: S
 
                 <motion.section
                     id="about-me"
-                    ref={descriptionsSectionRef}
                     style={{ opacity: contentOpacity }}
                     className="mt-[150vh] px-4 md:px-8"
                 >
@@ -82,11 +75,6 @@ export default function HomeClient({ lang, content }: { lang: Locale; content: S
                             {content.home.descriptions.map((segments, index) => (
                                 <motion.p
                                     key={index}
-                                    ref={(el) => {
-                                        if (descriptionsRef.current) {
-                                            descriptionsRef.current[index] = el
-                                        }
-                                    }}
                                     initial={initFadeUp}
                                     whileInView={{ opacity: 1, y: 0 }}
                                     viewport={{ once: true, margin: '-100px' }}
@@ -116,7 +104,6 @@ export default function HomeClient({ lang, content }: { lang: Locale; content: S
                         transition={dur(0.8)}
                     >
                         <Experiences
-                            ref={experienceRef}
                             title={content.home.experiencesTitle}
                             qualifier={content.home.experiencesQualifier}
                             experiences={content.experiences}
@@ -132,13 +119,11 @@ export default function HomeClient({ lang, content }: { lang: Locale; content: S
                         transition={dur(0.8)}
                     >
                         <FreelanceProjects
-                            ref={freelanceProjectsRef}
                             title={content.home.projectsTitle}
                             projects={content.projects}
                             lang={lang}
                             labels={{
                                 caseStudy: content.common.cta.caseStudy,
-                                liveSite: content.common.cta.liveSite,
                                 previous: content.common.cta.previousProject,
                                 next: content.common.cta.nextProject,
                             }}
@@ -154,7 +139,6 @@ export default function HomeClient({ lang, content }: { lang: Locale; content: S
                         transition={dur(0.8)}
                     >
                         <Contacts
-                            ref={contactsRef}
                             title={content.home.contactsTitle}
                             scheduleTitle={content.home.scheduleTitle}
                         />

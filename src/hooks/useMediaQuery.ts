@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useReducedMotion } from 'framer-motion'
 
 /**
  * Subscribe to a CSS media query. SSR-safe: returns `false` until mounted, so
@@ -20,4 +21,20 @@ export function useMediaQuery(query: string): boolean {
     }, [query])
 
     return matches
+}
+
+/**
+ * Whether pointer-driven hover effects (tilt, parallax inspect) should run at
+ * all: a fine pointer that can hover, and motion not suppressed.
+ *
+ * Both conditions matter for more than taste — without the reduced-motion half,
+ * `ProfileTiltCard`'s wrapper still renders `rotateX`/`rotateY` as a flat,
+ * unforeshortened distortion, so a reduced-motion user gets an instant snap
+ * between odd-looking shapes rather than no motion at all.
+ */
+export function usePointerEffects(): boolean {
+    const hasFinePointer = useMediaQuery('(hover: hover) and (pointer: fine)')
+    const prefersReducedMotion = useReducedMotion()
+
+    return hasFinePointer && !prefersReducedMotion
 }

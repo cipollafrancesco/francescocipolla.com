@@ -1,13 +1,13 @@
 import { Badge } from '@/components/ui/Badge'
+import { ButtonLink } from '@/components/ui/Button'
 import { ProjectGalleryCarousel } from '@/components/ProjectGalleryCarousel'
-import { getLocalizedProject, getProjectSlugs } from '@/content/site'
-import { isLocale, locales } from '@/i18n/config'
+import { getLocalizedProject, getProjectSlugs, localizedPath } from '@/content/site'
+import { locales } from '@/i18n/config'
 import { getI18nContent } from '@/i18n/server'
 import { withLocaleMetadata } from '@/lib/metadata'
 import { getProjectGalleryMedia } from '@/lib/project-gallery'
 import { ArrowLeft, ArrowUpRight } from 'lucide-react'
 import type { Metadata } from 'next'
-import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 interface ProjectPageProps {
@@ -20,8 +20,6 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: ProjectPageProps): Promise<Metadata> {
     const { lang: langParam, slug } = await params
-
-    if (!isLocale(langParam)) return {}
 
     const { lang } = await getI18nContent(langParam)
     const project = getLocalizedProject(lang, slug)
@@ -43,10 +41,6 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
     const { lang: langParam, slug } = await params
-
-    if (!isLocale(langParam)) {
-        notFound()
-    }
 
     const { lang, content } = await getI18nContent(langParam)
     const project = getLocalizedProject(lang, slug)
@@ -71,13 +65,15 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     return (
         <div className="min-h-screen bg-white text-black md:mt-[88px]">
             <main id="main-content" className="mx-auto max-w-5xl px-6 pb-16 pt-8 md:py-16">
-                <Link
-                    href={`/${lang}/projects`}
-                    className="mb-12 inline-flex items-center gap-2 rounded-full border border-black px-4 py-2 text-sm font-semibold text-black transition-colors hover:bg-black hover:text-white"
+                <ButtonLink
+                    href={localizedPath(lang, '/projects')}
+                    variant="secondary"
+                    static
+                    className="mb-12 min-h-0 rounded-full bg-transparent px-4 py-2 transition-colors"
                 >
                     <ArrowLeft className="h-4 w-4" />
                     {content.common.cta.backProjects}
-                </Link>
+                </ButtonLink>
 
                 <div className="mb-12">
                     <div className="mb-4 text-xs font-semibold uppercase tracking-[0.22em] text-gray-500">
@@ -146,14 +142,16 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                             ))}
                         </ul>
                         {project.url && (
-                            <a
+                            <ButtonLink
                                 href={project.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="mt-8 inline-flex items-center gap-2 rounded-md border border-black px-4 py-2 text-sm font-semibold text-black transition-colors hover:bg-black hover:text-white"
+                                variant="secondary"
+                                static
+                                className="mt-8 min-h-0 bg-transparent px-4 py-2 transition-colors"
                             >
                                 {content.common.cta.liveSite} <ArrowUpRight className="h-4 w-4" />
-                            </a>
+                            </ButtonLink>
                         )}
                     </aside>
                 </div>

@@ -4,6 +4,7 @@ import { useActionState, useEffect, useRef } from 'react'
 import { ArrowRight, CheckCircle } from 'lucide-react'
 import { submitContactForm } from '@/app/[lang]/contacts/actions'
 import { contactTopics } from '@/lib/contact-schema'
+import { Button } from '@/components/ui/Button'
 import { trackEvent } from '@/lib/analytics'
 import type { SiteContent } from '@/content/site'
 
@@ -170,14 +171,14 @@ export function ContactForm({ form, lang }: ContactFormProps) {
             )}
 
             <div className="mt-6">
-                <button
+                <Button
                     type="submit"
                     disabled={isPending}
-                    className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-black bg-black px-5 py-2.5 text-sm font-semibold text-white transition-[color,background-color,border-color,transform] duration-200 hover:bg-white hover:text-black active:scale-[0.96] disabled:cursor-not-allowed disabled:opacity-60"
+                    className="disabled:cursor-not-allowed disabled:opacity-60"
                 >
                     {isPending ? form.fields.submitting : form.fields.submit}
                     {!isPending && <ArrowRight className="h-4 w-4" aria-hidden="true" />}
-                </button>
+                </Button>
             </div>
         </form>
     )

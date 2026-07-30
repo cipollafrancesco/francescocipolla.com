@@ -53,7 +53,6 @@ function BookSpine({ book, isOpen, isHidden, rowPos, onOpen, label }: BookSpineP
         ['--bk-wear' as string]: wear(book),
         ['--spine-color' as string]: book.spineColor,
         ['--spine-text' as string]: spineTextColor(book.spineColor),
-        ...(book.spineImage ? { ['--spine-image' as string]: `url("${book.spineImage}")` } : {}),
         // The front-cover scan, shown on the right board whenever perspective
         // reveals it. Placeholder covers fall back to the plain board colour
         // via the CSS `var()` default.
@@ -97,7 +96,7 @@ function BookSpine({ book, isOpen, isHidden, rowPos, onOpen, label }: BookSpineP
                 depth offset. `pointer-events: none` lets clicks fall through to
                 the button underneath it. */}
             <span className="book__body" aria-hidden="true">
-                <span className={clsx('book__spine', book.spineImage && 'book__spine--image')}>
+                <span className="book__spine">
                     <span className="book__title">
                         <span className="book__title-text">{book.title}</span>
                     </span>

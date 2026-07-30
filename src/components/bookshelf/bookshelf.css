@@ -498,7 +498,7 @@
     /* Deliberately NO `transform-style: preserve-3d` and no 3D transform on this
        element. It is the flex item and the box the <button> is sized from, and
        Chrome stops hit-testing into a subtree that carries a 3D translate once a
-       real perspective is live — putting `translateZ` here made all 23 books
+       real perspective is live — putting `translateZ` here made every book
        unclickable while still painting perfectly. Depth lives on `.book__body`,
        which nothing needs to click. Only 2D transforms belong here. */
     /* The row is bottom-aligned, so every book rests flush on the plank; only the
@@ -754,14 +754,6 @@
         right bottom;
     background-repeat: no-repeat;
     pointer-events: none;
-}
-
-/* Scoped to `.book` only to out-specify the per-binding recipes above, which
-   would otherwise win and paint a cloth weave over the artwork. */
-.book .book__spine--image {
-    background-image: var(--spine-image);
-    background-size: cover;
-    background-position: center;
 }
 
 .book__title {

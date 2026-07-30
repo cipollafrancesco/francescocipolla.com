@@ -1,28 +1,35 @@
 import type { NextConfig } from 'next'
-import { existsSync, readFileSync } from 'fs'
+import { readFileSync } from 'fs'
 
-const blobHostsPath = new URL('./src/content/blob-hosts.generated.json', import.meta.url)
-
+/** The gallery manifest already stores absolute Blob URLs, so the set of hosts
+ *  `next/image` must allow is a projection of it rather than something that
+ *  needs generating and committing separately — which could go stale against
+ *  the manifest and break remote images at build time. */
 function getBlobImageRemotePatterns() {
-    if (!existsSync(blobHostsPath)) {
-        return []
-    }
+    const manifestPath = new URL('./src/content/project-gallery.generated.json', import.meta.url)
 
-    let hosts: string[]
+    let manifest: Record<string, { src: string }[]>
 
     try {
-        hosts = JSON.parse(readFileSync(blobHostsPath, 'utf8'))
+        manifest = JSON.parse(readFileSync(manifestPath, 'utf8'))
     } catch (error) {
+        // Raised from inside the Next config, which is a bad place to debug a bare
+        // ENOENT/SyntaxError from — say which file and how to regenerate it.
         throw new Error(
-            `Failed to parse ${blobHostsPath} — run \`pnpm gallery:sync\` to regenerate it, or check it for corruption.`,
+            `Failed to read ${manifestPath} — run \`pnpm gallery:sync\` to regenerate it, or check it for corruption.`,
             { cause: error }
         )
     }
 
-    return hosts.map((hostname) => ({
-        protocol: 'https' as const,
-        hostname,
-    }))
+    const hosts = new Set(
+        Object.values(manifest)
+            .flat()
+            .map((media) => media.src)
+            .filter((src) => src.startsWith('https://'))
+            .map((src) => new URL(src).hostname)
+    )
+
+    return [...hosts].map((hostname) => ({ protocol: 'https' as const, hostname }))
 }
 
 const securityHeaders = [

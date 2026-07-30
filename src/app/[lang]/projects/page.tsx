@@ -2,9 +2,7 @@ import type { Metadata } from 'next'
 import StackedProjects from '@/components/StackedProjects'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { getI18nContent } from '@/i18n/server'
-import { isLocale } from '@/i18n/config'
 import { withLocaleMetadata } from '@/lib/metadata'
-import { notFound } from 'next/navigation'
 
 interface ProjectsPageProps {
     params: Promise<{ lang: string }>
@@ -19,10 +17,6 @@ export async function generateMetadata({ params }: ProjectsPageProps): Promise<M
 
 export default async function ProjectsPage({ params }: ProjectsPageProps) {
     const { lang: langParam } = await params
-
-    if (!isLocale(langParam)) {
-        notFound()
-    }
 
     const { lang, content } = await getI18nContent(langParam)
     const { eyebrow, intro } = content.projectsPage
@@ -49,7 +43,6 @@ export default async function ProjectsPage({ params }: ProjectsPageProps) {
                             lang={lang}
                             labels={{
                                 caseStudy: content.common.cta.caseStudy,
-                                liveSite: content.common.cta.liveSite,
                                 previous: content.common.cta.previousProject,
                                 next: content.common.cta.nextProject,
                             }}

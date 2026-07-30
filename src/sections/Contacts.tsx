@@ -1,37 +1,32 @@
 'use client'
 import CalEmbed from '@/components/CalEmbed'
-import { siteLinks } from '@/content/site'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { siteLinks } from '@/content/site-links'
+import { motion, useReducedMotion } from 'framer-motion'
 import React from 'react'
+import { revealProps, useSectionScrollFade } from '@/lib/motion'
 
 interface IContactsProps {
-    ref: React.RefObject<HTMLDivElement | null>
     title: string
     scheduleTitle: string
 }
 
-const Contacts: React.FC<IContactsProps> = ({ ref, title, scheduleTitle }) => {
-    const { scrollYProgress } = useScroll({
-        target: ref,
-        offset: ['start end', 'end start'],
-    })
-
-    const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0])
-    const y = useTransform(scrollYProgress, [0, 0.2], [100, 0])
+const Contacts: React.FC<IContactsProps> = ({ title, scheduleTitle }) => {
+    const { ref, style } = useSectionScrollFade<HTMLElement>()
+    const reduced = useReducedMotion()
 
     return (
         <motion.section
             ref={ref}
             id="contacts"
             className="flex flex-col items-center justify-center py-20"
-            style={{ opacity, y }}
+            style={style}
         >
             <motion.h2
                 className="mb-12 text-[80px] font-extrabold leading-[0.9] tracking-tighter md:text-9xl lg:text-[9rem] xl:text-[16rem]"
-                initial={{ opacity: 0, scale: 0.8 }}
+                initial={reduced ? false : { opacity: 0, scale: 0.8 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.7 }}
+                transition={{ duration: reduced ? 0 : 0.7 }}
             >
                 {title}
             </motion.h2>
@@ -39,10 +34,7 @@ const Contacts: React.FC<IContactsProps> = ({ ref, title, scheduleTitle }) => {
             <motion.a
                 className="mb-12 text-2xl tracking-tighter md:text-4xl lg:text-5xl"
                 href={`mailto:${siteLinks.email}`}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.3 }}
+                {...revealProps(reduced, { delay: 0.3, y: 20 })}
             >
                 {siteLinks.email}
             </motion.a>
@@ -53,10 +45,7 @@ const Contacts: React.FC<IContactsProps> = ({ ref, title, scheduleTitle }) => {
                     href={siteLinks.linkedin}
                     target="_blank"
                     rel="noopener noreferrer"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: 0.4 }}
+                    {...revealProps(reduced, { delay: 0.4, y: 20 })}
                 >
                     LinkedIn
                 </motion.a>
@@ -66,28 +55,16 @@ const Contacts: React.FC<IContactsProps> = ({ ref, title, scheduleTitle }) => {
                     href={siteLinks.github}
                     target="_blank"
                     rel="noopener noreferrer"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: 0.5 }}
+                    {...revealProps(reduced, { delay: 0.5, y: 20 })}
                 >
                     GitHub
                 </motion.a>
             </div>
 
-            <motion.div
-                className="mt-28 w-full"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.6 }}
-            >
+            <motion.div className="mt-28 w-full" {...revealProps(reduced, { delay: 0.6, y: 20 })}>
                 <motion.h3
                     className="mb-8 text-center text-2xl tracking-tighter md:text-3xl lg:text-4xl"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: 0.6 }}
+                    {...revealProps(reduced, { delay: 0.6, y: 20 })}
                 >
                     {scheduleTitle}
                 </motion.h3>

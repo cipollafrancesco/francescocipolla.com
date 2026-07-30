@@ -1,11 +1,6 @@
 /**
- * Domain types for the 3D bookshelf ("Libreria").
- *
- * Phase 1 is a read-only, statically-fed bookshelf. The schema below is the
- * single source of truth and is intentionally shaped to anticipate a later
- * "library service" (search, user-added books, persistence) without needing a
- * refactor — extra fields can be appended, and the optional fields already
- * model the "may or may not exist" shape a backend would return.
+ * Domain types for the 3D bookshelf ("Libreria"), fed statically from
+ * `src/data/books.json`.
  */
 /**
  * The three bindings a shelf like this actually mixes:
@@ -29,7 +24,7 @@ export interface Book {
     coverUrl: string
     /** ISBN, used to look up the cover; improves match accuracy. */
     isbn?: string
-    /** CSS color used to generate the spine when no `spineImage` is provided. */
+    /** CSS color the spine is generated from. */
     spineColor: string
     /**
      * Optional manual spine-width multiplier (1 = the default width). Use it to
@@ -37,25 +32,10 @@ export interface Book {
      * it can't overflow a shelf row; when omitted the width is derived automatically.
      */
     thickness?: number
-    /** Optional artwork that overrides the generated spine. */
-    spineImage?: string
     /**
      * How the book is bound. Drives its whole material recipe — spine profile,
      * height, thickness, page-block colour and wear. Omit it and `bindingOf()`
      * derives a stable one from the id, so an un-annotated shelf still mixes.
      */
     binding?: Binding
-    /** Optional personal rating, conventionally 1–5. */
-    rating?: number
-    /** Optional free-form personal notes. */
-    personalNotes?: string
-    /** Optional ISO date the book was finished. Drives the default sort. */
-    dateRead?: string
 }
-
-/**
- * Sort criteria the bookshelf understands. Only `dateRead` is wired to the UI
- * in Phase 1; the rest are implemented as pure stubs in `sortBooks` so a future
- * sort dropdown is a UI-only change.
- */
-export type SortCriterion = 'dateRead' | 'author' | 'publishedDate' | 'rating' | 'spineColor'

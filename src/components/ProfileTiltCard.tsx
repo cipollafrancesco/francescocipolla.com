@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import { useRef, type PointerEvent, type ReactNode } from 'react'
-import { useMediaQuery } from '@/hooks/useMediaQuery'
+import { usePointerEffects } from '@/hooks/useMediaQuery'
 
 type ProfileTiltCardProps = {
     src: string
@@ -15,16 +15,7 @@ const clamp = (value: number, min: number, max: number) => Math.max(min, Math.mi
 
 export function ProfileTiltCard({ src, alt, sizes, caption }: ProfileTiltCardProps) {
     const figureRef = useRef<HTMLElement>(null)
-    // Gates the tilt on hover capability and reduced motion, the same way
-    // `InspectableProjectImage` does — without the reduced-motion check, the
-    // wrapper's `perspective: none` still lets `rotateX`/`rotateY` render as a
-    // flat, unforeshortened distortion, so a reduced-motion user got an
-    // instant snap between odd-looking shapes instead of no motion at all.
-    // (`useMediaQuery` is SSR-safe: `false` until mounted, so server and first
-    // client render agree.)
-    const hasFinePointer = useMediaQuery('(hover: hover) and (pointer: fine)')
-    const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)')
-    const canTilt = hasFinePointer && !prefersReducedMotion
+    const canTilt = usePointerEffects()
 
     // Writes the CSS custom properties the figure's `transform` reads,
     // instead of `setState` — a state update here would re-render the whole

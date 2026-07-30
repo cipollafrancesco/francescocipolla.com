@@ -30,21 +30,14 @@ export function isRateLimited(key: string): boolean {
     hits.delete(key)
     hits.set(key, recent)
 
-    // Opportunistic cleanup so the map doesn't grow unboundedly under
-    // sustained traffic from many distinct keys.
+    // Keep the map bounded by evicting from the front — least recently seen, per
+    // the re-insert above. Deliberately not `hits.clear()`: the only way to get
+    // here is a burst from thousands of distinct keys, and wiping the whole map
+    // would discard every legitimate visitor's window along with the attacker's,
+    // switching the limiter off for everyone exactly when it's needed. Expiring
+    // by age instead wouldn't help — under a burst nothing is old enough to
+    // expire, so the scan frees nothing and the map stays over cap.
     if (hits.size > MAX_TRACKED_KEYS) {
-        for (const [trackedKey, timestamps] of hits) {
-            if (timestamps.every((timestamp) => now - timestamp >= WINDOW_MS)) {
-                hits.delete(trackedKey)
-            }
-        }
-
-        // Expiry alone doesn't guarantee progress: under a burst from many
-        // distinct keys — precisely what the cap exists for — nothing is old
-        // enough to expire, so the pass above frees nothing and every later
-        // request pays a full scan while the map stays over cap indefinitely.
-        // Evicting from the front (least recently seen, per the re-insert
-        // above) bounds it for real.
         for (const trackedKey of hits.keys()) {
             if (hits.size <= MAX_TRACKED_KEYS) break
             if (trackedKey !== key) hits.delete(trackedKey)

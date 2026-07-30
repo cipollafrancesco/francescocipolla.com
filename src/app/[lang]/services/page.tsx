@@ -12,13 +12,11 @@ import { Reveal } from '@/components/Reveal'
 import { TrackedLink } from '@/components/TrackedLink'
 import { TrackOnView } from '@/components/TrackOnView'
 import { AccordionItem } from '@/components/ui/Accordion'
-import { ButtonLink } from '@/components/ui/Button'
+import { ButtonLink, buttonClasses } from '@/components/ui/Button'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { Section } from '@/components/ui/Section'
 import { getI18nContent } from '@/i18n/server'
-import { isLocale } from '@/i18n/config'
 import { withLocaleMetadata } from '@/lib/metadata'
-import { notFound } from 'next/navigation'
 
 interface ServicesPageProps {
     params: Promise<{ lang: string }>
@@ -42,10 +40,6 @@ export async function generateMetadata({ params }: ServicesPageProps): Promise<M
 
 export default async function ServicesPage({ params }: ServicesPageProps) {
     const { lang: langParam } = await params
-
-    if (!isLocale(langParam)) {
-        notFound()
-    }
 
     const { lang, content } = await getI18nContent(langParam)
     const services = content.services
@@ -83,7 +77,7 @@ export default async function ServicesPage({ params }: ServicesPageProps) {
                                         href={bookingHref}
                                         event="booking_cta_click"
                                         eventParams={{ locale: lang, location: 'hero' }}
-                                        className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-black bg-black px-5 py-2.5 text-sm font-semibold text-white transition-[color,background-color,border-color,transform] duration-200 hover:bg-white hover:text-black active:scale-[0.96] sm:w-fit"
+                                        className={buttonClasses({ className: 'sm:w-fit' })}
                                     >
                                         {content.common.cta.book}
                                         <ArrowRight className="h-4 w-4" />
@@ -145,7 +139,7 @@ export default async function ServicesPage({ params }: ServicesPageProps) {
                                 href={bookingHref}
                                 event="booking_cta_click"
                                 eventParams={{ locale: lang, location: 'service_options' }}
-                                className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-md border border-black bg-black px-5 py-2.5 text-sm font-semibold text-white transition-[color,background-color,border-color,transform] duration-200 hover:bg-white hover:text-black active:scale-[0.96]"
+                                className={buttonClasses({ className: 'shrink-0' })}
                             >
                                 {services.serviceIntro.ctaLabel}
                                 <ArrowRight className="h-4 w-4" />
@@ -238,7 +232,12 @@ export default async function ServicesPage({ params }: ServicesPageProps) {
                                             href={`/${lang}/projects/${project.slug}`}
                                             event="case_study_click"
                                             eventParams={{ locale: lang, project: project.slug }}
-                                            className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md border border-black px-4 py-2 text-sm font-semibold transition-colors hover:bg-black hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+                                            className={buttonClasses({
+                                                variant: 'secondary',
+                                                static: true,
+                                                className:
+                                                    'min-h-10 bg-transparent px-4 py-2 transition-colors',
+                                            })}
                                         >
                                             {content.common.cta.caseStudy}
                                             <ArrowUpRight className="h-4 w-4" />

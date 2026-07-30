@@ -2,7 +2,7 @@
 
 import { createReadStream } from 'node:fs'
 import { createHash } from 'node:crypto'
-import { copyFile, mkdir, readdir, readFile, rename, rm, stat, writeFile } from 'node:fs/promises'
+import { mkdir, readdir, readFile, rename, rm, stat, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { spawn } from 'node:child_process'
@@ -12,8 +12,9 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const publicProjectsRoot = path.join(root, 'public', 'projects')
 const sourceProjectsRoot = path.join(root, '.media-source', 'projects')
 const outputProjectsRoot = path.join(root, '.media-output', 'projects')
+// `next.config.ts` derives the `images.remotePatterns` hosts from this manifest's
+// absolute URLs, so there is no separate host list to keep in step with it.
 const manifestPath = path.join(root, 'src', 'content', 'project-gallery.generated.json')
-const blobHostsPath = path.join(root, 'src', 'content', 'blob-hosts.generated.json')
 
 const imageExtensions = new Set(['.avif', '.gif', '.jpg', '.jpeg', '.png', '.webp'])
 const videoExtensions = new Set(['.mp4', '.mov', '.webm'])
@@ -54,8 +55,6 @@ async function main() {
         preparedMedia.push(await prepareMedia(media))
     }
 
-    await syncPublicFallback(preparedMedia)
-
     if (prepareOnly) {
         console.log(`Prepared ${preparedMedia.length} gallery assets in .media-output.`)
         return
@@ -77,12 +76,6 @@ async function main() {
         manifest[slug] = []
     }
 
-    const hosts = new Set(
-        Object.values(manifest)
-            .flat()
-            .map((entry) => tryGetHostname(entry.src))
-            .filter(Boolean)
-    )
     const token = process.env.BLOB_READ_WRITE_TOKEN
 
     for (const media of preparedMedia) {
@@ -110,7 +103,6 @@ async function main() {
         }
 
         manifest[media.slug] = [...(manifest[media.slug] ?? []), entry]
-        hosts.add(new URL(blob.url).hostname)
         console.log(`Uploaded ${blobPath}`)
     }
 
@@ -119,9 +111,7 @@ async function main() {
     }
 
     await writeJson(manifestPath, sortManifest(manifest))
-    await writeJson(blobHostsPath, [...hosts].sort())
     console.log(`Wrote ${path.relative(root, manifestPath)}.`)
-    console.log(`Wrote ${path.relative(root, blobHostsPath)}.`)
 }
 
 async function movePublicGalleryMediaToSource() {
@@ -185,33 +175,6 @@ async function collectSourceMedia() {
                 { numeric: true }
             )
         )
-}
-
-async function syncPublicFallback(preparedMedia) {
-    const slugs = new Set(preparedMedia.map((media) => media.slug))
-
-    for (const slug of slugs) {
-        await removePublicGalleryMedia(path.join(publicProjectsRoot, slug, 'gallery'))
-    }
-
-    for (const media of preparedMedia) {
-        const destination = path.join(
-            publicProjectsRoot,
-            media.slug,
-            'gallery',
-            media.viewport,
-            path.basename(media.uploadPath)
-        )
-
-        await mkdir(path.dirname(destination), { recursive: true })
-        await copyFile(media.uploadPath, destination)
-    }
-}
-
-async function removePublicGalleryMedia(directory) {
-    const files = await walk(directory)
-
-    await Promise.all(files.filter(isSupportedMedia).map((file) => rm(file)))
 }
 
 async function prepareMedia(media) {
@@ -434,14 +397,6 @@ async function readExistingManifest() {
         }
 
         throw error
-    }
-}
-
-function tryGetHostname(url) {
-    try {
-        return new URL(url).hostname
-    } catch {
-        return null
     }
 }
 

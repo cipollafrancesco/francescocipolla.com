@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import type { AnchorHTMLAttributes, ReactNode } from 'react'
 import { trackEvent, type AnalyticsEvent } from '@/lib/analytics'
+import { isExternalHref } from '@/lib/utils'
 
 interface TrackedLinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
     href: string
@@ -24,7 +25,7 @@ export function TrackedLink({
         onClick?.(evt)
     }
 
-    if (href.startsWith('http') || href.startsWith('#') || href.startsWith('mailto:')) {
+    if (isExternalHref(href)) {
         return (
             <a href={href} onClick={handleClick} {...props}>
                 {children}

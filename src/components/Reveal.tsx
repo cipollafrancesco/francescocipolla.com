@@ -2,6 +2,7 @@
 
 import { motion, useReducedMotion } from 'framer-motion'
 import type { ReactNode } from 'react'
+import { revealProps } from '@/lib/motion'
 
 interface RevealProps {
     children: ReactNode
@@ -9,6 +10,9 @@ interface RevealProps {
     delay?: number
 }
 
+/** Wrapper form of the house scroll-reveal, for content that can take an extra
+ *  `<div>`. Elements that can't — a `motion.h2` inside a flex row, an anchor
+ *  that must stay the flex item — spread `revealProps()` directly instead. */
 export function Reveal({ children, className, delay = 0 }: RevealProps) {
     const reduceMotion = useReducedMotion()
 
@@ -19,10 +23,7 @@ export function Reveal({ children, className, delay = 0 }: RevealProps) {
     return (
         <motion.div
             className={className}
-            initial={{ opacity: 0, y: 28 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.5, ease: 'easeOut', delay }}
+            {...revealProps(reduceMotion, { delay, margin: '-80px' })}
         >
             {children}
         </motion.div>

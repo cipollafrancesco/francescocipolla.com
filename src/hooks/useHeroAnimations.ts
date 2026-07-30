@@ -1,6 +1,6 @@
 'use client'
 import { MotionValue, useScroll, useSpring, useTransform } from 'framer-motion'
-import { useEffect, useState } from 'react'
+import { useMediaQuery } from '@/hooks/useMediaQuery'
 
 interface HeroAnimations {
     springScale: MotionValue<number>
@@ -17,11 +17,11 @@ interface HeroAnimations {
 export const useHeroAnimations = (
     heroSectionRef: React.RefObject<HTMLElement | null>
 ): HeroAnimations => {
-    const [isClient, setIsClient] = useState(false)
-
-    useEffect(() => {
-        setIsClient(typeof window !== 'undefined')
-    }, [])
+    // Drives how far the hero flies off-screen. `useMediaQuery` is SSR-safe
+    // (false until mounted) and, unlike the `isClient` + `window.innerWidth`
+    // read this replaced, keeps tracking the breakpoint instead of freezing
+    // whatever was true at mount.
+    const isMobile = useMediaQuery('(max-width: 767px)')
 
     const { scrollYProgress: heroScrollProgress } = useScroll({
         target: heroSectionRef,
@@ -37,16 +37,8 @@ export const useHeroAnimations = (
 
     const scale = useTransform(smoothScrollProgress, [0.6, 0.75], [1, 44])
 
-    const xPosition = useTransform(
-        smoothScrollProgress,
-        [0.6, 0.75],
-        [0, isClient && window.innerWidth < 768 ? -800 : -1800]
-    )
-    const yPosition = useTransform(
-        smoothScrollProgress,
-        [0.6, 0.75],
-        [0, isClient && window.innerWidth < 768 ? -200 : -500]
-    )
+    const xPosition = useTransform(smoothScrollProgress, [0.6, 0.75], [0, isMobile ? -800 : -1800])
+    const yPosition = useTransform(smoothScrollProgress, [0.6, 0.75], [0, isMobile ? -200 : -500])
 
     const textOpacity = useTransform(smoothScrollProgress, [0.6, 0.75, 0.8], [1, 1, 0])
 

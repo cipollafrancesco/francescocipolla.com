@@ -38,7 +38,3 @@ export function getLocale(value: string | undefined): Locale {
 export function localeFromPathname(pathname: string): Locale {
     return getLocale(pathname.split('/')[1])
 }
-
-export function getOppositeLocale(locale: Locale): Locale {
-    return locale === 'it' ? 'en' : 'it'
-}

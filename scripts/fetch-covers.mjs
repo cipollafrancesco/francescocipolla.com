@@ -93,27 +93,6 @@ async function appleByIsbn(isbn) {
     return hit ? getImage(upscaleArt(hit.artworkUrl100)) : null
 }
 
-/** Open Library — direct cover-by-ISBN (exact edition). */
-async function openLibraryByIsbn(isbn) {
-    return getImage(`https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg?default=false`)
-}
-
-/** Google Books — image for an exact ISBN. */
-async function googleByIsbn(isbn) {
-    const data = await getJson(
-        `https://www.googleapis.com/books/v1/volumes?country=IT&q=isbn:${isbn}`
-    )
-    const hit = (data?.items || []).find((it) => it.volumeInfo?.imageLinks)
-    if (!hit) return null
-    const image = hit.volumeInfo.imageLinks.thumbnail || hit.volumeInfo.imageLinks.smallThumbnail
-    return getImage(
-        image
-            .replace(/^http:\/\//, 'https://')
-            .replace(/&edge=curl/, '')
-            .replace(/zoom=\d/, 'zoom=2')
-    )
-}
-
 /** Score an Apple result against the wanted book; reject summaries/wrong matches. */
 function scoreApple(r, book) {
     const name = (r.trackName || '').toLowerCase()
@@ -142,7 +121,8 @@ async function appleCover(book) {
     return getImage(upscaleArt(cands[0].artworkUrl100))
 }
 
-/** Google Books fallback (frequently rate-limited). */
+/** Google Books fallback (frequently rate-limited). Addresses the exact edition
+ *  by ISBN when we have one, and falls back to a title/author search. */
 async function googleCover(book) {
     const q = book.isbn
         ? `isbn:${book.isbn}`
@@ -182,7 +162,6 @@ async function main() {
             if (book.isbn && (buf = await ibsByIsbn(book.isbn))) source = 'ibs/isbn'
             if (!buf && book.isbn && (buf = await appleByIsbn(book.isbn))) source = 'apple/isbn'
             if (!buf && (buf = await appleCover(book))) source = 'apple'
-            if (!buf && book.isbn && (buf = await googleByIsbn(book.isbn))) source = 'google/isbn'
             if (!buf && (buf = await googleCover(book))) source = 'google'
         } catch (err) {
             console.log(`error: ${err.message}`)

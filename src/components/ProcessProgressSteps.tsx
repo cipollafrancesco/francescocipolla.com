@@ -75,8 +75,12 @@ export function ProcessProgressSteps({ steps }: ProcessProgressStepsProps) {
                                 },
                             }}
                         >
+                            {/* No `group-hover:` colour/transform on these two:
+                                the variants below resolve to an inline style,
+                                which always out-specifies a class, so the CSS
+                                hover never applied. One system, not two. */}
                             <motion.span
-                                className="block text-6xl font-black text-gray-100 transition-colors duration-300 group-focus-within:text-black group-hover:text-black"
+                                className="block text-6xl font-black text-gray-100"
                                 variants={{
                                     rest: { color: 'rgb(243 244 246)' },
                                     active: { color: 'rgb(0 0 0)' },
@@ -86,7 +90,7 @@ export function ProcessProgressSteps({ steps }: ProcessProgressStepsProps) {
                                 0{index + 1}
                             </motion.span>
                             <motion.h3
-                                className="mt-8 text-xl font-black tracking-tight transition-transform duration-300 group-focus-within:-translate-y-1 group-hover:-translate-y-1 motion-reduce:transition-none"
+                                className="mt-8 text-xl font-black tracking-tight"
                                 variants={{
                                     rest: { y: 0 },
                                     active: { y: -4 },

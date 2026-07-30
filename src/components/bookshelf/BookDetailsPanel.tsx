@@ -3,9 +3,8 @@
 import React, { useEffect, useRef } from 'react'
 import type { CSSProperties, ReactNode } from 'react'
 import { motion } from 'framer-motion'
-import { X, Star } from 'lucide-react'
+import { X } from 'lucide-react'
 import type { Book } from '@/lib/bookshelf/types'
-import type { Locale } from '@/i18n/config'
 import type { SiteContent } from '@/content/site'
 import { accentOnDark } from './visuals'
 
@@ -15,7 +14,6 @@ interface BookDetailsPanelProps {
     isSplit: boolean
     reducedMotion: boolean
     onClose: () => void
-    lang: Locale
     copy: SiteContent['books']
 }
 
@@ -26,50 +24,13 @@ function getFocusableElements(container: HTMLElement): HTMLElement[] {
     return Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR))
 }
 
-function formatLongDate(iso: string, lang: Locale): string {
-    const t = Date.parse(iso)
-    if (Number.isNaN(t)) return iso
-    return new Date(t).toLocaleDateString(lang, {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-    })
-}
-
-function Rating({ value, label }: { value: number; label: string }) {
-    const rounded = Math.round(value)
-    return (
-        <div
-            className="flex items-center gap-1"
-            aria-label={label.replace('{value}', String(value))}
-        >
-            {Array.from({ length: 5 }, (_, i) => (
-                <Star
-                    key={i}
-                    className="h-4 w-4"
-                    aria-hidden="true"
-                    fill={i < rounded ? 'currentColor' : 'none'}
-                    strokeWidth={1.5}
-                />
-            ))}
-        </div>
-    )
-}
-
 /**
  * Book details, set as type directly on the scrim — there is no panel, card or
  * sheet behind it. Split layout (>= 1024px): a column to the right of the
  * extracted book, sharing its centre line. Stacked layout: along the bottom of
  * the screen, draggable downwards to dismiss. Acts as a modal dialog.
  */
-function BookDetailsPanel({
-    book,
-    isSplit,
-    reducedMotion,
-    onClose,
-    lang,
-    copy,
-}: BookDetailsPanelProps) {
+function BookDetailsPanel({ book, isSplit, reducedMotion, onClose, copy }: BookDetailsPanelProps) {
     const closeRef = useRef<HTMLButtonElement>(null)
     const dialogRef = useRef<HTMLDivElement>(null)
     const titleId = `book-title-${book.id}`
@@ -177,19 +138,6 @@ function BookDetailsPanel({
                     {book.author}
                 </p>
 
-                {(book.dateRead || typeof book.rating === 'number') && (
-                    <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-white/60">
-                        {book.dateRead && (
-                            <span>
-                                {copy.read} {formatLongDate(book.dateRead, lang)}
-                            </span>
-                        )}
-                        {typeof book.rating === 'number' && (
-                            <Rating value={book.rating} label={copy.ratingLabel} />
-                        )}
-                    </div>
-                )}
-
                 <hr className="mt-7 border-0 border-t border-white/20" />
 
                 <p
@@ -200,22 +148,10 @@ function BookDetailsPanel({
                     {book.description}
                 </p>
 
-                {book.personalNotes && (
-                    <div className="mt-7 border-l-2 border-white/25 pl-5">
-                        <h3 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/50">
-                            {copy.notes}
-                        </h3>
-                        <p className="mt-2 max-w-[54ch] text-[15px] italic leading-relaxed text-white/75">
-                            {book.personalNotes}
-                        </p>
-                    </div>
-                )}
-
                 {/* Colophon. The publication year is deliberately not shown; with
-                    it gone the ISBN is all that is left, and only 4 of 23 books
+                    it gone the ISBN is all that is left, and only 4 of 28 books
                     carry one, so the line drops entirely for the rest rather than
-                    leaving a stranded label. `copy.published` stays in the
-                    dictionary for when the year comes back. */}
+                    leaving a stranded label. */}
                 {book.isbn && (
                     <p className="mt-10 text-[11px] uppercase tabular-nums tracking-[0.2em] text-white/45">
                         ISBN {book.isbn}

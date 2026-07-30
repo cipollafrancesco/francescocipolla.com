@@ -1,6 +1,14 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+// Aliased: the outside-dismiss listener below binds the DOM `KeyboardEvent`, so
+// the React synthetic one can't share the name.
+import {
+    useCallback,
+    useEffect,
+    useRef,
+    useState,
+    type KeyboardEvent as ReactKeyboardEvent,
+} from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
@@ -90,7 +98,9 @@ export function LanguageSwitcher({
     }, [isOpen, close])
 
     // Open with focus already on the active language, so keyboard users land
-    // somewhere meaningful and arrow keys have a starting point.
+    // somewhere meaningful and arrow keys have a starting point. Without it the
+    // `role="menu"` contract below promises keyboard behaviour that isn't there,
+    // and `close(true)`'s focus restore becomes a no-op.
     useEffect(() => {
         if (!isOpen) return
 
@@ -98,7 +108,7 @@ export function LanguageSwitcher({
         itemsRef.current[index === -1 ? 0 : index]?.focus()
     }, [isOpen, currentLocale])
 
-    const onItemKeyDown = (event: React.KeyboardEvent, index: number) => {
+    const onItemKeyDown = (event: ReactKeyboardEvent, index: number) => {
         if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return
 
         event.preventDefault()

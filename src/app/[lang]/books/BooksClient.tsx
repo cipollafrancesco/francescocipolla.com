@@ -5,7 +5,6 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 
 import booksData from '@/data/books.json'
 import type { Book } from '@/lib/bookshelf/types'
-import { DEFAULT_SORT, sortBooks } from '@/lib/bookshelf/sortBooks'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import type { Locale } from '@/i18n/config'
 import type { SiteContent } from '@/content/site'
@@ -25,6 +24,9 @@ interface Selection {
  *  already in `bookshelf.css` — used only if a click somehow reaches `onOpen`
  *  without a `.bookcase__frame` ancestor to measure. */
 const DEFAULT_VP = { x: 50, y: 45 }
+
+/** Shelf order is the order they're listed in. */
+const books = booksData as Book[]
 
 /**
  * `.bookcase__frame` and `.featured-layer` are two independent 3D contexts:
@@ -63,10 +65,6 @@ interface BooksClientProps {
 }
 
 export default function BooksClient({ lang, copy }: BooksClientProps) {
-    // Phase 1 ships a single sort criterion; the union + pure sort are ready for
-    // a future dropdown without touching this page.
-    const books = useMemo(() => sortBooks(booksData as Book[], DEFAULT_SORT), [])
-
     // Categories present in the library, with counts, for the filter chips.
     const { categories, counts } = useMemo(() => {
         const counts: Record<string, number> = {}
@@ -80,7 +78,7 @@ export default function BooksClient({ lang, copy }: BooksClientProps) {
             (copy.categories[a] ?? a).localeCompare(copy.categories[b] ?? b, lang)
         )
         return { categories, counts }
-    }, [books, lang, copy.categories])
+    }, [lang, copy.categories])
 
     const [activeCats, setActiveCats] = useState<Set<string>>(new Set())
     // Books stay mounted; filtered-out ones collapse away (CSS). We just compute
@@ -90,7 +88,7 @@ export default function BooksClient({ lang, copy }: BooksClientProps) {
         return new Set(
             books.filter((b) => !b.category || !activeCats.has(b.category)).map((b) => b.id)
         )
-    }, [books, activeCats])
+    }, [activeCats])
     const toggleCat = useCallback((category: string) => {
         setActiveCats((prev) => {
             const next = new Set(prev)
@@ -261,7 +259,6 @@ export default function BooksClient({ lang, copy }: BooksClientProps) {
                         isSplit={isSplit}
                         reducedMotion={reducedMotion}
                         onClose={handleClose}
-                        lang={lang}
                         copy={copy}
                     />
                 )}

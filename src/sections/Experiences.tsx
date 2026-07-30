@@ -2,13 +2,13 @@
 import ExperienceCard from '@/components/ExperienceCard'
 import type { SiteContent } from '@/content/site'
 import { cn } from '@/lib/utils'
-import { motion, useInView, useReducedMotion, useScroll, useTransform } from 'framer-motion'
+import { motion, useInView, useReducedMotion } from 'framer-motion'
 import React, { useRef } from 'react'
+import { motionPresets, revealProps, useSectionScrollFade } from '@/lib/motion'
 
 type Qualifier = SiteContent['home']['experiencesQualifier']
 
 interface IExperiencesProps {
-    ref: React.RefObject<HTMLDivElement | null>
     title: string
     qualifier: Qualifier
     experiences: SiteContent['experiences']
@@ -104,27 +104,21 @@ const FloatingCard: React.FC<{ index: number; children: React.ReactNode }> = ({
     )
 }
 
-const Experiences: React.FC<IExperiencesProps> = (props) => {
-    const { title, qualifier, experiences } = props
-
-    const { scrollYProgress } = useScroll({
-        target: props.ref,
-        offset: ['start end', 'end start'],
-    })
-
-    const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0])
-    const y = useTransform(scrollYProgress, [0, 0.2], [100, 0])
+const Experiences: React.FC<IExperiencesProps> = ({ title, qualifier, experiences }) => {
+    const { ref, style } = useSectionScrollFade<HTMLElement>()
+    const reduced = useReducedMotion()
+    const { dur } = motionPresets(reduced)
 
     return (
-        <motion.section id="experiences" className="py-20" ref={props.ref} style={{ opacity, y }}>
+        <motion.section id="experiences" className="py-20" ref={ref} style={style}>
             <div className="flex flex-col items-start justify-start lg:items-center lg:justify-center">
                 {/* Mobile title */}
                 <motion.h2
                     className="mb-10 text-[60px] font-extrabold leading-[0.9] tracking-tighter md:hidden"
-                    initial={{ opacity: 0, scale: 0.8 }}
+                    initial={reduced ? false : { opacity: 0, scale: 0.8 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.7 }}
+                    transition={dur(0.7)}
                 >
                     <TitleWithQualifier
                         title={title}
@@ -138,10 +132,7 @@ const Experiences: React.FC<IExperiencesProps> = (props) => {
                     {experiences.map((exp, index) => (
                         <motion.div
                             key={exp.company}
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.5, delay: index * 0.1 }}
+                            {...revealProps(reduced, { y: 20, delay: index * 0.1 })}
                         >
                             <ExperienceCard {...exp} />
                         </motion.div>
@@ -158,10 +149,7 @@ const Experiences: React.FC<IExperiencesProps> = (props) => {
                                 <motion.div
                                     key={exp.company}
                                     className="flex min-w-0 flex-1"
-                                    initial={{ opacity: 0, y: 50 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ duration: 0.5, delay: index * 0.2 }}
+                                    {...revealProps(reduced, { y: 50, delay: index * 0.2 })}
                                 >
                                     <FloatingCard index={index}>
                                         <ExperienceCard {...exp} />
@@ -173,10 +161,10 @@ const Experiences: React.FC<IExperiencesProps> = (props) => {
                         {/* Title */}
                         <motion.h2
                             className="mb-20 text-4xl font-extrabold leading-[1.2] tracking-tighter md:text-[7.65rem] lg:text-9xl xl:text-[15.5rem]"
-                            initial={{ opacity: 0, scale: 0.8 }}
+                            initial={reduced ? false : { opacity: 0, scale: 0.8 }}
                             whileInView={{ opacity: 1, scale: 1 }}
                             viewport={{ once: true }}
-                            transition={{ duration: 0.7 }}
+                            transition={dur(0.7)}
                         >
                             <TitleWithQualifier
                                 title={title}
@@ -191,10 +179,7 @@ const Experiences: React.FC<IExperiencesProps> = (props) => {
                                 <motion.div
                                     key={exp.company}
                                     className="flex min-w-0 flex-1"
-                                    initial={{ opacity: 0, y: 50 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ duration: 0.5, delay: index * 0.2 }}
+                                    {...revealProps(reduced, { y: 50, delay: index * 0.2 })}
                                 >
                                     {/* +2 so all four cards get distinct phases */}
                                     <FloatingCard index={index + 2}>

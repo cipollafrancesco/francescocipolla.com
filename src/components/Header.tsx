@@ -6,6 +6,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
+import { motionPresets } from '@/lib/motion'
 
 interface HeaderProps {
     lang: Locale
@@ -17,6 +18,7 @@ const BrandLogo = () => <span className="text-2xl font-extrabold">cipo.</span>
 const Header = ({ lang, copy }: HeaderProps) => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
     const reduceMotion = useReducedMotion()
+    const { initFade, dur } = motionPresets(reduceMotion)
 
     const menuItems = [
         { href: `/${lang}/#about-me`, label: copy.nav.about },
@@ -114,10 +116,10 @@ const Header = ({ lang, copy }: HeaderProps) => {
                 {isDrawerOpen && (
                     <motion.div
                         className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white bg-opacity-95 backdrop-blur-md"
-                        initial={{ opacity: reduceMotion ? 1 : 0 }}
+                        initial={initFade}
                         animate={{ opacity: 1 }}
                         exit={reduceMotion ? { opacity: 1 } : { opacity: 0, y: 8 }}
-                        transition={{ duration: reduceMotion ? 0 : 0.2, ease }}
+                        transition={{ ...dur(0.2), ease }}
                     >
                         <button
                             onClick={toggleDrawer}
@@ -131,11 +133,7 @@ const Header = ({ lang, copy }: HeaderProps) => {
                                 key={item.href}
                                 initial={reduceMotion ? false : { opacity: 0, y: 16 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                transition={{
-                                    duration: reduceMotion ? 0 : 0.25,
-                                    delay: reduceMotion ? 0 : 0.05 + index * 0.08,
-                                    ease,
-                                }}
+                                transition={{ ...dur(0.25, 0.05 + index * 0.08), ease }}
                             >
                                 <Link
                                     href={item.href}
@@ -149,11 +147,7 @@ const Header = ({ lang, copy }: HeaderProps) => {
                         <motion.div
                             initial={reduceMotion ? false : { opacity: 0, y: 12 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{
-                                duration: reduceMotion ? 0 : 0.25,
-                                delay: reduceMotion ? 0 : 0.05 + menuItems.length * 0.08,
-                                ease,
-                            }}
+                            transition={{ ...dur(0.25, 0.05 + menuItems.length * 0.08), ease }}
                         >
                             <LanguageSwitcher
                                 currentLocale={lang}

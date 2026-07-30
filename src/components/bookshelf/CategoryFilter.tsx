@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { cn } from '@/lib/utils'
 
 interface CategoryFilterProps {
     categories: string[]
@@ -34,18 +35,20 @@ function Chip({
             onClick={onClick}
             aria-pressed={selected}
             whileTap={{ scale: 0.94 }}
-            className={`inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 ${
+            className={cn(
+                'inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-sm font-medium transition-colors',
                 selected
                     ? 'border-black bg-black text-white'
                     : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400 hover:bg-gray-50'
-            }`}
+            )}
         >
             {label}
             {typeof count === 'number' && (
                 <span
-                    className={`text-xs tabular-nums ${
+                    className={cn(
+                        'text-xs tabular-nums',
                         selected ? 'text-white/70' : 'text-gray-400'
-                    }`}
+                    )}
                 >
                     {count}
                 </span>

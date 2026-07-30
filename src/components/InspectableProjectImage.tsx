@@ -2,7 +2,8 @@
 
 import Image from 'next/image'
 import type { PointerEvent } from 'react'
-import { useEffect, useRef, useState } from 'react'
+import { useRef } from 'react'
+import { usePointerEffects } from '@/hooks/useMediaQuery'
 
 interface InspectableProjectImageProps {
     src: string
@@ -12,25 +13,7 @@ interface InspectableProjectImageProps {
 
 export function InspectableProjectImage({ src, alt, sizes }: InspectableProjectImageProps) {
     const imageRef = useRef<HTMLImageElement>(null)
-    const [canInspect, setCanInspect] = useState(false)
-
-    useEffect(() => {
-        const pointerQuery = window.matchMedia('(hover: hover) and (pointer: fine)')
-        const reduceMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
-
-        const updateCapability = () => {
-            setCanInspect(pointerQuery.matches && !reduceMotionQuery.matches)
-        }
-
-        updateCapability()
-        pointerQuery.addEventListener('change', updateCapability)
-        reduceMotionQuery.addEventListener('change', updateCapability)
-
-        return () => {
-            pointerQuery.removeEventListener('change', updateCapability)
-            reduceMotionQuery.removeEventListener('change', updateCapability)
-        }
-    }, [])
+    const canInspect = usePointerEffects()
 
     const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => {
         if (!canInspect || !imageRef.current) {

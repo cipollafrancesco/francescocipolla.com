@@ -35,11 +35,11 @@ Every user-facing route lives under `src/app/[lang]/`. Locales are `it` (default
 - it also sets an `x-locale` request header, because `global-not-found.tsx` receives no route params and isn't nested under `[lang]`, so that header is its only way to resolve a language (`error.tsx` is a client component and reads the locale off `usePathname()` instead)
 - `/{lang}/about` gets a 307 to `/{lang}` (leftover route; the about content moved to the locale root)
 
-Its `matcher` excludes anything containing a dot, so static assets never cost a middleware invocation. That's why **route slugs must not contain dots** — `dpulses-2-0` is deliberately dash-only even though its asset folder is `dpulses2.0` (`src/lib/project-gallery.ts` maps between the two).
+Its `matcher` excludes anything containing a dot, so static assets never cost a middleware invocation. That's why **route slugs must not contain dots** — `dpulses-2-0` is deliberately dash-only. Asset folders under `public/projects/` match the slug exactly; keep it that way rather than reintroducing a slug→folder mapping.
 
 ### Copy and project content live in one file
 
-`src/content/site.ts` (~1.5k lines) is the single source of truth for **all** UI strings, page metadata, and project case studies, keyed by locale under `siteContent: Record<Locale, SiteContent>`. The `SiteContent` type is the contract — adding a string means adding it to the type and to _both_ `it` and `en`. Helpers exported from the same file: `getLocalizedProjects/getLocalizedProject/getProjectSlugs(locale)`, `localizedPath(locale, path)`, `absoluteLocalizedUrl(locale, path)`, `baseUrl`.
+`src/content/site.ts` (~1.5k lines) is the single source of truth for **all** UI strings, page metadata, and project case studies, keyed by locale under `siteContent: Record<Locale, SiteContent>`. **The Italian literal `it` is the schema** — `SiteContent` is derived from it (`typeof it`, with a few fields restated where inference is too narrow or too wide), so adding a string means adding it to `it` and then to `en`, which fails to compile until you do. Don't hand-maintain a parallel type. Helpers exported from the same file: `getLocalizedProjects/getLocalizedProject/getProjectSlugs(locale)`, `localizedPath(locale, path)`, `absoluteLocalizedUrl(locale, path)`, `baseUrl`.
 
 ### Page pattern
 
@@ -73,14 +73,14 @@ Gallery media is not committed — `public/projects/*/gallery/**` binaries are g
 
 1. drop originals in `.media-source/projects/<slug>/{desktop,mobile}/` (gitignored)
 2. `pnpm gallery:sync` — requires `ffmpeg`/`ffprobe` on PATH and `BLOB_READ_WRITE_TOKEN`; `--prepare-only` skips the upload
-3. it optimises into `.media-output/`, uploads to Vercel Blob, and writes two generated files that **must be committed**: `src/content/project-gallery.generated.json` (the manifest) and `src/content/blob-hosts.generated.json`
-4. `next.config.ts` reads `blob-hosts.generated.json` to build `images.remotePatterns` — a missing/stale host there means remote gallery images fail at build
+3. it optimises into `.media-output/`, uploads to Vercel Blob, and writes one generated file that **must be committed**: `src/content/project-gallery.generated.json` (the manifest)
+4. `next.config.ts` derives `images.remotePatterns` from the absolute URLs in that manifest, so there is no separate host list that can go stale against it
 
-`getProjectGalleryMedia(slug)` (`src/lib/project-gallery.ts`) prefers the manifest and falls back to scanning `public/projects/<slug>/gallery/{desktop,mobile}/`. Media is tagged `desktop`/`mobile` by folder, and detail pages filter on that.
+`getProjectGalleryMedia(slug)` (`src/lib/project-gallery.ts`) reads the manifest. It also falls back to scanning `public/projects/<slug>/gallery/{desktop,mobile}/`, but **only in development** — those binaries are gitignored, so on a deployed build the scan can never return anything; it exists so dropping files straight into `public/` previews locally. Media is tagged `desktop`/`mobile` by folder, and detail pages filter on that.
 
 ### Books
 
-`src/data/books.json` holds the collection. `category` values are stored in **Italian** and used as lookup keys into `siteContent[lang].books.categories` — never translate the raw values in the JSON, or filtering breaks. `pnpm covers` resolves covers (Apple Books → Open Library → Google Books) into `public/covers` and backfills only missing `isbn`; it never overwrites curated title/author/description.
+`src/data/books.json` holds the collection. `category` values are stored in **Italian** and used as lookup keys into `siteContent[lang].books.categories` — never translate the raw values in the JSON, or filtering breaks. `pnpm covers` resolves covers (IBS/laFeltrinelli by ISBN → Apple Books → Google Books) into `public/covers` and backfills only missing `isbn`; it never overwrites curated title/author/description.
 
 ### Analytics and consent
 
@@ -94,9 +94,17 @@ Gallery media is not committed — `public/projects/*/gallery/**` binaries are g
 
 Black-and-white design language: `border-black`/`bg-black` primitives, `font-extrabold`/`font-black` display type, lowercase nav.
 
-`src/components/ui/` (`Button`, `Card`, `Section`, `Badge`, `Eyebrow`, `Accordion`) are **hand-written**, not shadcn CLI output, despite `components.json` being present. Extend them by hand; don't `shadcn add` over them. `globals.css` does define the shadcn-style HSL variable set and Tailwind maps it, but most components use literal Tailwind colors instead — match the surrounding file.
+`src/components/ui/` (`Button`, `Section`, `Badge`, `Eyebrow`, `Accordion`) are **hand-written**, not shadcn CLI output. Extend them by hand; don't `shadcn add` over them (`components.json` was deleted precisely so that can't silently overwrite them). `globals.css` keeps only the handful of HSL variables Tailwind actually consumes (`--background`, `--foreground`, `--border`, `--radius`) — components use literal Tailwind colors, matching the black-and-white design language.
 
-Animation is framer-motion throughout, and `useReducedMotion` is honoured consistently via `motionPresets(reduced)` in `src/lib/motion.ts` — `initFade`/`initFadeUp`/`dur()`, which collapse to zero when motion is reduced (`HomeClient.tsx` is the reference call site). Use those rather than re-typing `reduced ? 0 : x`.
+Anything that looks like a button goes through `ui/Button` — `Button`, `ButtonLink`, or `buttonClasses()` for elements that own their own tag (e.g. `TrackedLink`). The focus ring lives in its base classes, and the several hand-copied class strings that dropped it were shipping CTAs with no visible focus state.
+
+Animation is framer-motion throughout, and `useReducedMotion` is honoured via three helpers in `src/lib/motion.ts` rather than re-typing `reduced ? 0 : x`:
+
+- `motionPresets(reduced)` — `initFade`/`initFadeUp`/`dur()` for one-off `motion.*` props (`HomeClient.tsx` is the reference call site)
+- `revealProps(reduced, {delay, y, margin})` — the whole fade-and-rise-on-scroll bundle; `Reveal` is its wrapper form, for content that can take an extra `<div>`
+- `useSectionScrollFade()` — the scroll-linked section fade, owning its own ref
+
+Note `useSectionScrollFade` flattens its `useTransform` output ranges under reduced motion instead of returning plain numbers. It must stay a `MotionValue`: the server renders the style at scroll progress 0, and React does not patch a mismatched `style` attribute during hydration, so a plain `{opacity: 1}` would never overwrite the SSR-baked `opacity:0` and the section would stay invisible.
 
 Note the asymmetry `dur()` exists to preserve: collapse the _duration_, don't disable the trigger. Dropping `whileInView` under reduced motion leaves variant-driven styles stuck at their unanimated values, which has already silently broken contrast once.
 

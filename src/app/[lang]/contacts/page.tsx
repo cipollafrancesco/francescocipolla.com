@@ -6,9 +6,7 @@ import { Reveal } from '@/components/Reveal'
 import CalEmbed from '@/components/CalEmbed'
 import { siteLinks } from '@/content/site'
 import { getI18nContent } from '@/i18n/server'
-import { isLocale } from '@/i18n/config'
 import { withLocaleMetadata } from '@/lib/metadata'
-import { notFound } from 'next/navigation'
 
 interface ContactsPageProps {
     params: Promise<{ lang: string }>
@@ -44,10 +42,6 @@ export async function generateMetadata({ params }: ContactsPageProps): Promise<M
 
 export default async function ContactsPage({ params }: ContactsPageProps) {
     const { lang: langParam } = await params
-
-    if (!isLocale(langParam)) {
-        notFound()
-    }
 
     const { lang, content } = await getI18nContent(langParam)
     const page = content.contact.page

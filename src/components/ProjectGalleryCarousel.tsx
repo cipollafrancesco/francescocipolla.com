@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import type { ProjectGalleryMedia } from '@/lib/project-gallery'
 import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/Button'
 
 type GalleryViewport = ProjectGalleryMedia['viewport']
 
@@ -109,22 +110,22 @@ export function ProjectGalleryCarousel({
                         {selectedMedia.length.toString().padStart(2, '0')}
                     </p>
                     <div className="flex items-center gap-2">
-                        <button
-                            type="button"
+                        <Button
+                            variant="secondary"
+                            shape="icon"
                             onClick={goToPrevious}
-                            className="grid h-10 w-10 place-items-center border border-black bg-white text-black transition-[color,background-color,border-color,transform] hover:bg-black hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 active:scale-[0.96]"
                             aria-label={labels.previous}
                         >
                             <ChevronLeft className="h-4 w-4" />
-                        </button>
-                        <button
-                            type="button"
+                        </Button>
+                        <Button
+                            variant="secondary"
+                            shape="icon"
                             onClick={goToNext}
-                            className="grid h-10 w-10 place-items-center border border-black bg-white text-black transition-[color,background-color,border-color,transform] hover:bg-black hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 active:scale-[0.96]"
                             aria-label={labels.next}
                         >
                             <ChevronRight className="h-4 w-4" />
-                        </button>
+                        </Button>
                     </div>
                 </div>
             </div>

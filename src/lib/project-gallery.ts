@@ -20,43 +20,32 @@ type ProjectGalleryManifest = Record<string, ProjectGalleryMedia[]>
 
 const galleryManifest = generatedGalleryManifest as ProjectGalleryManifest
 
-// `dpulses-2-0`'s route slug is dash-only on purpose (see the comment in
-// site.ts — a dotted path would be treated as a static file by the locale
-// middleware), but its media folder — wherever it ends up populated, whether
-// the generated manifest or the `public/` fallback — is the original dotted
-// name. As of this writing neither actually has an entry for this project
-// (`.media-source` was never synced for it), so this mapping doesn't yet
-// change what renders — it just means the gallery will resolve correctly
-// once that media is added, instead of needing this fixed at that point too.
-const slugToAssetFolder: Record<string, string> = {
-    'dpulses-2-0': 'dpulses2.0',
-}
-
 export function getProjectGalleryMedia(slug: string): ProjectGalleryMedia[] {
-    const folder = slugToAssetFolder[slug] ?? slug
-    const generatedMedia = galleryManifest[folder]
+    const generatedMedia = galleryManifest[slug]
 
     if (generatedMedia?.length) {
         return generatedMedia
     }
 
-    const galleryDirectory = path.join(process.cwd(), 'public', 'projects', folder, 'gallery')
+    // Local-preview escape hatch only. `public/projects/*/gallery/**` binaries are
+    // gitignored, so on a deployed build these directories hold nothing but
+    // `.gitkeep` and this branch can never return anything — it exists so dropping
+    // files straight into `public/` renders without running `pnpm gallery:sync`.
+    if (process.env.NODE_ENV !== 'development') {
+        return []
+    }
+
+    const galleryDirectory = path.join(process.cwd(), 'public', 'projects', slug, 'gallery')
 
     if (!existsSync(galleryDirectory)) {
         return []
     }
 
     return [
-        ...readGalleryDirectory(galleryDirectory, folder, 'mobile'),
-        ...readGalleryDirectory(galleryDirectory, folder, 'desktop'),
-        ...readGalleryDirectory(galleryDirectory, folder),
+        ...readGalleryDirectory(galleryDirectory, slug, 'mobile'),
+        ...readGalleryDirectory(galleryDirectory, slug, 'desktop'),
+        ...readGalleryDirectory(galleryDirectory, slug),
     ]
-}
-
-export function getProjectGalleryImages(slug: string) {
-    return getProjectGalleryMedia(slug)
-        .filter((media) => media.type === 'image' && media.viewport !== 'mobile')
-        .map((media) => media.src)
 }
 
 function readGalleryDirectory(
