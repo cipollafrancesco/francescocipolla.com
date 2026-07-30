@@ -1,7 +1,8 @@
 'use client'
 
 import Image from 'next/image'
-import { useEffect, useRef, useState, type PointerEvent, type ReactNode } from 'react'
+import { useRef, type PointerEvent, type ReactNode } from 'react'
+import { useMediaQuery } from '@/hooks/useMediaQuery'
 
 type ProfileTiltCardProps = {
     src: string
@@ -19,25 +20,11 @@ export function ProfileTiltCard({ src, alt, sizes, caption }: ProfileTiltCardPro
     // wrapper's `perspective: none` still lets `rotateX`/`rotateY` render as a
     // flat, unforeshortened distortion, so a reduced-motion user got an
     // instant snap between odd-looking shapes instead of no motion at all.
-    const [canTilt, setCanTilt] = useState(false)
-
-    useEffect(() => {
-        const pointerQuery = window.matchMedia('(hover: hover) and (pointer: fine)')
-        const reduceMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
-
-        const updateCapability = () => {
-            setCanTilt(pointerQuery.matches && !reduceMotionQuery.matches)
-        }
-
-        updateCapability()
-        pointerQuery.addEventListener('change', updateCapability)
-        reduceMotionQuery.addEventListener('change', updateCapability)
-
-        return () => {
-            pointerQuery.removeEventListener('change', updateCapability)
-            reduceMotionQuery.removeEventListener('change', updateCapability)
-        }
-    }, [])
+    // (`useMediaQuery` is SSR-safe: `false` until mounted, so server and first
+    // client render agree.)
+    const hasFinePointer = useMediaQuery('(hover: hover) and (pointer: fine)')
+    const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)')
+    const canTilt = hasFinePointer && !prefersReducedMotion
 
     // Writes the CSS custom properties the figure's `transform` reads,
     // instead of `setState` — a state update here would re-render the whole

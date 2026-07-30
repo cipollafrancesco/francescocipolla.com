@@ -75,5 +75,17 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-    matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
+    // Anything with a dot in it is a static asset and is excluded here rather
+    // than by the `PUBLIC_FILE` early return above: the early return still costs
+    // a full middleware invocation (and a possible cold start) before it runs,
+    // and the matcher is the only thing that can prevent one. That is not
+    // marginal — the book covers are plain `/covers/*.webp` requests (they're
+    // CSS backgrounds, so they never go through `/_next/image`), so a single
+    // uncached visit to `/books` was firing ~23 of them.
+    //
+    // Safe because no route slug contains a dot; `site.ts` keeps `dpulses-2-0`
+    // dash-only for exactly this reason. Extensionless metadata routes like
+    // `/opengraph-image` have no dot and are still matched, which is what
+    // `METADATA_IMAGE_ROUTE` above is for.
+    matcher: ['/((?!_next/static|_next/image|favicon.ico|.*\\..*).*)'],
 }

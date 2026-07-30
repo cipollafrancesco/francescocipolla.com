@@ -58,6 +58,29 @@ function spineHue(book: Book): number {
 }
 
 /**
+ * Descending, with `null` — missing or unparseable — always last and equal to
+ * each other.
+ *
+ * Subtracting two `Number.NEGATIVE_INFINITY` sentinels (the old approach, when
+ * two books both lacked a value) produces `NaN`, and `Array.sort`'s behaviour on
+ * a `NaN` comparator result is spec-undefined. Normalising "missing" and
+ * "unparseable" to `null` and branching on them closes that off entirely rather
+ * than just the common case.
+ */
+function descNullsLast(a: number | null, b: number | null): number {
+    if (a === null && b === null) return 0
+    if (a === null) return 1
+    if (b === null) return -1
+    return b - a
+}
+
+/** `dateRead` as a comparable number, or `null` if absent/unparseable. */
+function readTime(book: Book): number | null {
+    const parsed = book.dateRead ? Date.parse(book.dateRead) : NaN
+    return Number.isNaN(parsed) ? null : parsed
+}
+
+/**
  * Pure sort: returns a new array, never mutates the input.
  *
  * Phase 1 only wires `dateRead`; the other branches are implemented so adding a
@@ -68,24 +91,8 @@ export function sortBooks(books: Book[], criterion: SortCriterion): Book[] {
 
     switch (criterion) {
         case 'dateRead':
-            // Most recently read first; books without a dateRead — or with
-            // one `Date.parse` can't make sense of — go last and compare
-            // equal to each other. Subtracting two `Number.NEGATIVE_INFINITY`
-            // values (the old approach, for two books that both lack one)
-            // produces `NaN`, and `Array.sort`'s behavior on a `NaN`
-            // comparator result is spec-undefined; normalizing both "missing"
-            // and "unparseable" to `null` here closes that off entirely
-            // rather than just the common case.
-            return copy.sort((a, b) => {
-                const parsedA = a.dateRead ? Date.parse(a.dateRead) : NaN
-                const parsedB = b.dateRead ? Date.parse(b.dateRead) : NaN
-                const ta = Number.isNaN(parsedA) ? null : parsedA
-                const tb = Number.isNaN(parsedB) ? null : parsedB
-                if (ta === null && tb === null) return 0
-                if (ta === null) return 1
-                if (tb === null) return -1
-                return tb - ta
-            })
+            // Most recently read first; books without a usable dateRead go last.
+            return copy.sort((a, b) => descNullsLast(readTime(a), readTime(b)))
 
         case 'author':
             return copy.sort((a, b) =>
@@ -97,16 +104,8 @@ export function sortBooks(books: Book[], criterion: SortCriterion): Book[] {
             return copy.sort((a, b) => publishedTime(b) - publishedTime(a))
 
         case 'rating':
-            // Highest rating first; unrated books go last and compare equal
-            // to each other — same `NaN`-comparator hazard as `dateRead`.
-            return copy.sort((a, b) => {
-                const ra = a.rating ?? null
-                const rb = b.rating ?? null
-                if (ra === null && rb === null) return 0
-                if (ra === null) return 1
-                if (rb === null) return -1
-                return rb - ra
-            })
+            // Highest rating first; unrated books go last.
+            return copy.sort((a, b) => descNullsLast(a.rating ?? null, b.rating ?? null))
 
         case 'spineColor':
             return copy.sort((a, b) => spineHue(a) - spineHue(b))

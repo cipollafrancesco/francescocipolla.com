@@ -6,6 +6,17 @@ import { siteLinks } from '@/content/site'
 import { contactSchema } from '@/lib/contact-schema'
 import { isRateLimited } from '@/lib/rate-limit'
 
+// Lazily constructed rather than at module scope: `RESEND_API_KEY` is optional
+// locally, and building the client eagerly would throw on import. Cached so a
+// warm instance doesn't rebuild it on every submission. The `!` is safe — the
+// only caller is past the missing-key guard below.
+let resend: Resend | undefined
+
+function getResend() {
+    resend ??= new Resend(process.env.RESEND_API_KEY!)
+    return resend
+}
+
 export type ContactFormState = {
     ok: boolean
     fieldErrors?: Partial<Record<string, string>>
@@ -61,9 +72,7 @@ export async function submitContactForm(
     const from = process.env.CONTACT_FROM_EMAIL ?? 'onboarding@resend.dev'
 
     try {
-        const resend = new Resend(process.env.RESEND_API_KEY)
-
-        await resend.emails.send({
+        await getResend().emails.send({
             to,
             from,
             replyTo: email,

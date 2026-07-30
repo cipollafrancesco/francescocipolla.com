@@ -795,28 +795,6 @@
     white-space: nowrap;
 }
 
-/* Cloth titles are foil-stamped into the board, not printed — a metallic
-   gradient fill standing in for the foil, with a small emboss pair (a light
-   highlight up-left, a dark shadow down-right) standing in for the bevel a
-   stamping die actually leaves. The plain `color` fires first as a fallback for
-   any browser without background-clip: text, which is effectively none today;
-   more specific than the shared `.book__title` color above, so it wins without
-   `!important`. Jacket and paper titles are printed ink and keep that rule. */
-.book--cloth .book__title-text {
-    color: var(--foil-a, #f6dfa0);
-    background-image: linear-gradient(
-        180deg,
-        var(--foil-a, #f6dfa0) 0%,
-        var(--foil-b, #a97a2e) 100%
-    );
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-shadow:
-        -1px -1px 0 rgba(255, 255, 255, 0.35),
-        1px 1px 1px rgba(0, 0, 0, 0.55);
-}
-
 /* The cover boards, folded back from the spine's two long edges. Each is hinged
    on the edge it shares with the spine and swung away from the camera, so its
    outward normal points out of the book — the one turned away is then dropped by

@@ -240,5 +240,64 @@
         "description": "Austin Kleon's illustrated manifesto on creativity: nothing is original, so steal like an artist.",
         "coverUrl": "/covers/ruba-come-un-artista.webp",
         "spineColor": "#1a1a1a"
+    },
+    {
+        "id": "il-vecchio-e-il-mare",
+        "category": "Narrativa",
+        "title": "Il vecchio e il mare",
+        "author": "Ernest Hemingway",
+        "publishedDate": "1952-09-01",
+        "description": "Hemingway's late novella: an old Cuban fisherman, eighty-four days without a catch, hooks a marlin far out in the Gulf Stream and refuses to let go.",
+        "coverUrl": "/covers/il-vecchio-e-il-mare.webp",
+        "spineColor": "#4d76a3",
+        "isbn": "9788804734451",
+        "thickness": 0.9
+    },
+    {
+        "id": "the-italian-dream",
+        "category": "Economia",
+        "title": "The Italian Dream. Riprendersi il futuro",
+        "author": "Alec Ross",
+        "publishedDate": "2026-05-26",
+        "description": "Alec Ross on why a country admired for its past struggles to imagine its future, and what it would take for Italy to trade risk-aversion and nostalgia for confidence.",
+        "coverUrl": "/covers/the-italian-dream.webp",
+        "spineColor": "#f0e9e6",
+        "isbn": "9788807175633",
+        "thickness": 0.83,
+        "binding": "jacket"
+    },
+    {
+        "id": "steve-jobs",
+        "category": "Business",
+        "title": "Steve Jobs",
+        "author": "Walter Isaacson",
+        "publishedDate": "2011-10-24",
+        "description": "Walter Isaacson's authorized biography of Steve Jobs, drawn from over forty interviews with Jobs himself and hundreds more with family, friends, colleagues and rivals.",
+        "coverUrl": "/covers/steve-jobs.webp",
+        "spineColor": "#eeeae3",
+        "isbn": "9788804616320"
+    },
+    {
+        "id": "talk-like-ted",
+        "category": "Marketing",
+        "title": "Talk Like TED: The 9 Public-Speaking Secrets of the World's Top Minds",
+        "author": "Carmine Gallo",
+        "publishedDate": "2014-03-04",
+        "description": "Carmine Gallo distills nine public-speaking habits shared by the most-watched TED speakers, from storytelling to stagecraft.",
+        "coverUrl": "/covers/talk-like-ted.webp",
+        "spineColor": "#d7dee1",
+        "isbn": "9781447261131",
+        "binding": "paper"
+    },
+    {
+        "id": "thinking-fast-and-slow",
+        "category": "Scienza",
+        "title": "Thinking, Fast and Slow",
+        "author": "Daniel Kahneman",
+        "publishedDate": "2011-10-25",
+        "description": "Nobel laureate Daniel Kahneman on the two systems that drive how we think — fast, intuitive System 1 and slow, deliberate System 2 — and the biases that follow from their interplay.",
+        "coverUrl": "/covers/thinking-fast-and-slow.webp",
+        "spineColor": "#f2ede2",
+        "isbn": "9780374275631"
     }
 ]

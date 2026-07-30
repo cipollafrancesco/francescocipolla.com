@@ -2,7 +2,7 @@
 
 import { Analytics } from '@vercel/analytics/next'
 import { useEffect, useState } from 'react'
-import { hasAnalyticsConsent } from '@/lib/analytics'
+import { hasAnalyticsConsent, subscribeToAnalyticsConsent } from '@/lib/analytics'
 
 /** Vercel's `<Analytics />` has no built-in consent gate — unlike the GA
  *  loader in `lib/analytics.ts`, it fired unconditionally, contradicting the
@@ -14,10 +14,7 @@ export function ConsentedVercelAnalytics() {
     useEffect(() => {
         setConsented(hasAnalyticsConsent())
 
-        const onConsentChange = () => setConsented(hasAnalyticsConsent())
-        window.addEventListener('analytics-consent-changed', onConsentChange)
-
-        return () => window.removeEventListener('analytics-consent-changed', onConsentChange)
+        return subscribeToAnalyticsConsent(() => setConsented(hasAnalyticsConsent()))
     }, [])
 
     if (!consented) return null

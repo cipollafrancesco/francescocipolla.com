@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { loadGoogleAnalytics } from '@/lib/analytics'
+import { loadGoogleAnalytics, notifyConsentChanged } from '@/lib/analytics'
 import type { SiteContent } from '@/content/site'
 
 const consentCookie = 'analytics_consent'
@@ -20,7 +20,7 @@ function setConsent(value: 'accepted' | 'rejected') {
     // Lets consumers that gate on `hasAnalyticsConsent()` — e.g.
     // `ConsentedVercelAnalytics` — react immediately instead of waiting for
     // the next full page load.
-    window.dispatchEvent(new Event('analytics-consent-changed'))
+    notifyConsentChanged()
 }
 
 export function ConsentBanner({ copy }: { copy: SiteContent['consent'] }) {

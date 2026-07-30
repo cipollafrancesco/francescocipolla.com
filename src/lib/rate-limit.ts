@@ -15,11 +15,19 @@ export function isRateLimited(key: string): boolean {
     const recent = (hits.get(key) ?? []).filter((timestamp) => now - timestamp < WINDOW_MS)
 
     if (recent.length >= MAX_REQUESTS_PER_WINDOW) {
+        // Refreshed the same way as the allowed path below, so a key that is
+        // actively being hammered can't age out of the map and get a clean slate.
+        hits.delete(key)
         hits.set(key, recent)
         return true
     }
 
     recent.push(now)
+    // Delete-then-set, not a plain `set`: updating an existing `Map` key leaves
+    // it at its original position, and the eviction below relies on insertion
+    // order meaning *recency*. Re-inserting moves this key to the back, so an
+    // actively-used key is never the one evicted.
+    hits.delete(key)
     hits.set(key, recent)
 
     // Opportunistic cleanup so the map doesn't grow unboundedly under
@@ -29,6 +37,17 @@ export function isRateLimited(key: string): boolean {
             if (timestamps.every((timestamp) => now - timestamp >= WINDOW_MS)) {
                 hits.delete(trackedKey)
             }
+        }
+
+        // Expiry alone doesn't guarantee progress: under a burst from many
+        // distinct keys — precisely what the cap exists for — nothing is old
+        // enough to expire, so the pass above frees nothing and every later
+        // request pays a full scan while the map stays over cap indefinitely.
+        // Evicting from the front (least recently seen, per the re-insert
+        // above) bounds it for real.
+        for (const trackedKey of hits.keys()) {
+            if (hits.size <= MAX_TRACKED_KEYS) break
+            if (trackedKey !== key) hits.delete(trackedKey)
         }
     }
 

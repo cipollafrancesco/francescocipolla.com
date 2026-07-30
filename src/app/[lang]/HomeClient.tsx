@@ -10,6 +10,7 @@ import Hero from '@/sections/Hero'
 import { useHeroAnimations } from '@/hooks/useHeroAnimations'
 import type { Locale } from '@/i18n/config'
 import type { SiteContent } from '@/content/site'
+import { motionPresets } from '@/lib/motion'
 
 export default function HomeClient({ lang, content }: { lang: Locale; content: SiteContent }) {
     const mainContainerRef = useRef<HTMLDivElement>(null)
@@ -34,12 +35,7 @@ export default function HomeClient({ lang, content }: { lang: Locale; content: S
         smoothScrollProgress,
     } = useHeroAnimations(heroSectionRef)
 
-    const initFade = prefersReducedMotion ? false : { opacity: 0 }
-    const initFadeUp = prefersReducedMotion ? false : { opacity: 0, y: 50 }
-    const dur = (d: number, delay = 0) => ({
-        duration: prefersReducedMotion ? 0 : d,
-        delay: prefersReducedMotion ? 0 : delay,
-    })
+    const { initFade, initFadeUp, dur } = motionPresets(prefersReducedMotion)
 
     return (
         <div ref={mainContainerRef} id="main-content" className="min-h-[300vh] bg-white text-black">

@@ -5,6 +5,10 @@ export const size = {
     width: 1200,
     height: 630,
 }
+// Explicit, matching `[lang]/services/opengraph-image.tsx`. `ImageResponse`
+// already emits PNG, so this changes nothing served — it just stops the two
+// OG routes from describing themselves differently.
+export const contentType = 'image/png'
 
 export default function Image() {
     return new ImageResponse(

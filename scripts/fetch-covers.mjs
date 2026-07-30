@@ -5,8 +5,9 @@
  *
  * The collection is mostly Italian editions. Resolver order, best Italian
  * coverage first:
- *   1. Apple Books / iTunes Search API (country=it, no key) — artwork upscaled.
- *   2. Open Library search (language:ita preferred) — high-res cover-by-id.
+ *   1. IBS / laFeltrinelli, addressed directly by ISBN — the exact Italian
+ *      edition's jacket, when we know which one it is.
+ *   2. Apple Books / iTunes Search API (country=it, no key) — artwork upscaled.
  *   3. Google Books (country=IT) — with backoff (often rate-limited).
  *
  * Backfills ONLY missing `isbn`; never overwrites curated title/author/description.
@@ -70,6 +71,18 @@ async function getImage(url) {
 }
 
 const upscaleArt = (art) => art.replace(/\/\d+x\d+bb\.(jpg|png)/, '/600x600bb.$1')
+
+/** IBS / laFeltrinelli — covers addressed directly by ISBN. Best source for the
+ *  exact *Italian edition*: Apple often lists only an older ebook of a classic,
+ *  Open Library rarely has Italian ISBNs, and Google is frequently quota-capped. */
+async function ibsByIsbn(isbn) {
+    const buf = await getImage(`https://www.ibs.it/images/${isbn}_0_536_0_75.jpg`)
+    if (!buf) return null
+    // Unknown ISBNs return a 536×536 "cover not available" square with a 200.
+    // Real covers are portrait — reject squares rather than shipping the graphic.
+    const { width, height } = await sharp(buf).metadata()
+    return width && height && height > width ? buf : null
+}
 
 /** Apple Books / iTunes lookup by ISBN — exact edition match. */
 async function appleByIsbn(isbn) {
@@ -166,7 +179,8 @@ async function main() {
         let buf = null
         let source = ''
         try {
-            if (book.isbn && (buf = await appleByIsbn(book.isbn))) source = 'apple/isbn'
+            if (book.isbn && (buf = await ibsByIsbn(book.isbn))) source = 'ibs/isbn'
+            if (!buf && book.isbn && (buf = await appleByIsbn(book.isbn))) source = 'apple/isbn'
             if (!buf && (buf = await appleCover(book))) source = 'apple'
             if (!buf && book.isbn && (buf = await googleByIsbn(book.isbn))) source = 'google/isbn'
             if (!buf && (buf = await googleCover(book))) source = 'google'

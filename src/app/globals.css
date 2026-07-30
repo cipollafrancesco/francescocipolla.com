@@ -115,6 +115,29 @@ section {
     }
 }
 
+/* ── Route transition (U3) ────────────────────────────────────────
+   Driven by `app/[lang]/template.tsx`. Next remounts a `template` on every
+   navigation, so the animation replays each time without any JS to schedule
+   it — the element is simply new. `ease-out` is cubic-bezier(0, 0, 0.58, 1),
+   the same curve framer-motion's `easeOut` uses, so the motion is unchanged
+   from the client-component version this replaced. */
+@media (prefers-reduced-motion: no-preference) {
+    .page-enter {
+        animation: page-enter 0.25s ease-out;
+    }
+
+    @keyframes page-enter {
+        from {
+            opacity: 0;
+            transform: translateY(6px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+}
+
 /* ── Focus rings (A5) ─────────────────────────────────────────── */
 :focus-visible {
     outline: 2px solid black;

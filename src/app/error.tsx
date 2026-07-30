@@ -3,24 +3,13 @@
 import { useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/Button'
-import { localeFromPathname, type Locale } from '@/i18n/config'
-
-// A dedicated copy map rather than importing `siteContent`: this is a client
-// component (error boundaries must be), and `siteContent` carries every
-// page's copy plus every project case study — pulling it in here would ship
-// all of it to the browser for three strings.
-const errorCopy: Record<Locale, { title: string; description: string; retry: string }> = {
-    it: {
-        title: 'ops.',
-        description: 'Qualcosa è andato storto da parte nostra. Non è colpa tua — è nostra.',
-        retry: 'Riprova',
-    },
-    en: {
-        title: 'oops.',
-        description: "Something went wrong on our end. It's not you — it's us.",
-        retry: 'Try again',
-    },
-}
+import { localeFromPathname } from '@/i18n/config'
+// Not `siteContent`: this is a client component (error boundaries must be), and
+// `siteContent` carries every page's copy plus every project case study, all of
+// which would ship to the browser for three strings. `system-copy` holds just
+// these and is re-exported into `siteContent.error`, so the copy still has a
+// single home — see the note in that file.
+import { errorCopy } from '@/content/system-copy'
 
 export default function Error({
     error,
@@ -29,7 +18,8 @@ export default function Error({
     error: Error & { digest?: string }
     reset: () => void
 }) {
-    // Same as `not-found.tsx`: no route params here, so read the locale off the URL.
+    // Like `global-not-found.tsx`, this receives no route params — so the locale
+    // has to come off the URL.
     const lang = localeFromPathname(usePathname())
     const copy = errorCopy[lang]
 

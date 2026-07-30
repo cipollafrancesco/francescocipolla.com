@@ -17,11 +17,11 @@ pnpm gallery:sync   # optimise + upload project gallery media (see "Project gall
 
 There is **no test suite**. `pnpm build` is what catches breakage — run it after non-trivial changes.
 
-A husky `pre-commit` hook runs `lint-staged`: prettier + `eslint --fix` on staged `.ts/.tsx`, prettier on `.json/.css/.md`. Prettier config is non-default and deliberate: **no semicolons, single quotes, 4-space indent, 100 columns**, plus `prettier-plugin-tailwindcss` for class sorting.
+A husky `pre-commit` hook runs `lint-staged`: prettier + `eslint --fix` on staged `.ts/.tsx/.mjs`, prettier on `.json/.css/.md`. Prettier config is non-default and deliberate: **no semicolons, single quotes, 4-space indent, 100 columns**, plus `prettier-plugin-tailwindcss` for class sorting.
 
 ## Stack
 
-Next.js 15 App Router · React 19 · TypeScript (strict) · Tailwind 3 · framer-motion · i18next. Path alias `@/*` → `src/*`.
+Next.js 15 App Router · React 19 · TypeScript (strict) · Tailwind 3 · framer-motion. Path alias `@/*` → `src/*`. There is no i18n library — see "Copy is prop-drilled" below.
 
 ## Architecture
 
@@ -32,8 +32,10 @@ Every user-facing route lives under `src/app/[lang]/`. Locales are `it` (default
 `src/middleware.ts` guarantees a locale prefix on every request:
 
 - unprefixed paths are redirected to `/{locale}/...`, the locale coming from the `NEXT_LOCALE` cookie or falling back to `it`
-- it also sets an `x-locale` request header, because `not-found.tsx` and `error.tsx` receive no route params and that header is their only way to resolve a language
+- it also sets an `x-locale` request header, because `global-not-found.tsx` receives no route params and isn't nested under `[lang]`, so that header is its only way to resolve a language (`error.tsx` is a client component and reads the locale off `usePathname()` instead)
 - `/{lang}/about` gets a 307 to `/{lang}` (leftover route; the about content moved to the locale root)
+
+Its `matcher` excludes anything containing a dot, so static assets never cost a middleware invocation. That's why **route slugs must not contain dots** — `dpulses-2-0` is deliberately dash-only even though its asset folder is `dpulses2.0` (`src/lib/project-gallery.ts` maps between the two).
 
 ### Copy and project content live in one file
 
@@ -59,13 +61,11 @@ export default async function Page({ params }) {
 
 `withLocaleMetadata` (`src/lib/metadata.ts`) is what produces canonical URLs, `hreflang` alternates, and OG locale — always route page metadata through it rather than hand-writing `alternates`.
 
-**Copy is prop-drilled, not hooked.** `I18nProvider` and `react-i18next` are wired up in the layout, but no component calls `useTranslation` — every string arrives as a `copy`/`content` prop from a server component. Follow that; don't introduce `useTranslation` for new work.
+**Copy is prop-drilled, not hooked.** There is no i18next in the project — `i18next`/`react-i18next` and the old `I18nProvider` are gone. Every string arrives as a `copy`/`content` prop from a server component that read `siteContent[lang]`. Follow that; don't introduce `useTranslation`.
+
+The one deliberate exception is `src/content/system-copy.ts`, which holds the error-boundary strings. `app/error.tsx` must be a client component, and importing `site.ts` there would ship all ~1.5k lines of copy and case studies to the browser for three strings — so those live in a tiny module that `site.ts` re-exports into `siteContent.error`. Single source, two module boundaries. `global-not-found.tsx` needs no such split: it's a Server Component and reads `siteContent` directly.
 
 Interactive pages split into a server `page.tsx` plus a sibling `*Client.tsx` marked `'use client'` (`HomeClient`, `BooksClient`).
-
-### Legacy unprefixed route tree — do not extend
-
-`src/app/{about,blog,projects,services}/` still exist without a locale segment. They are shadowed by the middleware redirect and effectively dead, and they read project data from the older path (`src/lib/projects.ts` → `content/projects/*.json`) rather than from `site.ts`. New pages and edits belong in `src/app/[lang]/`. Treat `content/projects/*.json` + `src/lib/projects.ts` as superseded by `site.ts`.
 
 ### Project gallery pipeline
 
@@ -88,7 +88,7 @@ Gallery media is not committed — `public/projects/*/gallery/**` binaries are g
 
 ### Contact form
 
-`src/app/[lang]/contacts/actions.ts` is a server action: zod validation (`src/lib/contact-schema.ts`) → Resend. It returns **error codes** (`'required'`, `'email_invalid'`, `'message_too_short'`), not messages — the client maps them to localized copy. A `website` honeypot field silently returns success.
+`src/app/[lang]/contacts/actions.ts` is a server action: zod validation (`src/lib/contact-schema.ts`) → Resend. It returns **error codes** (`'required'`, `'email_invalid'`, `'message_too_short'`, `'message_too_long'`), not messages — the client maps them to localized copy in `ContactForm`'s `getFieldError`. A `website` honeypot field silently returns success. Submissions are also IP-rate-limited in-process by `src/lib/rate-limit.ts` — a per-instance deterrent, not a durable defence; see the note at the top of that file.
 
 ## Styling conventions
 
@@ -96,7 +96,11 @@ Black-and-white design language: `border-black`/`bg-black` primitives, `font-ext
 
 `src/components/ui/` (`Button`, `Card`, `Section`, `Badge`, `Eyebrow`, `Accordion`) are **hand-written**, not shadcn CLI output, despite `components.json` being present. Extend them by hand; don't `shadcn add` over them. `globals.css` does define the shadcn-style HSL variable set and Tailwind maps it, but most components use literal Tailwind colors instead — match the surrounding file.
 
-Animation is framer-motion throughout, and `useReducedMotion` is honoured consistently — see `HomeClient.tsx` for the established pattern (`initFade`/`initFadeUp`/`dur()` helpers that collapse to zero when motion is reduced). Preserve that when adding motion.
+Animation is framer-motion throughout, and `useReducedMotion` is honoured consistently via `motionPresets(reduced)` in `src/lib/motion.ts` — `initFade`/`initFadeUp`/`dur()`, which collapse to zero when motion is reduced (`HomeClient.tsx` is the reference call site). Use those rather than re-typing `reduced ? 0 : x`.
+
+Note the asymmetry `dur()` exists to preserve: collapse the _duration_, don't disable the trigger. Dropping `whileInView` under reduced motion leaves variant-driven styles stuck at their unanimated values, which has already silently broken contrast once.
+
+Route transitions are the exception to "framer-motion throughout": `app/[lang]/template.tsx` is a Server Component and the fade-and-rise is the `.page-enter` CSS class in `globals.css`, so navigation costs no client JS.
 
 ## Browsing the site
 

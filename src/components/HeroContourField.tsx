@@ -25,10 +25,14 @@ export function HeroContourField({ className }: HeroContourFieldProps) {
         const pointerQuery = window.matchMedia(
             '(hover: hover) and (pointer: fine) and (min-width: 768px)'
         )
+        // Raw viewport coordinates. Converting to canvas-local space is deferred
+        // to `draw()`, which already runs at most 30×/sec and is the only reader
+        // — so a moving canvas (scroll) can never leave the pointer mapped
+        // against a stale rect, and no handler has to force a layout flush.
         const pointer = {
-            active: false,
-            x: -1000,
-            y: -1000,
+            inWindow: false,
+            clientX: -1000,
+            clientY: -1000,
         }
 
         let frame = 0
@@ -37,11 +41,26 @@ export function HeroContourField({ className }: HeroContourFieldProps) {
         let canAnimate = !reduceMotionQuery.matches
         let canInteract = pointerQuery.matches && canAnimate
         let rect = canvas.getBoundingClientRect()
+        let rectDirty = false
 
         const draw = (time = 0) => {
+            if (rectDirty) {
+                rect = canvas.getBoundingClientRect()
+                rectDirty = false
+            }
+
             if (rect.width <= 0 || rect.height <= 0) {
                 return
             }
+
+            const pointerX = pointer.clientX - rect.left
+            const pointerY = pointer.clientY - rect.top
+            const pointerActive =
+                pointer.inWindow &&
+                pointerX >= 0 &&
+                pointerX <= rect.width &&
+                pointerY >= 0 &&
+                pointerY <= rect.height
 
             context.clearRect(0, 0, rect.width, rect.height)
             context.lineCap = 'round'
@@ -66,9 +85,9 @@ export function HeroContourField({ className }: HeroContourFieldProps) {
                     let warpedX = x
                     let warpedY = baseY + wave
 
-                    if (pointer.active && canInteract) {
-                        const distanceX = x - pointer.x
-                        const distanceY = warpedY - pointer.y
+                    if (pointerActive && canInteract) {
+                        const distanceX = x - pointerX
+                        const distanceY = warpedY - pointerY
                         const distance = Math.hypot(distanceX, distanceY) || 1
                         const force = Math.max(0, 1 - distance / INTERACTION_RADIUS)
                         const ripple = Math.sin(distance * 0.045 - time * 0.004) * force * 11
@@ -114,15 +133,17 @@ export function HeroContourField({ className }: HeroContourFieldProps) {
             }
         }
 
-        // Split from `resize()` so scroll (which moves the canvas relative to
-        // the viewport without changing its size) can refresh `rect` cheaply,
-        // without also touching the backing buffer.
-        const updateRect = () => {
-            rect = canvas.getBoundingClientRect()
+        // Scroll moves the canvas relative to the viewport without changing its
+        // size, so it only has to invalidate the cached rect — `draw()` picks
+        // the new one up on its next frame. Setting a boolean keeps the scroll
+        // handler free of layout reads.
+        const markRectDirty = () => {
+            rectDirty = true
         }
 
         const resize = () => {
-            updateRect()
+            rect = canvas.getBoundingClientRect()
+            rectDirty = false
             const pixelRatio = Math.min(window.devicePixelRatio || 1, 2)
 
             canvas.width = Math.floor(rect.width * pixelRatio)
@@ -131,23 +152,17 @@ export function HeroContourField({ className }: HeroContourFieldProps) {
             start()
         }
 
-        // Reads the `rect` kept fresh by `resize`/`updateRect` instead of
-        // calling `getBoundingClientRect()` here, which would force a
-        // synchronous layout flush on every pointer event — and this listener
-        // is on `window`, so it can fire well past 60/sec on a high
-        // polling-rate mouse.
+        // Records the raw event coordinates and nothing else. This listener is
+        // on `window` and can fire well past 60/sec on a high polling-rate
+        // mouse, so it must not read layout; `draw()` does the conversion.
         const handlePointerMove = (event: PointerEvent) => {
-            pointer.x = event.clientX - rect.left
-            pointer.y = event.clientY - rect.top
-            pointer.active =
-                pointer.x >= 0 &&
-                pointer.x <= rect.width &&
-                pointer.y >= 0 &&
-                pointer.y <= rect.height
+            pointer.inWindow = true
+            pointer.clientX = event.clientX
+            pointer.clientY = event.clientY
         }
 
         const handlePointerLeave = () => {
-            pointer.active = false
+            pointer.inWindow = false
         }
 
         const handleMediaChange = () => {
@@ -176,7 +191,7 @@ export function HeroContourField({ className }: HeroContourFieldProps) {
         // the target of its own pointer events.
         window.addEventListener('pointermove', handlePointerMove, { passive: true })
         window.addEventListener('pointerleave', handlePointerLeave)
-        window.addEventListener('scroll', updateRect, { passive: true, capture: true })
+        window.addEventListener('scroll', markRectDirty, { passive: true, capture: true })
         pointerQuery.addEventListener('change', handleMediaChange)
         reduceMotionQuery.addEventListener('change', handleMediaChange)
         resize()
@@ -187,7 +202,7 @@ export function HeroContourField({ className }: HeroContourFieldProps) {
             resizeObserver.disconnect()
             window.removeEventListener('pointermove', handlePointerMove)
             window.removeEventListener('pointerleave', handlePointerLeave)
-            window.removeEventListener('scroll', updateRect, { capture: true })
+            window.removeEventListener('scroll', markRectDirty, { capture: true })
             pointerQuery.removeEventListener('change', handleMediaChange)
             reduceMotionQuery.removeEventListener('change', handleMediaChange)
         }

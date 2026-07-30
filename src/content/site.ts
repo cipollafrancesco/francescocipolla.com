@@ -1,5 +1,6 @@
 import type { Locale } from '@/i18n/config'
 import type { Metadata } from 'next'
+import { errorCopy } from '@/content/system-copy'
 
 // `NEXT_PUBLIC_SITE_URL` wins if set explicitly; otherwise a Vercel preview
 // canonicalizes to its own deploy URL rather than production — without this,
@@ -19,6 +20,12 @@ export const siteLinks = {
     linkedin: 'https://www.linkedin.com/in/francesco-cipolla-41768411b',
     github: 'https://github.com/cipollafrancesco',
 } as const
+
+/** The site-wide default `<title>`. Locale-independent by design (it's a proper
+ *  name plus a role that reads the same in both languages), and shared so the
+ *  root layout and `global-not-found.tsx` — which bypasses that layout and so
+ *  needs its own `metadata` — cannot drift apart. */
+export const siteTitle = 'Francesco Cipolla - Digital Product Partner'
 
 export type LocalizedProject = {
     id: number
@@ -1010,11 +1017,7 @@ export const siteContent: Record<Locale, SiteContent> = {
             label: '404',
             description: 'La pagina che cercavi non esiste o è stata spostata altrove.',
         },
-        error: {
-            title: 'ops.',
-            description: 'Qualcosa è andato storto da parte nostra. Non è colpa tua — è nostra.',
-            retry: 'Riprova',
-        },
+        error: errorCopy.it,
         consent: {
             title: 'Privacy e analytics',
             description:
@@ -1443,11 +1446,7 @@ export const siteContent: Record<Locale, SiteContent> = {
             label: '404',
             description: "The page you were looking for doesn't exist, or it moved somewhere else.",
         },
-        error: {
-            title: 'oops.',
-            description: "Something went wrong on our end. It's not you — it's us.",
-            retry: 'Try again',
-        },
+        error: errorCopy.en,
         consent: {
             title: 'Privacy and analytics',
             description:

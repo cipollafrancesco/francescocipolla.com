@@ -32,7 +32,9 @@ export function getLocale(value: string | undefined): Locale {
 }
 
 /** Middleware guarantees a locale prefix, so the first path segment is the locale.
- *  Needed by `not-found.tsx` and `error.tsx`, which never receive route params. */
+ *  Needed by `error.tsx`, which never receives route params. (`global-not-found.tsx`
+ *  has the same problem but renders on the server, so it reads `localeHeaderName`
+ *  instead of a client-side pathname.) */
 export function localeFromPathname(pathname: string): Locale {
     return getLocale(pathname.split('/')[1])
 }

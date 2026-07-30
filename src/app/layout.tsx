@@ -1,14 +1,12 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
 import { ConsentedVercelAnalytics } from '@/components/ConsentedVercelAnalytics'
-import { baseUrl, siteLinks } from '@/content/site'
+import { baseUrl, siteLinks, siteTitle } from '@/content/site'
 import { defaultLocale } from '@/i18n/config'
+import { inter } from '@/lib/fonts'
 import './globals.css'
 
-const inter = Inter({ subsets: ['latin'], weight: ['400', '500', '700', '900'] })
-
 export const metadata: Metadata = {
-    title: 'Francesco Cipolla - Digital Product Partner',
+    title: siteTitle,
     description:
         'Digital product partner e ingegnere informatico: prodotti web, streaming, design e sistemi digitali.',
     metadataBase: new URL(baseUrl),

@@ -7,7 +7,6 @@ import type { Book } from '@/lib/bookshelf/types'
 import {
     bindingOf,
     depthInset,
-    foilColors,
     hasBands,
     hasRealCover,
     heightScale,
@@ -59,14 +58,6 @@ function BookSpine({ book, isOpen, isHidden, rowPos, onOpen, label }: BookSpineP
         // reveals it. Placeholder covers fall back to the plain board colour
         // via the CSS `var()` default.
         ...(hasRealCover(book) ? { ['--cover-image' as string]: `url("${book.coverUrl}")` } : {}),
-        // Foil is stamped, not printed, so only cloth spines get a colour pair
-        // to paint one — jacket and paper titles stay plain ink.
-        ...(binding === 'cloth'
-            ? (() => {
-                  const [a, b] = foilColors(book)
-                  return { ['--foil-a' as string]: a, ['--foil-b' as string]: b }
-              })()
-            : {}),
     }
 
     return (

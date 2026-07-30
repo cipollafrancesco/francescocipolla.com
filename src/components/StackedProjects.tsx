@@ -55,7 +55,7 @@ export default function StackedProjects({
                 modules={[EffectCards, A11y]}
                 className="aspect-[9/16] h-auto w-[290px] md:aspect-video md:w-[630px] xl:!mr-[5%] xl:h-[600px] xl:w-[1080px]"
             >
-                {projects.map((project, index) => (
+                {projects.map((project) => (
                     <SwiperSlide
                         key={project.id}
                         className="group overflow-hidden rounded-lg bg-white shadow-xl"
@@ -71,12 +71,16 @@ export default function StackedProjects({
                                     alt={project.title}
                                     fill
                                     sizes="290px"
-                                    // Only one of the two variants gets `priority` —
-                                    // both are `<Image>` elements (CSS shows/hides
-                                    // the other per breakpoint), and `priority` still
-                                    // preloads a CSS-hidden image, so marking both
-                                    // would fetch the off-breakpoint asset for nothing.
-                                    priority={index === 0}
+                                    // Neither variant gets `priority`. Both are
+                                    // `<Image>` elements with CSS showing one per
+                                    // breakpoint, and `priority` emits a
+                                    // `<link rel=preload>` that fetches regardless of
+                                    // `display: none` — so whichever one carried it
+                                    // pulled the *off-breakpoint* asset down the wire
+                                    // on every load. Left lazy, the hidden variant
+                                    // never intersects and is never fetched at all,
+                                    // while the visible one is in the initial viewport
+                                    // and so is fetched immediately anyway.
                                     className="object-cover md:hidden"
                                 />
                                 <Image

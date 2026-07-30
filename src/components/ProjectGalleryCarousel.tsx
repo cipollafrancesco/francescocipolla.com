@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import Image from 'next/image'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import type { ProjectGalleryMedia } from '@/lib/project-gallery'
@@ -44,23 +44,14 @@ export function ProjectGalleryCarousel({
     )
     const [activeIndex, setActiveIndex] = useState(0)
     const selectedMedia = selectedView === 'desktop' ? desktopMedia : mobileMedia
-    // Clamped during render, not just reset in an effect below: switching views
-    // can leave `activeIndex` pointing past the end of the new `selectedMedia`
-    // for the render that happens before the effect runs, which made
-    // `activeMedia` briefly undefined and unmounted the whole carousel.
-    const clampedIndex =
-        selectedMedia.length > 0 ? Math.min(activeIndex, selectedMedia.length - 1) : 0
+    // Clamped during render rather than reset in an effect: switching views can
+    // leave `activeIndex` pointing past the end of the new `selectedMedia` for
+    // the render that happens before any effect runs, which made `activeMedia`
+    // briefly undefined and unmounted the whole carousel.
+    const clampIndex = (index: number) =>
+        selectedMedia.length > 0 ? Math.min(index, selectedMedia.length - 1) : 0
+    const clampedIndex = clampIndex(activeIndex)
     const activeMedia = selectedMedia[clampedIndex]
-
-    useEffect(() => {
-        if (!availableViews.some((view) => view.value === selectedView)) {
-            setSelectedView(availableViews[0]?.value ?? 'desktop')
-        }
-    }, [availableViews, selectedView])
-
-    useEffect(() => {
-        setActiveIndex(0)
-    }, [selectedView])
 
     if (!activeMedia) {
         return null
@@ -71,20 +62,24 @@ export function ProjectGalleryCarousel({
     // render-scoped `clampedIndex` and compute the same next value, silently
     // dropping one of the clicks. Clamping again inside the updater (against
     // `current`, not `clampedIndex`) keeps the same out-of-bounds protection.
-    const goToPrevious = () => {
+    const step = (delta: number) => {
         setActiveIndex((current) => {
-            const clamped =
-                selectedMedia.length > 0 ? Math.min(current, selectedMedia.length - 1) : 0
-            return clamped === 0 ? selectedMedia.length - 1 : clamped - 1
+            const clamped = clampIndex(current)
+            const last = selectedMedia.length - 1
+            if (delta < 0) return clamped === 0 ? last : clamped - 1
+            return clamped === last ? 0 : clamped + 1
         })
     }
 
-    const goToNext = () => {
-        setActiveIndex((current) => {
-            const clamped =
-                selectedMedia.length > 0 ? Math.min(current, selectedMedia.length - 1) : 0
-            return clamped === selectedMedia.length - 1 ? 0 : clamped + 1
-        })
+    const goToPrevious = () => step(-1)
+    const goToNext = () => step(1)
+
+    // Resetting here rather than in an effect on `selectedView`: this is the
+    // only thing that ever changes the view, so the effect was just a delayed
+    // echo of this handler.
+    const handleViewChange = (view: GalleryViewport) => {
+        setSelectedView(view)
+        setActiveIndex(0)
     }
 
     return (
@@ -94,7 +89,9 @@ export function ProjectGalleryCarousel({
                     <span>{labels.view}</span>
                     <select
                         value={selectedView}
-                        onChange={(event) => setSelectedView(event.target.value as GalleryViewport)}
+                        onChange={(event) =>
+                            handleViewChange(event.target.value as GalleryViewport)
+                        }
                         className="min-w-32 rounded-none border border-black bg-white px-3 py-2 text-sm font-bold normal-case tracking-normal text-black outline-none transition-colors focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:border-gray-200 disabled:text-gray-400"
                         disabled={availableViews.length < 2}
                     >

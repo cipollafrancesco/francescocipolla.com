@@ -23,6 +23,31 @@ export function hasAnalyticsConsent() {
     return document.cookie.split('; ').some((item) => item === 'analytics_consent=accepted')
 }
 
+/** Fired by the consent banner whenever the stored choice changes.
+ *
+ *  Private to this module on purpose — `ConsentBanner` dispatches it and
+ *  `ConsentedVercelAnalytics` subscribes, and while the name was a bare string
+ *  literal in both, a typo on either side silently disabled the gate with no
+ *  type error to catch it. Go through `notifyConsentChanged` /
+ *  `subscribeToAnalyticsConsent` instead. */
+const CONSENT_CHANGED_EVENT = 'analytics-consent-changed'
+
+/** Tells live consumers the consent cookie just changed, so they can re-read it
+ *  without waiting for the next full page load. */
+export function notifyConsentChanged() {
+    if (typeof window === 'undefined') return
+
+    window.dispatchEvent(new Event(CONSENT_CHANGED_EVENT))
+}
+
+/** Subscribes to consent changes. Returns an unsubscribe function. */
+export function subscribeToAnalyticsConsent(onChange: () => void) {
+    if (typeof window === 'undefined') return () => {}
+
+    window.addEventListener(CONSENT_CHANGED_EVENT, onChange)
+    return () => window.removeEventListener(CONSENT_CHANGED_EVENT, onChange)
+}
+
 export function loadGoogleAnalytics() {
     if (typeof window === 'undefined' || !gaId || !hasAnalyticsConsent()) return
     if (document.querySelector(`script[src*="${gaId}"]`)) return

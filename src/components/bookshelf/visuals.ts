@@ -78,39 +78,6 @@ export function bindingOf(book: Book): Binding {
     return 'paper'
 }
 
-/** Foil, bright enough to read on the dark spines it is picked for. Kept to a
- *  narrow ~10pt luminance band: the original recipe spanned light-to-dark
- *  across the whole gradient, and whichever letter happened to land on the
- *  mid-tone crossed the spine's own luminance and vanished — worst on the
- *  reddest spine, where that midpoint was nearly the exact colour of the
- *  cloth. A tight band can't cross anything. */
-const FOIL_BRIGHT: Record<'gold' | 'silver', [string, string]> = {
-    gold: ['#f4dda2', '#e0bb72'],
-    silver: ['#f3f2ef', '#dad7cd'],
-}
-/** The dark counterpart, for pale spines a bright foil would wash out against. */
-const FOIL_DEEP: Record<'gold' | 'silver', [string, string]> = {
-    gold: ['#8c6a2e', '#6d4f1e'],
-    silver: ['#707070', '#4c4c4c'],
-}
-
-/**
- * Cloth spines are foil-stamped, not printed — the metal a real bindery would
- * actually use. Two choices, each picked for contrast rather than at random:
- * - Light/dark: a pale spine needs a dark foil to read against it and a dark
- *   spine needs a bright one, the same "target the opposite end of the scale"
- *   logic as `accentOnDark`.
- * - Gold/silver: a warm spine (red, orange) sits too close to gold in hue for
- *   the two to separate cleanly, so warm spines get the neutral silver instead;
- *   cool and neutral spines get the more common gold.
- */
-export function foilColors(book: Book): [string, string] {
-    const { r, b } = toRgb(book.spineColor)
-    const metal = r - b > 20 ? 'silver' : 'gold'
-    const pale = luminance(book.spineColor) >= 0.55
-    return pale ? FOIL_DEEP[metal] : FOIL_BRIGHT[metal]
-}
-
 /** Raised cord bands are a leather/traditionally-sewn binding trait — mainly
  *  antique or special editions, not the ordinary contemporary cloth hardback
  *  this shelf is mostly made of. ~1 in 6 cloth books gets them; the rest are
