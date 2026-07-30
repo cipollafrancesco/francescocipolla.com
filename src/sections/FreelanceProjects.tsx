@@ -13,6 +13,8 @@ interface IFreelanceProjectsProps {
     labels: {
         caseStudy: string
         liveSite: string
+        previous: string
+        next: string
     }
 }
 
@@ -41,7 +43,6 @@ const FreelanceProjects: React.FC<IFreelanceProjectsProps> = ({
         >
             {/* Title container */}
             <motion.h2
-                id="projects-title"
                 className="mb-10 text-[70px] font-extrabold leading-[0.9] tracking-tighter md:absolute md:left-0 md:top-0 md:z-0 md:mb-0 md:whitespace-nowrap md:text-[150px] lg:text-[200px] xl:text-[300px]"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{

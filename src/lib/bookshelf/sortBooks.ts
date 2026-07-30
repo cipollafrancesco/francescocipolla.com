@@ -68,10 +68,22 @@ export function sortBooks(books: Book[], criterion: SortCriterion): Book[] {
 
     switch (criterion) {
         case 'dateRead':
-            // Most recently read first; books without a dateRead go last.
+            // Most recently read first; books without a dateRead — or with
+            // one `Date.parse` can't make sense of — go last and compare
+            // equal to each other. Subtracting two `Number.NEGATIVE_INFINITY`
+            // values (the old approach, for two books that both lack one)
+            // produces `NaN`, and `Array.sort`'s behavior on a `NaN`
+            // comparator result is spec-undefined; normalizing both "missing"
+            // and "unparseable" to `null` here closes that off entirely
+            // rather than just the common case.
             return copy.sort((a, b) => {
-                const ta = a.dateRead ? Date.parse(a.dateRead) : Number.NEGATIVE_INFINITY
-                const tb = b.dateRead ? Date.parse(b.dateRead) : Number.NEGATIVE_INFINITY
+                const parsedA = a.dateRead ? Date.parse(a.dateRead) : NaN
+                const parsedB = b.dateRead ? Date.parse(b.dateRead) : NaN
+                const ta = Number.isNaN(parsedA) ? null : parsedA
+                const tb = Number.isNaN(parsedB) ? null : parsedB
+                if (ta === null && tb === null) return 0
+                if (ta === null) return 1
+                if (tb === null) return -1
                 return tb - ta
             })
 
@@ -85,10 +97,14 @@ export function sortBooks(books: Book[], criterion: SortCriterion): Book[] {
             return copy.sort((a, b) => publishedTime(b) - publishedTime(a))
 
         case 'rating':
-            // Highest rating first; unrated books last.
+            // Highest rating first; unrated books go last and compare equal
+            // to each other — same `NaN`-comparator hazard as `dateRead`.
             return copy.sort((a, b) => {
-                const ra = a.rating ?? Number.NEGATIVE_INFINITY
-                const rb = b.rating ?? Number.NEGATIVE_INFINITY
+                const ra = a.rating ?? null
+                const rb = b.rating ?? null
+                if (ra === null && rb === null) return 0
+                if (ra === null) return 1
+                if (rb === null) return -1
                 return rb - ra
             })
 

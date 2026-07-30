@@ -114,8 +114,15 @@ export function HeroContourField({ className }: HeroContourFieldProps) {
             }
         }
 
-        const resize = () => {
+        // Split from `resize()` so scroll (which moves the canvas relative to
+        // the viewport without changing its size) can refresh `rect` cheaply,
+        // without also touching the backing buffer.
+        const updateRect = () => {
             rect = canvas.getBoundingClientRect()
+        }
+
+        const resize = () => {
+            updateRect()
             const pixelRatio = Math.min(window.devicePixelRatio || 1, 2)
 
             canvas.width = Math.floor(rect.width * pixelRatio)
@@ -124,8 +131,12 @@ export function HeroContourField({ className }: HeroContourFieldProps) {
             start()
         }
 
+        // Reads the `rect` kept fresh by `resize`/`updateRect` instead of
+        // calling `getBoundingClientRect()` here, which would force a
+        // synchronous layout flush on every pointer event — and this listener
+        // is on `window`, so it can fire well past 60/sec on a high
+        // polling-rate mouse.
         const handlePointerMove = (event: PointerEvent) => {
-            rect = canvas.getBoundingClientRect()
             pointer.x = event.clientX - rect.left
             pointer.y = event.clientY - rect.top
             pointer.active =
@@ -159,8 +170,13 @@ export function HeroContourField({ className }: HeroContourFieldProps) {
 
         observer.observe(canvas)
         resizeObserver.observe(canvas)
+        // Stays on `window`, not the canvas: the canvas is rendered
+        // `pointer-events-none` (clicks need to pass through to real content
+        // layered on top of this decorative background), so it can never be
+        // the target of its own pointer events.
         window.addEventListener('pointermove', handlePointerMove, { passive: true })
         window.addEventListener('pointerleave', handlePointerLeave)
+        window.addEventListener('scroll', updateRect, { passive: true, capture: true })
         pointerQuery.addEventListener('change', handleMediaChange)
         reduceMotionQuery.addEventListener('change', handleMediaChange)
         resize()
@@ -171,6 +187,7 @@ export function HeroContourField({ className }: HeroContourFieldProps) {
             resizeObserver.disconnect()
             window.removeEventListener('pointermove', handlePointerMove)
             window.removeEventListener('pointerleave', handlePointerLeave)
+            window.removeEventListener('scroll', updateRect, { capture: true })
             pointerQuery.removeEventListener('change', handleMediaChange)
             reduceMotionQuery.removeEventListener('change', handleMediaChange)
         }

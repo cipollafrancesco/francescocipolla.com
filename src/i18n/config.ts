@@ -4,8 +4,9 @@ export type Locale = (typeof locales)[number]
 
 export const defaultLocale: Locale = 'it'
 export const localeCookieName = 'NEXT_LOCALE'
-/** Set by the middleware so renders without route params — `not-found.tsx` — can
- *  still resolve the locale. */
+/** Set by the middleware so `global-not-found.tsx` — which gets no route
+ *  params and isn't nested under `[lang]` — can still resolve the locale
+ *  from the actual requested path. */
 export const localeHeaderName = 'x-locale'
 
 /** Endonyms — each language in its own name, so they never need translating.

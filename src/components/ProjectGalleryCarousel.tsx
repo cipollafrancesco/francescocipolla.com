@@ -14,6 +14,8 @@ type ProjectGalleryCarouselLabels = {
     mobile: string
     previous: string
     next: string
+    /** `{title}` and `{index}` are substituted. */
+    imageAlt: string
 }
 
 type ProjectGalleryCarouselProps = {
@@ -42,7 +44,13 @@ export function ProjectGalleryCarousel({
     )
     const [activeIndex, setActiveIndex] = useState(0)
     const selectedMedia = selectedView === 'desktop' ? desktopMedia : mobileMedia
-    const activeMedia = selectedMedia[activeIndex]
+    // Clamped during render, not just reset in an effect below: switching views
+    // can leave `activeIndex` pointing past the end of the new `selectedMedia`
+    // for the render that happens before the effect runs, which made
+    // `activeMedia` briefly undefined and unmounted the whole carousel.
+    const clampedIndex =
+        selectedMedia.length > 0 ? Math.min(activeIndex, selectedMedia.length - 1) : 0
+    const activeMedia = selectedMedia[clampedIndex]
 
     useEffect(() => {
         if (!availableViews.some((view) => view.value === selectedView)) {
@@ -58,16 +66,25 @@ export function ProjectGalleryCarousel({
         return null
     }
 
+    // Functional updates, not `setActiveIndex(clampedIndex ± 1)`: two clicks
+    // fired before React re-renders would otherwise both read the same
+    // render-scoped `clampedIndex` and compute the same next value, silently
+    // dropping one of the clicks. Clamping again inside the updater (against
+    // `current`, not `clampedIndex`) keeps the same out-of-bounds protection.
     const goToPrevious = () => {
-        setActiveIndex((currentIndex) =>
-            currentIndex === 0 ? selectedMedia.length - 1 : currentIndex - 1
-        )
+        setActiveIndex((current) => {
+            const clamped =
+                selectedMedia.length > 0 ? Math.min(current, selectedMedia.length - 1) : 0
+            return clamped === 0 ? selectedMedia.length - 1 : clamped - 1
+        })
     }
 
     const goToNext = () => {
-        setActiveIndex((currentIndex) =>
-            currentIndex === selectedMedia.length - 1 ? 0 : currentIndex + 1
-        )
+        setActiveIndex((current) => {
+            const clamped =
+                selectedMedia.length > 0 ? Math.min(current, selectedMedia.length - 1) : 0
+            return clamped === selectedMedia.length - 1 ? 0 : clamped + 1
+        })
     }
 
     return (
@@ -91,7 +108,7 @@ export function ProjectGalleryCarousel({
 
                 <div className="flex items-center justify-between gap-3 sm:justify-end">
                     <p className="font-mono text-xs tabular-nums text-gray-500">
-                        {(activeIndex + 1).toString().padStart(2, '0')} /{' '}
+                        {(clampedIndex + 1).toString().padStart(2, '0')} /{' '}
                         {selectedMedia.length.toString().padStart(2, '0')}
                     </p>
                     <div className="flex items-center gap-2">
@@ -119,7 +136,13 @@ export function ProjectGalleryCarousel({
                 <GallerySlide
                     key={activeMedia.src}
                     media={activeMedia}
-                    alt={`${projectTitle} gallery ${activeIndex + 1}`}
+                    // Function replacers, not literal-string ones: a literal
+                    // second argument to `.replace()` special-cases `$&`/`$$`/
+                    // `$\``/`$'` sequences, so a project title containing a
+                    // literal `$` would silently corrupt the interpolation.
+                    alt={labels.imageAlt
+                        .replace('{title}', () => projectTitle)
+                        .replace('{index}', () => String(clampedIndex + 1))}
                 />
             </div>
         </div>

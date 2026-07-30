@@ -103,6 +103,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                             mobile: content.projectPage.galleryMobile,
                             previous: content.projectPage.galleryPrevious,
                             next: content.projectPage.galleryNext,
+                            imageAlt: content.projectPage.galleryImageAlt,
                         }}
                     />
                 </div>

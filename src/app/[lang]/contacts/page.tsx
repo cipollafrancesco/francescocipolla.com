@@ -4,9 +4,11 @@ import { ContactForm } from '@/components/ContactForm'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { Reveal } from '@/components/Reveal'
 import CalEmbed from '@/components/CalEmbed'
+import { siteLinks } from '@/content/site'
 import { getI18nContent } from '@/i18n/server'
 import { isLocale } from '@/i18n/config'
 import { withLocaleMetadata } from '@/lib/metadata'
+import { notFound } from 'next/navigation'
 
 interface ContactsPageProps {
     params: Promise<{ lang: string }>
@@ -15,20 +17,20 @@ interface ContactsPageProps {
 const channels = [
     {
         Icon: Mail,
-        label: 'info@francescocipolla.com',
-        href: 'mailto:info@francescocipolla.com',
+        label: siteLinks.email,
+        href: `mailto:${siteLinks.email}`,
         external: false,
     },
     {
         Icon: Linkedin,
         label: 'LinkedIn',
-        href: 'https://www.linkedin.com/in/francesco-cipolla-41768411b',
+        href: siteLinks.linkedin,
         external: true,
     },
     {
         Icon: Github,
         label: 'GitHub',
-        href: 'https://github.com/cipollafrancesco',
+        href: siteLinks.github,
         external: true,
     },
 ]
@@ -44,12 +46,12 @@ export default async function ContactsPage({ params }: ContactsPageProps) {
     const { lang: langParam } = await params
 
     if (!isLocale(langParam)) {
-        return null
+        notFound()
     }
 
     const { lang, content } = await getI18nContent(langParam)
     const page = content.contact.page
-    const newTab = lang === 'it' ? 'si apre in una nuova scheda' : 'opens in a new tab'
+    const newTab = page.opensInNewTab
 
     return (
         <div className="min-h-screen bg-white text-black md:mt-[88px]">

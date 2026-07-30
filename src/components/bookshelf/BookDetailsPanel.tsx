@@ -19,6 +19,13 @@ interface BookDetailsPanelProps {
     copy: SiteContent['books']
 }
 
+const FOCUSABLE_SELECTOR =
+    'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+
+function getFocusableElements(container: HTMLElement): HTMLElement[] {
+    return Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR))
+}
+
 function formatLongDate(iso: string, lang: Locale): string {
     const t = Date.parse(iso)
     if (Number.isNaN(t)) return iso
@@ -64,12 +71,51 @@ function BookDetailsPanel({
     copy,
 }: BookDetailsPanelProps) {
     const closeRef = useRef<HTMLButtonElement>(null)
+    const dialogRef = useRef<HTMLDivElement>(null)
     const titleId = `book-title-${book.id}`
     const category = book.category ? (copy.categories[book.category] ?? book.category) : null
 
     // Move focus into the dialog on open (focus is restored by the page on close).
     useEffect(() => {
         closeRef.current?.focus()
+    }, [])
+
+    // Trap Tab within the dialog: without this, Tab escapes to the book spines
+    // behind the scrim, which stay focusable — the ones filtered out are also
+    // `tabIndex={-1}`, but the ones still on the shelf are real buttons.
+    useEffect(() => {
+        const dialogNode = dialogRef.current
+        if (!dialogNode) return
+
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key !== 'Tab') return
+
+            const focusable = getFocusableElements(dialogNode)
+            if (focusable.length === 0) return
+
+            const first = focusable[0]
+            const last = focusable[focusable.length - 1]
+            const active = document.activeElement
+
+            // Only wraps at the boundary — doesn't try to pull focus back in
+            // once it's already outside. `AnimatePresence` keeps this panel
+            // mounted (and this listener live) for the ~150-250ms exit
+            // transition after close, and `handleClose` deliberately moves
+            // focus to the triggering spine during that window; recovering
+            // focus back into a closing dialog would fight that on purpose.
+            if (event.shiftKey) {
+                if (active === first) {
+                    event.preventDefault()
+                    last.focus()
+                }
+            } else if (active === last) {
+                event.preventDefault()
+                first.focus()
+            }
+        }
+
+        document.addEventListener('keydown', handleKeyDown)
+        return () => document.removeEventListener('keydown', handleKeyDown)
     }, [])
 
     // Two groups, not six: the masthead arrives, then the reading matter.
@@ -195,6 +241,7 @@ function BookDetailsPanel({
         return (
             <motion.div
                 {...dialogProps}
+                ref={dialogRef}
                 className="book-details pointer-events-none fixed inset-0 z-[70]"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -220,6 +267,7 @@ function BookDetailsPanel({
         <div className="fixed left-[48%] top-1/2 z-[70] w-[min(44vw,620px)] -translate-y-1/2">
             <motion.div
                 {...dialogProps}
+                ref={dialogRef}
                 className="book-details max-h-[80vh] overflow-y-auto pr-2"
                 exit={{ opacity: 0, transition: { duration: 0.15 } }}
             >

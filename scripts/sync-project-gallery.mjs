@@ -2,16 +2,7 @@
 
 import { createReadStream } from 'node:fs'
 import { createHash } from 'node:crypto'
-import {
-    copyFile,
-    mkdir,
-    readdir,
-    readFile,
-    rename,
-    rm,
-    stat,
-    writeFile,
-} from 'node:fs/promises'
+import { copyFile, mkdir, readdir, readFile, rename, rm, stat, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { spawn } from 'node:child_process'
@@ -44,10 +35,11 @@ async function main() {
     const sourceMedia = await collectSourceMedia()
 
     if (sourceMedia.length === 0) {
-        await writeJson(manifestPath, {})
-        await writeJson(blobHostsPath, [])
-        console.log('No gallery media found.')
-        return
+        throw new Error(
+            `No gallery media found in ${path.relative(root, sourceProjectsRoot)}. ` +
+                'Drop project media under .media-source/projects/<slug>/{desktop,mobile}/ before running ' +
+                'this script — refusing to overwrite the existing manifest with an empty one.'
+        )
     }
 
     if (!prepareOnly && !process.env.BLOB_READ_WRITE_TOKEN) {
@@ -69,8 +61,28 @@ async function main() {
         return
     }
 
-    const manifest = {}
-    const hosts = new Set()
+    // Merge into the existing manifest rather than rebuilding from scratch: this
+    // run only touches the slugs found in .media-source, and any slug not
+    // represented there (e.g. media temporarily missing from a contributor's
+    // checkout) must keep its previously synced entries instead of being dropped.
+    // Known tradeoff: if a slug's media is deliberately and fully removed from
+    // .media-source (project retired), its old entries are never pruned —
+    // there's no way to distinguish that from "just not synced this run."
+    // Silent staleness is a much smaller failure than the wipe this replaced;
+    // clean up a retired project's manifest entry by hand if that comes up.
+    const manifest = await readExistingManifest()
+    const touchedSlugs = new Set(preparedMedia.map((media) => media.slug))
+
+    for (const slug of touchedSlugs) {
+        manifest[slug] = []
+    }
+
+    const hosts = new Set(
+        Object.values(manifest)
+            .flat()
+            .map((entry) => tryGetHostname(entry.src))
+            .filter(Boolean)
+    )
     const token = process.env.BLOB_READ_WRITE_TOKEN
 
     for (const media of preparedMedia) {
@@ -377,7 +389,10 @@ async function loadLocalEnv() {
             }
 
             const key = trimmed.slice(0, separatorIndex).trim()
-            const value = trimmed.slice(separatorIndex + 1).trim().replace(/^['"]|['"]$/g, '')
+            const value = trimmed
+                .slice(separatorIndex + 1)
+                .trim()
+                .replace(/^['"]|['"]$/g, '')
 
             process.env[key] ??= value
         }
@@ -406,6 +421,27 @@ async function walk(directory) {
         }
 
         throw error
+    }
+}
+
+async function readExistingManifest() {
+    try {
+        const text = await readFile(manifestPath, 'utf8')
+        return JSON.parse(text)
+    } catch (error) {
+        if (error?.code === 'ENOENT') {
+            return {}
+        }
+
+        throw error
+    }
+}
+
+function tryGetHostname(url) {
+    try {
+        return new URL(url).hostname
+    } catch {
+        return null
     }
 }
 
@@ -468,13 +504,19 @@ function getContentType(file) {
 }
 
 function compareManifestEntries(first, second) {
-    return `${first.viewport}/${first.src}`.localeCompare(`${second.viewport}/${second.src}`, undefined, {
-        numeric: true,
-    })
+    return `${first.viewport}/${first.src}`.localeCompare(
+        `${second.viewport}/${second.src}`,
+        undefined,
+        {
+            numeric: true,
+        }
+    )
 }
 
 function sortManifest(manifest) {
-    return Object.fromEntries(Object.entries(manifest).sort(([first], [second]) => first.localeCompare(second)))
+    return Object.fromEntries(
+        Object.entries(manifest).sort(([first], [second]) => first.localeCompare(second))
+    )
 }
 
 async function writeJson(file, value) {

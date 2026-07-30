@@ -1,9 +1,10 @@
 'use server'
 
+import { headers } from 'next/headers'
 import { Resend } from 'resend'
+import { siteLinks } from '@/content/site'
 import { contactSchema } from '@/lib/contact-schema'
-
-const resend = new Resend(process.env.RESEND_API_KEY)
+import { isRateLimited } from '@/lib/rate-limit'
 
 export type ContactFormState = {
     ok: boolean
@@ -15,6 +16,16 @@ export async function submitContactForm(
     _prevState: ContactFormState | null,
     formData: FormData
 ): Promise<ContactFormState> {
+    // No fallback bucket for a missing IP: Vercel always sets `x-forwarded-for`
+    // in production, so this only matters locally or behind an unusual proxy —
+    // and sharing one 'unknown' bucket across every such request would let
+    // unrelated visitors lock each other out instead of just going unlimited.
+    const ip = (await headers()).get('x-forwarded-for')?.split(',')[0]?.trim()
+
+    if (ip && isRateLimited(ip)) {
+        return { ok: false, genericError: true }
+    }
+
     const raw = {
         name: (formData.get('name') as string | null) ?? '',
         email: (formData.get('email') as string | null) ?? '',
@@ -42,10 +53,16 @@ export async function submitContactForm(
 
     const { name, email, company, topic, message } = result.data
 
-    const to = process.env.CONTACT_TO_EMAIL ?? 'info@francescocipolla.com'
+    if (!process.env.RESEND_API_KEY) {
+        return { ok: false, genericError: true }
+    }
+
+    const to = process.env.CONTACT_TO_EMAIL ?? siteLinks.email
     const from = process.env.CONTACT_FROM_EMAIL ?? 'onboarding@resend.dev'
 
     try {
+        const resend = new Resend(process.env.RESEND_API_KEY)
+
         await resend.emails.send({
             to,
             from,

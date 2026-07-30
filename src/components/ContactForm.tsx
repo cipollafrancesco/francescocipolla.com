@@ -43,6 +43,7 @@ export function ContactForm({ form, lang }: ContactFormProps) {
         if (!code) return null
         if (code === 'email_invalid') return form.errors.emailInvalid
         if (code === 'message_too_short') return form.errors.messageTooShort
+        if (code === 'message_too_long') return form.errors.messageTooLong
         return form.errors.required
     }
 

@@ -20,23 +20,36 @@ type ProjectGalleryManifest = Record<string, ProjectGalleryMedia[]>
 
 const galleryManifest = generatedGalleryManifest as ProjectGalleryManifest
 
+// `dpulses-2-0`'s route slug is dash-only on purpose (see the comment in
+// site.ts — a dotted path would be treated as a static file by the locale
+// middleware), but its media folder — wherever it ends up populated, whether
+// the generated manifest or the `public/` fallback — is the original dotted
+// name. As of this writing neither actually has an entry for this project
+// (`.media-source` was never synced for it), so this mapping doesn't yet
+// change what renders — it just means the gallery will resolve correctly
+// once that media is added, instead of needing this fixed at that point too.
+const slugToAssetFolder: Record<string, string> = {
+    'dpulses-2-0': 'dpulses2.0',
+}
+
 export function getProjectGalleryMedia(slug: string): ProjectGalleryMedia[] {
-    const generatedMedia = galleryManifest[slug]
+    const folder = slugToAssetFolder[slug] ?? slug
+    const generatedMedia = galleryManifest[folder]
 
     if (generatedMedia?.length) {
         return generatedMedia
     }
 
-    const galleryDirectory = path.join(process.cwd(), 'public', 'projects', slug, 'gallery')
+    const galleryDirectory = path.join(process.cwd(), 'public', 'projects', folder, 'gallery')
 
     if (!existsSync(galleryDirectory)) {
         return []
     }
 
     return [
-        ...readGalleryDirectory(galleryDirectory, slug, 'mobile'),
-        ...readGalleryDirectory(galleryDirectory, slug, 'desktop'),
-        ...readGalleryDirectory(galleryDirectory, slug),
+        ...readGalleryDirectory(galleryDirectory, folder, 'mobile'),
+        ...readGalleryDirectory(galleryDirectory, folder, 'desktop'),
+        ...readGalleryDirectory(galleryDirectory, folder),
     ]
 }
 

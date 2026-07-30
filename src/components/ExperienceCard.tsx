@@ -8,7 +8,6 @@ interface IExperienceCardProps {
     position: string
     period: string
     description: string
-    techs?: string[]
 }
 
 const ExperienceCard: React.FC<IExperienceCardProps> = ({

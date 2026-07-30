@@ -1,5 +1,6 @@
 'use client'
 import CalEmbed from '@/components/CalEmbed'
+import { siteLinks } from '@/content/site'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import React from 'react'
 
@@ -26,7 +27,6 @@ const Contacts: React.FC<IContactsProps> = ({ ref, title, scheduleTitle }) => {
             style={{ opacity, y }}
         >
             <motion.h2
-                id="contacts-title"
                 className="mb-12 text-[80px] font-extrabold leading-[0.9] tracking-tighter md:text-9xl lg:text-[9rem] xl:text-[16rem]"
                 initial={{ opacity: 0, scale: 0.8 }}
                 whileInView={{ opacity: 1, scale: 1 }}
@@ -38,20 +38,21 @@ const Contacts: React.FC<IContactsProps> = ({ ref, title, scheduleTitle }) => {
 
             <motion.a
                 className="mb-12 text-2xl tracking-tighter md:text-4xl lg:text-5xl"
-                href="mailto:info@francescocipolla.com"
+                href={`mailto:${siteLinks.email}`}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.3 }}
             >
-                info@francescocipolla.com
+                {siteLinks.email}
             </motion.a>
 
             <div className="flex flex-row gap-8">
                 <motion.a
                     className="text-xl tracking-tighter underline md:text-3xl lg:text-4xl"
-                    href="https://www.linkedin.com/in/francesco-cipolla-41768411b"
+                    href={siteLinks.linkedin}
                     target="_blank"
+                    rel="noopener noreferrer"
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
@@ -62,8 +63,9 @@ const Contacts: React.FC<IContactsProps> = ({ ref, title, scheduleTitle }) => {
 
                 <motion.a
                     className="text-xl tracking-tighter underline md:text-3xl lg:text-4xl"
-                    href="https://github.com/cipollafrancesco"
+                    href={siteLinks.github}
                     target="_blank"
+                    rel="noopener noreferrer"
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}

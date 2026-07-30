@@ -17,6 +17,10 @@ function getConsent() {
 
 function setConsent(value: 'accepted' | 'rejected') {
     document.cookie = `${consentCookie}=${value}; Path=/; Max-Age=${maxAge}; SameSite=Lax`
+    // Lets consumers that gate on `hasAnalyticsConsent()` — e.g.
+    // `ConsentedVercelAnalytics` — react immediately instead of waiting for
+    // the next full page load.
+    window.dispatchEvent(new Event('analytics-consent-changed'))
 }
 
 export function ConsentBanner({ copy }: { copy: SiteContent['consent'] }) {

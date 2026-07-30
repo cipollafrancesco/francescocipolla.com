@@ -25,7 +25,7 @@ export interface Book {
     publishedDate: string
     description: string
     /** Cover image shown when the book is extracted and rotated to the front.
-     *  Populated by `scripts/fetch-covers.mjs` (Open Library) → `/covers/<id>.jpg`. */
+     *  Populated by `scripts/fetch-covers.mjs` (Open Library) → `/covers/<id>.webp`. */
     coverUrl: string
     /** ISBN, used to look up the cover; improves match accuracy. */
     isbn?: string

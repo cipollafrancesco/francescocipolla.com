@@ -9,6 +9,13 @@ import {
 
 const PUBLIC_FILE = /\.(.*)$/
 
+/** Next's file-convention metadata images (`opengraph-image.tsx`, `icon.tsx`, …)
+ *  are served from extensionless root paths like `/opengraph-image?<hash>` —
+ *  `PUBLIC_FILE` requires a dot, so without this they'd fall through to the
+ *  unprefixed-path branch below and get redirected into a 404 at `/it/opengraph-image`. */
+const METADATA_IMAGE_ROUTE =
+    /^\/(opengraph-image|twitter-image|icon|apple-icon)\d*(\.[a-zA-Z0-9]+)?$/
+
 function preferredLocale(request: NextRequest): Locale {
     const cookieLocale = request.cookies.get(localeCookieName)?.value
 
@@ -19,20 +26,9 @@ function preferredLocale(request: NextRequest): Locale {
     return defaultLocale
 }
 
-/** Passes the request through with the resolved locale attached. `not-found.tsx`
- *  gets no route params, so this header is the only way it can tell which
- *  language to render — without it the prerendered 404 is always Italian. */
-function passThrough(request: NextRequest, locale: Locale) {
-    const headers = new Headers(request.headers)
-    headers.set(localeHeaderName, locale)
-
-    return NextResponse.next({ request: { headers } })
-}
-
 export function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl
     const firstSegment = pathname.split('/')[1]
-    const locale = isLocale(firstSegment) ? firstSegment : preferredLocale(request)
 
     if (
         pathname.startsWith('/_next') ||
@@ -40,9 +36,10 @@ export function middleware(request: NextRequest) {
         pathname === '/favicon.ico' ||
         pathname === '/robots.txt' ||
         pathname === '/sitemap.xml' ||
+        METADATA_IMAGE_ROUTE.test(pathname) ||
         PUBLIC_FILE.test(pathname)
     ) {
-        return passThrough(request, locale)
+        return NextResponse.next()
     }
 
     if (isLocale(firstSegment)) {
@@ -59,9 +56,18 @@ export function middleware(request: NextRequest) {
             return NextResponse.redirect(url, 307)
         }
 
-        return passThrough(request, locale)
+        // Carries the locale forward on a header: an unmatched path under this
+        // prefix (e.g. `/it/totally-bogus`) falls through to
+        // `global-not-found.tsx`, which gets no route params and isn't nested
+        // under `[lang]`, so this is the only way it can resolve which
+        // language to render.
+        const headers = new Headers(request.headers)
+        headers.set(localeHeaderName, firstSegment)
+
+        return NextResponse.next({ request: { headers } })
     }
 
+    const locale = preferredLocale(request)
     const url = request.nextUrl.clone()
     url.pathname = `/${locale}${pathname === '/' ? '' : pathname}`
 

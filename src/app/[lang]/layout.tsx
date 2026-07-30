@@ -3,7 +3,9 @@ import { notFound } from 'next/navigation'
 import Header from '@/components/Header'
 import { ConsentBanner } from '@/components/ConsentBanner'
 import { ConsentSettingsButton } from '@/components/ConsentSettingsButton'
-import { I18nProvider } from '@/i18n/I18nProvider'
+import { CurrentYear } from '@/components/CurrentYear'
+import { HtmlLangSync } from '@/components/HtmlLangSync'
+import { siteLinks } from '@/content/site'
 import { getI18nContent } from '@/i18n/server'
 import { isLocale, locales, type Locale } from '@/i18n/config'
 
@@ -27,12 +29,22 @@ export default async function LocaleLayout({
     const { lang, content } = await getI18nContent(langParam)
 
     return (
-        <I18nProvider lang={lang}>
+        <>
+            <HtmlLangSync lang={lang} />
+            {/* Skip to content — A2. Lives here rather than the root layout:
+                this layout has the `lang` route param statically, so the
+                link stays correctly localized without any request-time cost. */}
+            <a
+                href="#main-content"
+                className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded focus:bg-black focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-white"
+            >
+                {content.common.skipToContent}
+            </a>
             <Header lang={lang} copy={content.common} />
             {children}
             <Footer lang={lang} copy={content.common} />
             <ConsentBanner copy={content.consent} />
-        </I18nProvider>
+        </>
     )
 }
 
@@ -98,7 +110,7 @@ function Footer({
                     </nav>
                     <div className="flex flex-wrap gap-6 text-sm">
                         <a
-                            href="https://www.linkedin.com/in/francesco-cipolla-41768411b"
+                            href={siteLinks.linkedin}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="underline-offset-2 hover:underline"
@@ -107,7 +119,7 @@ function Footer({
                             {copy.footer.socials.linkedin}
                         </a>
                         <a
-                            href="https://github.com/cipollafrancesco"
+                            href={siteLinks.github}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="underline-offset-2 hover:underline"
@@ -116,7 +128,7 @@ function Footer({
                             {copy.footer.socials.github}
                         </a>
                         <a
-                            href="mailto:info@francescocipolla.com"
+                            href={`mailto:${siteLinks.email}`}
                             className="underline-offset-2 hover:underline"
                             aria-label={copy.footer.socials.email}
                         >
@@ -126,7 +138,8 @@ function Footer({
                     </div>
                 </div>
                 <p className="mt-10 text-xs text-gray-400">
-                    &copy; {new Date().getFullYear()} Francesco Cipolla. {copy.footer.rights}
+                    &copy; <CurrentYear buildYear={new Date().getFullYear()} /> Francesco Cipolla.{' '}
+                    {copy.footer.rights}
                 </p>
             </div>
         </footer>

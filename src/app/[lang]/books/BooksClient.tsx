@@ -151,6 +151,10 @@ export default function BooksClient({ lang, copy }: BooksClientProps) {
         <div className="bookcase min-h-screen bg-white text-black md:mt-[88px]">
             <main
                 id="main-content"
+                // Inert while a book is open: the dialog traps Tab regardless,
+                // but this also keeps the shelf's spine buttons out of the
+                // accessibility tree instead of sitting hidden behind the scrim.
+                inert={Boolean(selected)}
                 className="container relative mx-auto overflow-x-hidden px-4 pb-24"
             >
                 {/* Full-width hero title pinned to the top, layered behind the shelf

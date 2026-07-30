@@ -1,7 +1,5 @@
 import type { Metadata } from 'next'
-import { existsSync } from 'fs'
 import Link from 'next/link'
-import { join } from 'path'
 import { AppWindow, ArrowRight, ArrowUpRight, Globe, Smartphone, Sparkles } from 'lucide-react'
 import { BookingEmphasisCard } from '@/components/BookingEmphasisCard'
 import CalEmbed from '@/components/CalEmbed'
@@ -34,7 +32,6 @@ const capabilityIcons: Record<string, typeof Globe> = {
 }
 
 const profileImageSrc = '/profile/me.webp'
-const profileImageFile = join(process.cwd(), 'public', profileImageSrc.slice(1))
 
 export async function generateMetadata({ params }: ServicesPageProps): Promise<Metadata> {
     const { lang: langParam } = await params
@@ -55,8 +52,7 @@ export default async function ServicesPage({ params }: ServicesPageProps) {
     // Same-page anchors: every one of these sections lives on this page.
     const bookingHref = '#booking'
     const casesHref = '#case-studies'
-    const caseStudiesLabel = lang === 'it' ? 'Guarda i lavori realizzati' : 'See past work'
-    const hasProfileImage = existsSync(profileImageFile)
+    const caseStudiesLabel = content.common.cta.seePastWork
 
     return (
         <div className="min-h-screen bg-white text-black md:mt-[88px]">
@@ -257,7 +253,7 @@ export default async function ServicesPage({ params }: ServicesPageProps) {
                             href={`/${lang}/projects`}
                             className="inline-flex items-center gap-2 px-1 py-2 text-sm font-semibold text-white underline underline-offset-4 transition-opacity hover:opacity-60"
                         >
-                            {lang === 'it' ? 'Vedi tutti i progetti' : 'See all projects'}
+                            {services.cases.seeAllCta}
                             <ArrowUpRight className="h-4 w-4" />
                         </Link>
                     </div>
@@ -274,45 +270,17 @@ export default async function ServicesPage({ params }: ServicesPageProps) {
                 <section className="border-b border-black bg-white py-16 md:py-24">
                     <div className="mx-auto grid max-w-6xl gap-8 px-5 md:grid-cols-[320px_1fr] md:px-8 lg:grid-cols-[340px_1fr] lg:gap-12">
                         <Reveal className="mx-auto w-full max-w-[280px] md:max-w-none">
-                            {hasProfileImage ? (
-                                <ProfileTiltCard
-                                    src={profileImageSrc}
-                                    alt={services.profile.imageAlt}
-                                    sizes="(min-width: 1024px) 340px, (min-width: 768px) 320px, 280px"
-                                    caption={
-                                        <>
-                                            <span>{services.profile.imageCaption}</span>
-                                            <span aria-hidden="true">/</span>
-                                        </>
-                                    }
-                                />
-                            ) : (
-                                <figure className="relative overflow-hidden border border-black bg-neutral-100">
-                                    <div className="aspect-[4/5] overflow-hidden">
-                                        <div className="grid h-full place-items-center bg-white">
-                                            <div className="relative flex h-full w-full items-end justify-start overflow-hidden p-6">
-                                                <span
-                                                    className="absolute inset-x-0 top-1/2 h-px -rotate-12 bg-black/15"
-                                                    aria-hidden="true"
-                                                />
-                                                <span
-                                                    className="absolute bottom-8 right-6 text-[clamp(5rem,18vw,9rem)] font-black leading-none tracking-tight text-black"
-                                                    aria-hidden="true"
-                                                >
-                                                    FC
-                                                </span>
-                                                <span className="max-w-[14rem] text-xs font-semibold uppercase tracking-[0.24em] text-gray-500">
-                                                    {services.profile.imageCaption}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <figcaption className="flex items-center justify-between gap-4 border-t border-black bg-white px-4 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-gray-500">
+                            <ProfileTiltCard
+                                src={profileImageSrc}
+                                alt={services.profile.imageAlt}
+                                sizes="(min-width: 1024px) 340px, (min-width: 768px) 320px, 280px"
+                                caption={
+                                    <>
                                         <span>{services.profile.imageCaption}</span>
                                         <span aria-hidden="true">/</span>
-                                    </figcaption>
-                                </figure>
-                            )}
+                                    </>
+                                }
+                            />
                         </Reveal>
 
                         <Reveal delay={0.08} className="flex flex-col justify-center">
@@ -379,16 +347,12 @@ export default async function ServicesPage({ params }: ServicesPageProps) {
                     />
                     <div className="mt-10 grid gap-6 lg:grid-cols-[0.75fr_1.25fr]">
                         <BookingEmphasisCard>
-                            <Eyebrow tone="dark">
-                                {lang === 'it' ? '30 minuti' : '30 minutes'}
-                            </Eyebrow>
+                            <Eyebrow tone="dark">{services.booking.callDuration}</Eyebrow>
                             <p className="mt-4 text-3xl font-black tracking-tight md:text-4xl">
                                 {content.common.cta.book}
                             </p>
                             <p className="mt-4 text-sm leading-7 text-gray-300">
-                                {lang === 'it'
-                                    ? 'Una chiacchierata, non una presentazione di vendita. Se non sono la persona giusta, te lo dico subito.'
-                                    : 'Every project starts with a conversation. Tell me where you are stuck: in 30 minutes we work out if and how I can help.'}
+                                {services.booking.callIntro}
                             </p>
                             <p className="mt-4 text-xs text-gray-400">
                                 {content.common.cta.bookMicrocopy}
@@ -398,9 +362,7 @@ export default async function ServicesPage({ params }: ServicesPageProps) {
                                     href={`/${lang}/contacts`}
                                     className="underline underline-offset-4 transition-opacity hover:opacity-70"
                                 >
-                                    {lang === 'it'
-                                        ? 'Preferisci scrivere? Vai al form →'
-                                        : 'Prefer to write? Go to the form →'}
+                                    {services.booking.formLinkLabel}
                                 </Link>
                             </p>
                         </BookingEmphasisCard>

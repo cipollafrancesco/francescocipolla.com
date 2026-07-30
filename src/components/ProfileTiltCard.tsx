@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { useCallback, useState, type PointerEvent, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type PointerEvent, type ReactNode } from 'react'
 
 type ProfileTiltCardProps = {
     src: string
@@ -13,10 +13,37 @@ type ProfileTiltCardProps = {
 const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value))
 
 export function ProfileTiltCard({ src, alt, sizes, caption }: ProfileTiltCardProps) {
-    const [tilt, setTilt] = useState({ rotateX: 0, rotateY: 0 })
+    const figureRef = useRef<HTMLElement>(null)
+    // Gates the tilt on hover capability and reduced motion, the same way
+    // `InspectableProjectImage` does — without the reduced-motion check, the
+    // wrapper's `perspective: none` still lets `rotateX`/`rotateY` render as a
+    // flat, unforeshortened distortion, so a reduced-motion user got an
+    // instant snap between odd-looking shapes instead of no motion at all.
+    const [canTilt, setCanTilt] = useState(false)
 
-    const handlePointerMove = useCallback((event: PointerEvent<HTMLElement>) => {
-        if (event.pointerType === 'touch') {
+    useEffect(() => {
+        const pointerQuery = window.matchMedia('(hover: hover) and (pointer: fine)')
+        const reduceMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+
+        const updateCapability = () => {
+            setCanTilt(pointerQuery.matches && !reduceMotionQuery.matches)
+        }
+
+        updateCapability()
+        pointerQuery.addEventListener('change', updateCapability)
+        reduceMotionQuery.addEventListener('change', updateCapability)
+
+        return () => {
+            pointerQuery.removeEventListener('change', updateCapability)
+            reduceMotionQuery.removeEventListener('change', updateCapability)
+        }
+    }, [])
+
+    // Writes the CSS custom properties the figure's `transform` reads,
+    // instead of `setState` — a state update here would re-render the whole
+    // card (`next/image` included) at pointer-event rate.
+    const handlePointerMove = (event: PointerEvent<HTMLElement>) => {
+        if (!canTilt || event.pointerType === 'touch' || !figureRef.current) {
             return
         }
 
@@ -24,22 +51,26 @@ export function ProfileTiltCard({ src, alt, sizes, caption }: ProfileTiltCardPro
         const x = (event.clientX - rect.left) / rect.width - 0.5
         const y = (event.clientY - rect.top) / rect.height - 0.5
 
-        setTilt({
-            rotateX: clamp(y * -7, -5, 5),
-            rotateY: clamp(x * 8, -6, 6),
-        })
-    }, [])
+        figureRef.current.style.setProperty('--tilt-x', `${clamp(y * -7, -5, 5)}deg`)
+        figureRef.current.style.setProperty('--tilt-y', `${clamp(x * 8, -6, 6)}deg`)
+    }
+
+    const resetTilt = () => {
+        figureRef.current?.style.setProperty('--tilt-x', '0deg')
+        figureRef.current?.style.setProperty('--tilt-y', '0deg')
+    }
 
     return (
         <div className="[perspective:900px] motion-reduce:[perspective:none]">
             <figure
+                ref={figureRef}
                 className="group relative overflow-hidden border border-black bg-neutral-100 transition-transform duration-200 ease-out will-change-transform motion-reduce:transition-none"
                 style={{
-                    transform: `rotateX(${tilt.rotateX}deg) rotateY(${tilt.rotateY}deg)`,
+                    transform: 'rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg))',
                     transformStyle: 'preserve-3d',
                 }}
                 onPointerMove={handlePointerMove}
-                onPointerLeave={() => setTilt({ rotateX: 0, rotateY: 0 })}
+                onPointerLeave={resetTilt}
             >
                 <div className="relative aspect-[4/5] overflow-hidden">
                     <Image

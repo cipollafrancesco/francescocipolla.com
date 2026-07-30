@@ -8,7 +8,16 @@ function getBlobImageRemotePatterns() {
         return []
     }
 
-    const hosts = JSON.parse(readFileSync(blobHostsPath, 'utf8')) as string[]
+    let hosts: string[]
+
+    try {
+        hosts = JSON.parse(readFileSync(blobHostsPath, 'utf8'))
+    } catch (error) {
+        throw new Error(
+            `Failed to parse ${blobHostsPath} — run \`pnpm gallery:sync\` to regenerate it, or check it for corruption.`,
+            { cause: error }
+        )
+    }
 
     return hosts.map((hostname) => ({
         protocol: 'https' as const,
@@ -25,6 +34,9 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
     poweredByHeader: false,
+    experimental: {
+        globalNotFound: true,
+    },
     images: {
         formats: ['image/avif', 'image/webp'],
         remotePatterns: getBlobImageRemotePatterns(),

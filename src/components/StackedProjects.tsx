@@ -2,7 +2,7 @@
 import Image from 'next/image'
 import { useRef, useState } from 'react'
 import type { Swiper as SwiperInstance } from 'swiper'
-import { EffectCards, Pagination } from 'swiper/modules'
+import { A11y, EffectCards } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
 import type { LocalizedProject } from '@/content/site'
@@ -11,6 +11,7 @@ import { ArrowLeft, ArrowRight, ArrowUpRight } from 'lucide-react'
 import Link from 'next/link'
 import 'swiper/css'
 import 'swiper/css/effect-cards'
+import 'swiper/css/a11y'
 
 export default function StackedProjects({
     projects,
@@ -23,14 +24,14 @@ export default function StackedProjects({
     labels: {
         caseStudy: string
         liveSite: string
+        previous: string
+        next: string
     }
     className?: string
 }) {
     const swiperRef = useRef<SwiperInstance | null>(null)
     const [activeIndex, setActiveIndex] = useState(0)
     const totalProjects = projects.length
-    const previousLabel = lang === 'it' ? 'Progetto precedente' : 'Previous project'
-    const nextLabel = lang === 'it' ? 'Progetto successivo' : 'Next project'
 
     const goPrevious = () => {
         swiperRef.current?.slidePrev()
@@ -51,11 +52,10 @@ export default function StackedProjects({
                 }}
                 effect={'cards'}
                 grabCursor={true}
-                pagination={{ clickable: true, enabled: true }}
-                modules={[EffectCards, Pagination]}
+                modules={[EffectCards, A11y]}
                 className="aspect-[9/16] h-auto w-[290px] md:aspect-video md:w-[630px] xl:!mr-[5%] xl:h-[600px] xl:w-[1080px]"
             >
-                {projects.map((project) => (
+                {projects.map((project, index) => (
                     <SwiperSlide
                         key={project.id}
                         className="group overflow-hidden rounded-lg bg-white shadow-xl"
@@ -70,12 +70,20 @@ export default function StackedProjects({
                                     src={project.mobileImage}
                                     alt={project.title}
                                     fill
+                                    sizes="290px"
+                                    // Only one of the two variants gets `priority` —
+                                    // both are `<Image>` elements (CSS shows/hides
+                                    // the other per breakpoint), and `priority` still
+                                    // preloads a CSS-hidden image, so marking both
+                                    // would fetch the off-breakpoint asset for nothing.
+                                    priority={index === 0}
                                     className="object-cover md:hidden"
                                 />
                                 <Image
                                     src={project.image}
                                     alt={project.title}
                                     fill
+                                    sizes="(min-width: 1280px) 1080px, 630px"
                                     className="hidden object-cover md:block"
                                 />
                             </Link>
@@ -98,7 +106,7 @@ export default function StackedProjects({
                     type="button"
                     onClick={goPrevious}
                     className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-black bg-white text-black transition-[color,background-color,border-color,transform] hover:bg-black hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black active:scale-[0.96]"
-                    aria-label={previousLabel}
+                    aria-label={labels.previous}
                 >
                     <ArrowLeft className="h-4 w-4" />
                 </button>
@@ -110,7 +118,7 @@ export default function StackedProjects({
                     type="button"
                     onClick={goNext}
                     className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-black bg-white text-black transition-[color,background-color,border-color,transform] hover:bg-black hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black active:scale-[0.96]"
-                    aria-label={nextLabel}
+                    aria-label={labels.next}
                 >
                     <ArrowRight className="h-4 w-4" />
                 </button>

@@ -4,6 +4,7 @@ import { Eyebrow } from '@/components/ui/Eyebrow'
 import { getI18nContent } from '@/i18n/server'
 import { isLocale } from '@/i18n/config'
 import { withLocaleMetadata } from '@/lib/metadata'
+import { notFound } from 'next/navigation'
 
 interface ProjectsPageProps {
     params: Promise<{ lang: string }>
@@ -20,15 +21,11 @@ export default async function ProjectsPage({ params }: ProjectsPageProps) {
     const { lang: langParam } = await params
 
     if (!isLocale(langParam)) {
-        return null
+        notFound()
     }
 
     const { lang, content } = await getI18nContent(langParam)
-    const intro =
-        lang === 'it'
-            ? 'Una selezione di progetti pubblici: siti, piattaforme, MVP e sistemi digitali costruiti con attenzione a prodotto, interfaccia e sviluppo.'
-            : 'A selection of public projects: websites, platforms, MVPs, and digital systems built with attention to product, interface, and engineering.'
-    const eyebrow = lang === 'it' ? 'Portfolio selezionato' : 'Selected portfolio'
+    const { eyebrow, intro } = content.projectsPage
 
     return (
         <div className="min-h-screen bg-white text-black md:mt-[88px]">
@@ -53,6 +50,8 @@ export default async function ProjectsPage({ params }: ProjectsPageProps) {
                             labels={{
                                 caseStudy: content.common.cta.caseStudy,
                                 liveSite: content.common.cta.liveSite,
+                                previous: content.common.cta.previousProject,
+                                next: content.common.cta.nextProject,
                             }}
                             className=""
                         />

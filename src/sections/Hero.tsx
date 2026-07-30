@@ -1,5 +1,5 @@
 'use client'
-import React, { useRef } from 'react'
+import React from 'react'
 import { motion, MotionValue, useTransform } from 'framer-motion'
 
 interface IHeroProps {
@@ -12,9 +12,6 @@ interface IHeroProps {
 }
 
 const Hero: React.FC<IHeroProps> = ({ scale, x, y, opacity, progress, disclaimer }) => {
-    const cipoRef = useRef(null)
-    const cLetterRef = useRef(null)
-
     const nameOpacity = useTransform(progress, [0, 0.2, 0.6], [0, 1, 1])
 
     const paragraphOpacity = useTransform(progress, [0.3, 0.6, 0.75], [0, 1, 1])
@@ -22,7 +19,6 @@ const Hero: React.FC<IHeroProps> = ({ scale, x, y, opacity, progress, disclaimer
     return (
         <div className="sentence-container relative">
             <motion.h1
-                ref={cipoRef}
                 style={{
                     scale,
                     x,
@@ -39,12 +35,7 @@ const Hero: React.FC<IHeroProps> = ({ scale, x, y, opacity, progress, disclaimer
                     >
                         Francesco
                     </motion.span>
-                    <span
-                        ref={cLetterRef}
-                        className="relative inline-block origin-center transform-gpu"
-                    >
-                        C
-                    </span>
+                    <span className="relative inline-block origin-center transform-gpu">C</span>
                     ipo
                 </span>
                 <motion.span
@@ -55,7 +46,6 @@ const Hero: React.FC<IHeroProps> = ({ scale, x, y, opacity, progress, disclaimer
                 </motion.span>
                 {disclaimer && (
                     <motion.p
-                        id="hero-disclaimer"
                         style={{ opacity: paragraphOpacity }}
                         className="absolute mt-4 max-w-[80%] whitespace-normal text-left text-sm font-normal tracking-tighter md:p-4"
                     >

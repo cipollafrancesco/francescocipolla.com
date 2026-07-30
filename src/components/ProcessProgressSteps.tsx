@@ -38,10 +38,24 @@ export function ProcessProgressSteps({ steps }: ProcessProgressStepsProps) {
                     <motion.div
                         key={step.title}
                         className="group h-full border-b border-black p-5 transition-colors duration-300 last:border-b-0 hover:bg-gray-50 md:min-h-[260px] md:border-r md:last:border-r-0 lg:border-b-0"
+                        // `whileInView` always targets 'active' — only `initial`
+                        // and the transition collapse under reduced motion, so
+                        // the observer firing still resolves the 'active' variant
+                        // (near-instantly, with duration 0, once reduced) instead
+                        // of never resolving one at all. Previously `whileInView`
+                        // itself was disabled under reduced motion, so no variant
+                        // ever applied and the numerals stayed stuck at their
+                        // unstyled className color (`text-gray-100`, ~1.05:1 on
+                        // white) — the accessibility accommodation was silently
+                        // breaking the content it was meant to simplify.
                         initial={reduceMotion ? false : 'rest'}
-                        whileInView={reduceMotion ? undefined : 'active'}
+                        whileInView="active"
                         viewport={{ once: true, amount: 0.45 }}
-                        transition={{ duration: 0.45, ease: 'easeOut', delay: index * 0.05 }}
+                        transition={{
+                            duration: reduceMotion ? 0 : 0.45,
+                            ease: 'easeOut',
+                            delay: reduceMotion ? 0 : index * 0.05,
+                        }}
                         variants={{
                             rest: {
                                 opacity: 0.86,
@@ -61,7 +75,11 @@ export function ProcessProgressSteps({ steps }: ProcessProgressStepsProps) {
                                 rest: { color: 'rgb(243 244 246)' },
                                 active: { color: 'rgb(0 0 0)' },
                             }}
-                            transition={{ duration: 0.35, ease: 'easeOut', delay: index * 0.05 }}
+                            transition={{
+                                duration: reduceMotion ? 0 : 0.35,
+                                ease: 'easeOut',
+                                delay: reduceMotion ? 0 : index * 0.05,
+                            }}
                         >
                             0{index + 1}
                         </motion.span>
@@ -71,7 +89,11 @@ export function ProcessProgressSteps({ steps }: ProcessProgressStepsProps) {
                                 rest: { y: 0 },
                                 active: { y: -4 },
                             }}
-                            transition={{ duration: 0.35, ease: 'easeOut', delay: index * 0.05 }}
+                            transition={{
+                                duration: reduceMotion ? 0 : 0.35,
+                                ease: 'easeOut',
+                                delay: reduceMotion ? 0 : index * 0.05,
+                            }}
                         >
                             {step.title}
                         </motion.h3>

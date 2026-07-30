@@ -1,7 +1,24 @@
 import type { Locale } from '@/i18n/config'
 import type { Metadata } from 'next'
 
-const baseUrl = 'https://francescocipolla.com'
+// `NEXT_PUBLIC_SITE_URL` wins if set explicitly; otherwise a Vercel preview
+// canonicalizes to its own deploy URL rather than production — without this,
+// every preview's canonical/hreflang/sitemap/OG output pointed at
+// francescocipolla.com, making previews unindexable and useless for QA.
+const baseUrl =
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    (process.env.VERCEL_ENV && process.env.VERCEL_ENV !== 'production' && process.env.VERCEL_URL
+        ? `https://${process.env.VERCEL_URL}`
+        : 'https://francescocipolla.com')
+
+/** Contact channels shared across the JSON-LD, the footer, the contacts page,
+ *  and the homepage contact section — one source instead of four copies that
+ *  can silently drift apart. */
+export const siteLinks = {
+    email: 'info@francescocipolla.com',
+    linkedin: 'https://www.linkedin.com/in/francesco-cipolla-41768411b',
+    github: 'https://github.com/cipollafrancesco',
+} as const
 
 export type LocalizedProject = {
     id: number
@@ -25,6 +42,7 @@ export type LocalizedProject = {
 
 export type SiteContent = {
     common: {
+        skipToContent: string
         nav: {
             about: string
             experiences: string
@@ -66,6 +84,9 @@ export type SiteContent = {
             caseStudy: string
             backHome: string
             backProjects: string
+            seePastWork: string
+            previousProject: string
+            nextProject: string
         }
     }
     metadata: {
@@ -115,6 +136,7 @@ export type SiteContent = {
         projectsTitle: string
         contactsTitle: string
         scheduleTitle: string
+        scrollDownAlt: string
     }
     experiences: {
         company: string
@@ -122,7 +144,6 @@ export type SiteContent = {
         position: string
         period: string
         description: string
-        techs?: string[]
     }[]
     services: {
         hero: {
@@ -168,6 +189,7 @@ export type SiteContent = {
             eyebrow: string
             title: string
             description: string
+            seeAllCta: string
         }
         process: {
             eyebrow: string
@@ -183,7 +205,14 @@ export type SiteContent = {
             eyebrow: string
             title: string
             description: string
+            callDuration: string
+            callIntro: string
+            formLinkLabel: string
         }
+    }
+    projectsPage: {
+        eyebrow: string
+        intro: string
     }
     projects: LocalizedProject[]
     projectPage: {
@@ -198,6 +227,8 @@ export type SiteContent = {
         galleryMobile: string
         galleryPrevious: string
         galleryNext: string
+        /** `{title}` and `{index}` are substituted. */
+        galleryImageAlt: string
     }
     blog: {
         title: string
@@ -223,6 +254,8 @@ export type SiteContent = {
         page: {
             eyebrow: string
             intro: string
+            /** Suffixed to a channel's `aria-label` when it opens in a new tab. */
+            opensInNewTab: string
             booking: {
                 eyebrow: string
                 description: string
@@ -260,6 +293,7 @@ export type SiteContent = {
                 required: string
                 emailInvalid: string
                 messageTooShort: string
+                messageTooLong: string
                 generic: string
             }
         }
@@ -605,6 +639,7 @@ const enProjects: LocalizedProject[] = [
 export const siteContent: Record<Locale, SiteContent> = {
     it: {
         common: {
+            skipToContent: 'Vai al contenuto',
             nav: {
                 about: 'Chi sono',
                 experiences: 'Esperienze',
@@ -647,6 +682,9 @@ export const siteContent: Record<Locale, SiteContent> = {
                 caseStudy: 'Vedi il progetto',
                 backHome: 'Torna alla home',
                 backProjects: 'Torna ai progetti',
+                seePastWork: 'Guarda i lavori realizzati',
+                previousProject: 'Progetto precedente',
+                nextProject: 'Progetto successivo',
             },
         },
         metadata: {
@@ -725,6 +763,7 @@ export const siteContent: Record<Locale, SiteContent> = {
             projectsTitle: 'progetti freelance',
             contactsTitle: 'contatti',
             scheduleTitle: 'Prenota una consulenza',
+            scrollDownAlt: 'Scorri verso il basso',
         },
         experiences: [
             {
@@ -734,7 +773,6 @@ export const siteContent: Record<Locale, SiteContent> = {
                 period: 'Giu 2023 - Presente',
                 description:
                     'Sviluppo e manutenzione di una SPA React per lo streaming sportivo, incluse funzionalità core come il player.',
-                techs: ['React', 'TypeScript', 'Storybook', 'Jest', 'Playwright'],
             },
             {
                 company: 'Globant',
@@ -751,7 +789,6 @@ export const siteContent: Record<Locale, SiteContent> = {
                 period: 'Nov 2021 - Dic 2024',
                 description:
                     'Sviluppo e manutenzione del sito web e della Smart TV app su dispositivi Samsung, LG, Sony e altri.',
-                techs: ['React', 'TypeScript', 'Jest', 'Bit.dev', 'RobotFramework'],
             },
             {
                 company: 'Softlab S.p.A.',
@@ -760,7 +797,6 @@ export const siteContent: Record<Locale, SiteContent> = {
                 period: 'Nov 2017 - Nov 2021',
                 description:
                     'Sviluppo di applicazioni enterprise per un grande gruppo assicurativo e ruolo di vice team leader frontend.',
-                techs: ['React', 'TypeScript', 'Angular2+', 'Redux', 'Puppeteer'],
             },
         ],
         services: {
@@ -881,6 +917,7 @@ export const siteContent: Record<Locale, SiteContent> = {
                 title: 'Progetti reali che puoi visitare online.',
                 description:
                     'Ogni progetto parte da un bisogno diverso: acquisire contatti, raccontare un brand, pubblicare contenuti o rendere chiara una proposta tecnica.',
+                seeAllCta: 'Vedi tutti i progetti',
             },
             process: {
                 eyebrow: 'Metodo',
@@ -939,7 +976,15 @@ export const siteContent: Record<Locale, SiteContent> = {
                 title: 'Parliamone: porta il tuo problema, esci con una direzione.',
                 description:
                     "Senza impegno e senza preventivi a sorpresa. Sito, processo o idea: dimmi dov'è il blocco.",
+                callDuration: '30 minuti',
+                callIntro:
+                    'Una chiacchierata, non una presentazione di vendita. Se non sono la persona giusta, te lo dico subito.',
+                formLinkLabel: 'Preferisci scrivere? Vai al form →',
             },
+        },
+        projectsPage: {
+            eyebrow: 'Portfolio selezionato',
+            intro: 'Una selezione di progetti pubblici: siti, piattaforme, MVP e sistemi digitali costruiti con attenzione a prodotto, interfaccia e sviluppo.',
         },
         projects: itProjects,
         projectPage: {
@@ -954,6 +999,7 @@ export const siteContent: Record<Locale, SiteContent> = {
             galleryMobile: 'Mobile',
             galleryPrevious: 'Media precedente',
             galleryNext: 'Media successivo',
+            galleryImageAlt: 'Galleria di {title}, immagine {index}',
         },
         blog: {
             title: 'Blog',
@@ -980,6 +1026,7 @@ export const siteContent: Record<Locale, SiteContent> = {
             page: {
                 eyebrow: 'Scegli il canale',
                 intro: 'Email, LinkedIn o GitHub per un contatto diretto. Qui sotto trovi il form e il calendario, se preferisci partire da lì.',
+                opensInNewTab: 'si apre in una nuova scheda',
                 booking: {
                     eyebrow: '30 minuti',
                     description:
@@ -1018,6 +1065,7 @@ export const siteContent: Record<Locale, SiteContent> = {
                     required: 'Campo obbligatorio',
                     emailInvalid: 'Inserisci un indirizzo email valido',
                     messageTooShort: 'Il messaggio è troppo corto (minimo 10 caratteri)',
+                    messageTooLong: 'Il messaggio è troppo lungo (massimo 5000 caratteri)',
                     generic:
                         'Si è verificato un errore. Riprova o scrivimi direttamente a info@francescocipolla.com.',
                 },
@@ -1026,6 +1074,7 @@ export const siteContent: Record<Locale, SiteContent> = {
     },
     en: {
         common: {
+            skipToContent: 'Skip to content',
             nav: {
                 about: 'About',
                 experiences: 'Experience',
@@ -1068,6 +1117,9 @@ export const siteContent: Record<Locale, SiteContent> = {
                 caseStudy: 'See the project',
                 backHome: 'Back to home',
                 backProjects: 'Back to projects',
+                seePastWork: 'See past work',
+                previousProject: 'Previous project',
+                nextProject: 'Next project',
             },
         },
         metadata: {
@@ -1147,6 +1199,7 @@ export const siteContent: Record<Locale, SiteContent> = {
             projectsTitle: 'freelance projects',
             contactsTitle: 'contacts',
             scheduleTitle: 'Book a project discovery call',
+            scrollDownAlt: 'Scroll down',
         },
         experiences: [
             {
@@ -1156,7 +1209,6 @@ export const siteContent: Record<Locale, SiteContent> = {
                 period: 'Jun 2023 - Present',
                 description:
                     'Development and maintenance of a React SPA for sports streaming, including core features such as the player.',
-                techs: ['React', 'TypeScript', 'Storybook', 'Jest', 'Playwright'],
             },
             {
                 company: 'Globant',
@@ -1173,7 +1225,6 @@ export const siteContent: Record<Locale, SiteContent> = {
                 period: 'Nov 2021 - Dec 2024',
                 description:
                     "Developed and maintained the company's website and Smart TV app across Samsung, LG, Sony, and other devices.",
-                techs: ['React', 'TypeScript', 'Jest', 'Bit.dev', 'RobotFramework'],
             },
             {
                 company: 'Softlab S.p.A.',
@@ -1182,7 +1233,6 @@ export const siteContent: Record<Locale, SiteContent> = {
                 period: 'Nov 2017 - Nov 2021',
                 description:
                     'Built enterprise applications for a major insurance group and served as frontend vice-team leader.',
-                techs: ['React', 'TypeScript', 'Angular2+', 'Redux', 'Puppeteer'],
             },
         ],
         services: {
@@ -1300,6 +1350,7 @@ export const siteContent: Record<Locale, SiteContent> = {
                 title: 'Public projects that show the method.',
                 description:
                     'Each project starts from a different need: capturing leads, presenting a brand, publishing content, or making a technical offer clear.',
+                seeAllCta: 'See all projects',
             },
             process: {
                 eyebrow: 'Process',
@@ -1358,7 +1409,15 @@ export const siteContent: Record<Locale, SiteContent> = {
                 title: 'Book a project discovery call and let’s see what digital can unlock for your business.',
                 description:
                     '30 minutes, no commitment. Bring the problem: website, workflow, idea, or project in progress.',
+                callDuration: '30 minutes',
+                callIntro:
+                    'Every project starts with a conversation. Tell me where you are stuck: in 30 minutes we work out if and how I can help.',
+                formLinkLabel: 'Prefer to write? Go to the form →',
             },
+        },
+        projectsPage: {
+            eyebrow: 'Selected portfolio',
+            intro: 'A selection of public projects: websites, platforms, MVPs, and digital systems built with attention to product, interface, and engineering.',
         },
         projects: enProjects,
         projectPage: {
@@ -1373,6 +1432,7 @@ export const siteContent: Record<Locale, SiteContent> = {
             galleryMobile: 'Mobile',
             galleryPrevious: 'Previous media',
             galleryNext: 'Next media',
+            galleryImageAlt: '{title} gallery, image {index}',
         },
         blog: {
             title: 'Blog',
@@ -1399,6 +1459,7 @@ export const siteContent: Record<Locale, SiteContent> = {
             page: {
                 eyebrow: 'Pick your channel',
                 intro: "Email, LinkedIn, or GitHub for a direct line. Below you'll find the form and the calendar, if you'd rather start there.",
+                opensInNewTab: 'opens in a new tab',
                 booking: {
                     eyebrow: '30 minutes',
                     description:
@@ -1437,6 +1498,7 @@ export const siteContent: Record<Locale, SiteContent> = {
                     required: 'This field is required',
                     emailInvalid: 'Please enter a valid email address',
                     messageTooShort: 'Message is too short (minimum 10 characters)',
+                    messageTooLong: 'Message is too long (maximum 5000 characters)',
                     generic:
                         'Something went wrong. Please try again or email me directly at info@francescocipolla.com.',
                 },

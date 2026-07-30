@@ -48,7 +48,12 @@ export default function HomeClient({ lang, content }: { lang: Locale; content: S
                     style={{ opacity: scrollIndicatorOpacity }}
                     className="fixed bottom-5 right-4 z-20 xl:bottom-auto xl:top-1/2"
                 >
-                    <Image src="/scrolldown.svg" alt="Scroll Down" width={24} height={133} />
+                    <Image
+                        src="/scrolldown.svg"
+                        alt={content.home.scrollDownAlt}
+                        width={24}
+                        height={133}
+                    />
                 </motion.div>
 
                 <motion.section
@@ -138,6 +143,8 @@ export default function HomeClient({ lang, content }: { lang: Locale; content: S
                             labels={{
                                 caseStudy: content.common.cta.caseStudy,
                                 liveSite: content.common.cta.liveSite,
+                                previous: content.common.cta.previousProject,
+                                next: content.common.cta.nextProject,
                             }}
                         />
                     </motion.div>

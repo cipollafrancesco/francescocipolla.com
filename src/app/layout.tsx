@@ -1,6 +1,8 @@
-import { Analytics } from '@vercel/analytics/next'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import { ConsentedVercelAnalytics } from '@/components/ConsentedVercelAnalytics'
+import { baseUrl, siteLinks } from '@/content/site'
+import { defaultLocale } from '@/i18n/config'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'], weight: ['400', '500', '700', '900'] })
@@ -9,9 +11,12 @@ export const metadata: Metadata = {
     title: 'Francesco Cipolla - Digital Product Partner',
     description:
         'Digital product partner e ingegnere informatico: prodotti web, streaming, design e sistemi digitali.',
-    metadataBase: new URL('https://francescocipolla.com'),
+    metadataBase: new URL(baseUrl),
 }
 
+// `@id`/`url` are deliberately pinned to the production domain rather than
+// `baseUrl` — this identifies the Person/WebSite entity itself, which doesn't
+// change across preview deploys, unlike page-level canonical URLs.
 const personJsonLd = {
     '@context': 'https://schema.org',
     '@graph': [
@@ -21,10 +26,7 @@ const personJsonLd = {
             name: 'Francesco Cipolla',
             url: 'https://francescocipolla.com',
             jobTitle: 'Senior Frontend Engineer',
-            sameAs: [
-                'https://www.linkedin.com/in/francesco-cipolla-41768411b',
-                'https://github.com/cipollafrancesco',
-            ],
+            sameAs: [siteLinks.linkedin, siteLinks.github],
         },
         {
             '@type': 'WebSite',
@@ -36,9 +38,18 @@ const personJsonLd = {
     ],
 }
 
+// The root layout can't know `lang` itself — it wraps every route including
+// the statically generated `[lang]` pages, and a parent layout never receives
+// a child segment's params. Reading it from `headers()` instead would work,
+// but a dynamic API in the root layout forces the *entire* site out of static
+// generation: every locale page would move from a prebuilt, CDN-served
+// response to a per-request server render. So this renders the default, and
+// `HtmlLangSync` (in `[lang]/layout.tsx`, which does have `lang`) corrects the
+// attribute client-side — see that component for why it also needs to run on
+// every navigation, not just once.
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
-        <html lang="it">
+        <html lang={defaultLocale}>
             <body className={`${inter.className} antialiased`}>
                 {/* JSON-LD structured data */}
                 <script
@@ -47,15 +58,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 />
                 {/* Scroll progress indicator — U5 */}
                 <div id="scroll-progress" aria-hidden="true" />
-                {/* Skip to content — A2 */}
-                <a
-                    href="#main-content"
-                    className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded focus:bg-black focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-white"
-                >
-                    Skip to content
-                </a>
                 {children}
-                <Analytics />
+                <ConsentedVercelAnalytics />
             </body>
         </html>
     )
