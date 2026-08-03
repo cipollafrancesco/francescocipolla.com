@@ -3,7 +3,10 @@ import { absoluteLocalizedUrl, getProjectSlugs } from '@/content/site'
 import { locales } from '@/i18n/config'
 
 // `/about` is intentionally absent — it redirects to the locale root.
-const staticRoutes = ['', '/services', '/projects', '/books', '/contacts', '/blog']
+// `/blog` likewise: the route still renders, but its only post is a
+// placeholder, so it is unlisted here and in the footer nav until there's
+// something worth indexing. Re-add it in both places together.
+const staticRoutes = ['', '/services', '/projects', '/books', '/contacts']
 
 export default function sitemap(): MetadataRoute.Sitemap {
     const now = new Date()
@@ -20,7 +23,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
             ...staticRoutes.map((route) => ({
                 url: absoluteLocalizedUrl(locale, route),
                 lastModified: now,
-                changeFrequency: route === '/blog' ? ('weekly' as const) : ('monthly' as const),
+                changeFrequency: 'monthly' as const,
                 priority: route === '' ? 1 : route === '/services' ? 0.9 : 0.75,
             })),
             ...projectRoutes,

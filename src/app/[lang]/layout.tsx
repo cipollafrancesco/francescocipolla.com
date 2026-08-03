@@ -16,14 +16,17 @@ export function generateStaticParams() {
 const footerLinkClass = 'underline-offset-2 hover:underline'
 
 /** `label` keys into `copy.footer.links`, so a new entry needs the copy in both
- *  locales before it will typecheck. */
+ *  locales before it will typecheck.
+ *
+ *  `/blog` is deliberately absent: the route works, but the only post is a
+ *  placeholder, so nothing links to it and `sitemap.ts` leaves it out to match.
+ *  Add the entry back here and there together once there's a real post. */
 const footerLinks = [
     { path: '/#about-me', label: 'about' },
     { path: '/#experiences', label: 'experiences' },
     { path: '/projects', label: 'projects' },
     { path: '/books', label: 'books' },
     { path: '/services', label: 'services' },
-    { path: '/blog', label: 'blog' },
     { path: '/contacts', label: 'contacts' },
 ] as const
 

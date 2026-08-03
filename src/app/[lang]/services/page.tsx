@@ -15,6 +15,7 @@ import { AccordionItem } from '@/components/ui/Accordion'
 import { ButtonLink, buttonClasses } from '@/components/ui/Button'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { Section } from '@/components/ui/Section'
+import { absoluteLocalizedUrl } from '@/content/site'
 import { getI18nContent } from '@/i18n/server'
 import { withLocaleMetadata } from '@/lib/metadata'
 
@@ -35,7 +36,28 @@ export async function generateMetadata({ params }: ServicesPageProps): Promise<M
     const { lang: langParam } = await params
     const { lang, content } = await getI18nContent(langParam)
 
-    return withLocaleMetadata(content.metadata.services, lang, '/services')
+    return withLocaleMetadata(
+        {
+            ...content.metadata.services,
+            // This page has its own `opengraph-image.tsx` — a localized card
+            // built from the services hero copy, not the site-wide one. Named
+            // explicitly because `withLocaleMetadata` now sets a default
+            // `images`, and an `images` in metadata takes precedence over the
+            // file convention, so leaving it implicit would quietly swap this
+            // page's bespoke card for the generic wordmark.
+            openGraph: {
+                images: [
+                    {
+                        url: absoluteLocalizedUrl(lang, '/services/opengraph-image'),
+                        width: 1200,
+                        height: 630,
+                    },
+                ],
+            },
+        },
+        lang,
+        '/services'
+    )
 }
 
 export default async function ServicesPage({ params }: ServicesPageProps) {

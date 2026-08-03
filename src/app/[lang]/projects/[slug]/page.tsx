@@ -18,6 +18,18 @@ export function generateStaticParams() {
     return locales.flatMap((lang) => getProjectSlugs(lang).map((slug) => ({ lang, slug })))
 }
 
+/** Every project is known at build time, so an unlisted slug is simply a 404.
+ *
+ *  Without this, Next treats an unknown slug as a route to render on demand:
+ *  it starts streaming the shell, *then* hits `notFound()` below — too late to
+ *  set a status, since the headers are already sent. The result was a soft 404,
+ *  `/it/projects/anything` answering **200** with Next's stock black-on-white
+ *  "This page could not be found" wedged between this site's header and footer.
+ *  Crawlers read that as a real page. Refusing unknown params moves the 404 up
+ *  to the routing layer, before any bytes go out, which both restores the
+ *  status code and lets `global-not-found.tsx` render its localized page. */
+export const dynamicParams = false
+
 export async function generateMetadata({ params }: ProjectPageProps): Promise<Metadata> {
     const { lang: langParam, slug } = await params
 
