@@ -20,11 +20,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
         }))
 
         return [
+            // `/services` is not ranked above the rest: nothing on the site links
+            // to it (neither `Header.tsx` nor the footer in `[lang]/layout.tsx`),
+            // so advertising it as the second-most-important page contradicted
+            // the site's own navigation. It stays listed — it's a complete page
+            // meant to be linked directly — just not privileged. Raise the
+            // priority again if it returns to the nav.
             ...staticRoutes.map((route) => ({
                 url: absoluteLocalizedUrl(locale, route),
                 lastModified: now,
                 changeFrequency: 'monthly' as const,
-                priority: route === '' ? 1 : route === '/services' ? 0.9 : 0.75,
+                priority: route === '' ? 1 : 0.75,
             })),
             ...projectRoutes,
         ]

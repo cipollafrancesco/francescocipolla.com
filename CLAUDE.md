@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Commands
 
-Package manager is **pnpm** (`node_modules/.pnpm` present; `pnpm-lock.yaml` is the lockfile kept current — the tracked `package-lock.json` is stale, don't update it).
+Package manager is **pnpm** (`node_modules/.pnpm` present; `pnpm-lock.yaml` is the only tracked lockfile).
 
 ```bash
 pnpm dev            # dev server on :3000

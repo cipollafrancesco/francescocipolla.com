@@ -131,6 +131,10 @@ function BookFeatured({ book, originRect, isSplit, reducedMotion }: BookFeatured
                         <span className="cover__title">{book.title}</span>
                         <span className="cover__author">{book.author}</span>
                         {showImage && (
+                            // Not `next/image`: this element removes itself on error to reveal
+                            // the generated fallback beneath, and `onLoad` measures its natural
+                            // aspect ratio off the raw element. Both fight the wrapper.
+                            // eslint-disable-next-line @next/next/no-img-element
                             <img
                                 ref={imgRef}
                                 className="cover__img"

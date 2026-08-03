@@ -24,8 +24,10 @@ const Header = ({ lang, copy }: HeaderProps) => {
         { href: `/${lang}/#about-me`, label: copy.nav.about },
         { href: `/${lang}/projects`, label: copy.nav.projects },
         { href: `/${lang}/books`, label: copy.nav.books },
-        // Services page temporarily hidden from nav — re-add when ready
-        // { href: `/${lang}/services`, label: copy.nav.services },
+        // `/services` is deliberately absent, and the footer nav mirrors this list
+        // rather than extending it — so the page is intentionally unlinked from
+        // the site, reached by direct link instead. It stays in `sitemap.ts` at
+        // standard priority. Restore it here and in `[lang]/layout.tsx` together.
         { href: `/${lang}/contacts`, label: copy.nav.contacts },
     ]
 

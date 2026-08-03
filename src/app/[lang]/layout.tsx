@@ -15,18 +15,28 @@ export function generateStaticParams() {
 
 const footerLinkClass = 'underline-offset-2 hover:underline'
 
-/** `label` keys into `copy.footer.links`, so a new entry needs the copy in both
- *  locales before it will typecheck.
+/** Mirrors the header's `menuItems` (`components/Header.tsx`) exactly — the
+ *  footer is not a place to surface routes the primary nav has chosen to hide.
+ *  Keep the two lists in sync; anything reachable here should be reachable up
+ *  there. `copy.footer.links` intentionally still carries copy for entries this
+ *  list omits (`blog`, `experiences`, `services`), so restoring one is a
+ *  one-line change rather than a copy edit in both locales.
  *
- *  `/blog` is deliberately absent: the route works, but the only post is a
- *  placeholder, so nothing links to it and `sitemap.ts` leaves it out to match.
- *  Add the entry back here and there together once there's a real post. */
+ *  Deliberately absent, and why:
+ *  - `/blog` — the only post is a placeholder; `sitemap.ts` omits it to match.
+ *  - `/#experiences` — a section of the home page, reachable by scrolling from
+ *    the `about` anchor above; it was the only footer entry pointing at a
+ *    fragment the header doesn't offer.
+ *  - `/services` — kept out of the primary nav on purpose. It stays in
+ *    `sitemap.ts` at standard priority because it's a complete page with its
+ *    own OG image, meant to be linked directly rather than browsed to.
+ *
+ *  `label` keys into `copy.footer.links`, so a new entry needs the copy in both
+ *  locales before it will typecheck. */
 const footerLinks = [
     { path: '/#about-me', label: 'about' },
-    { path: '/#experiences', label: 'experiences' },
     { path: '/projects', label: 'projects' },
     { path: '/books', label: 'books' },
-    { path: '/services', label: 'services' },
     { path: '/contacts', label: 'contacts' },
 ] as const
 
