@@ -1,6 +1,6 @@
 'use client'
-import {MotionValue, useScroll, useSpring, useTransform} from 'framer-motion'
-import {useEffect, useState} from 'react'
+import { MotionValue, useScroll, useSpring, useTransform } from 'framer-motion'
+import { useMediaQuery } from '@/hooks/useMediaQuery'
 
 interface HeroAnimations {
     springScale: MotionValue<number>
@@ -14,73 +14,53 @@ interface HeroAnimations {
     smoothScrollProgress: MotionValue<number>
 }
 
-export const useHeroAnimations = (heroSectionRef: React.RefObject<HTMLElement | null>): HeroAnimations => {
-    const [isClient, setIsClient] = useState(false)
+export const useHeroAnimations = (
+    heroSectionRef: React.RefObject<HTMLElement | null>
+): HeroAnimations => {
+    // Drives how far the hero flies off-screen. `useMediaQuery` is SSR-safe
+    // (false until mounted) and, unlike the `isClient` + `window.innerWidth`
+    // read this replaced, keeps tracking the breakpoint instead of freezing
+    // whatever was true at mount.
+    const isMobile = useMediaQuery('(max-width: 767px)')
 
-    useEffect(() => {
-        setIsClient(typeof window !== 'undefined')
-    }, [])
-
-    // Hero section specific scroll progress
-    const {scrollYProgress: heroScrollProgress} = useScroll({
+    const { scrollYProgress: heroScrollProgress } = useScroll({
         target: heroSectionRef,
-        offset: ['start start', 'end start']
+        offset: ['start start', 'end start'],
     })
 
-    // Add spring animation to the scroll progress for smooth control
     const smoothScrollProgress = useSpring(heroScrollProgress, {
-        stiffness: 30,    // Lower stiffness for smoother movement
-        damping: 15,      // Lower damping for more fluid motion
-        mass: 1.2,        // Slightly more mass for more controlled inertia
-        restDelta: 0.001  // Precision of final resting position
+        stiffness: 30,
+        damping: 15,
+        mass: 1.2,
+        restDelta: 0.001,
     })
 
-    // Text scale and position animation (delayed start)
-    const scale = useTransform(smoothScrollProgress,
-        [0.6, 0.75],
-        [1, 44]
-    )
+    const scale = useTransform(smoothScrollProgress, [0.6, 0.75], [1, 44])
 
-    // Responsive position adjustments for centering on "C"
-    const xPosition = useTransform(smoothScrollProgress,
-        [0.6, 0.75],
-        [0, isClient && window.innerWidth < 768 ? -800 : -1800]
-    )
-    const yPosition = useTransform(smoothScrollProgress,
-        [0.6, 0.75],
-        [0, isClient && window.innerWidth < 768 ? -200 : -500]
-    )
+    const xPosition = useTransform(smoothScrollProgress, [0.6, 0.75], [0, isMobile ? -800 : -1800])
+    const yPosition = useTransform(smoothScrollProgress, [0.6, 0.75], [0, isMobile ? -200 : -500])
 
-    const textOpacity = useTransform(smoothScrollProgress,
-        [0.6, 0.75, 0.8],
-        [1, 1, 0]
-    )
+    const textOpacity = useTransform(smoothScrollProgress, [0.6, 0.75, 0.8], [1, 1, 0])
 
     const springConfig = {
         stiffness: 80,
         damping: 25,
         mass: 0.8,
-        restDelta: 0.001
+        restDelta: 0.001,
     }
 
     const springScale = useSpring(scale, springConfig)
     const springX = useSpring(xPosition, springConfig)
     const springY = useSpring(yPosition, springConfig)
 
-    // Content fade in (delayed until after zoom)
-    const contentOpacity = useTransform(smoothScrollProgress,
-        [0.85, 0.95],
-        [0, 1]
-    )
+    const contentOpacity = useTransform(smoothScrollProgress, [0.85, 0.95], [0, 1])
 
-    // Scroll indicator opacity
     const scrollIndicatorOpacity = useTransform(
         smoothScrollProgress,
         [0, 0.1, 0.95, 1],
         [1, 1, 1, 0]
     )
 
-    // Hero section visibility
     const heroVisibility = useTransform(
         smoothScrollProgress,
         [0, 0.8, 0.801],
@@ -102,6 +82,6 @@ export const useHeroAnimations = (heroSectionRef: React.RefObject<HTMLElement | 
         scrollIndicatorOpacity,
         heroVisibility,
         heroPointerEvents,
-        smoothScrollProgress
+        smoothScrollProgress,
     }
 }
