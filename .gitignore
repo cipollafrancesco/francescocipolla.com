@@ -37,6 +37,7 @@
 .DS_Store
 *.pem
 .claude/
+.idea/
 .playwright-mcp/
 hero-*.png
 
